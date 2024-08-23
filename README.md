@@ -4,7 +4,7 @@
 Il progetto prevede lo sviluppo di una piattaforma di distribuzione digitale per videogiochi, simile a _Steam_ o _G2A_. Gli utenti potranno registrarsi, esplorare un catalogo di giochi, acquistare titoli e gestire la loro libreria personale. L'applicazione sarà caratterizzata da un'interfaccia _user-friendly_ e offrirà funzionalità fondamentali per la gestione degli account, degli acquisti e delle recensioni.
 
 ## 🎯 Obiettivo del Progetto
-L'obiettivo principale è creare una piattaforma che simuli l'esperienza di un negozio di videogiochi online. Il progetto dimostrerà competenze sia nel _**frontend**_ che nel _**backend**_, nella gestione dei _database_ e nell'integrazione di _**API**_ esterne. Gli utenti potranno acquistare giochi, lasciare recensioni e gestire i loro profili.
+L'obiettivo principale è creare una piattaforma che simuli l'esperienza di un negozio di videogiochi online. Il progetto dimostrerà competenze sia nel _**frontend**_ che nel _**backend**_, nella **gestione dei _database_** e nell'integrazione di **_API_ esterne**. Gli utenti potranno acquistare giochi, lasciare recensioni e gestire i loro profili.
 
 ## 💻 Tecnologie Utilizzate
 
