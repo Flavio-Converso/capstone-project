@@ -10,7 +10,7 @@ Il progetto dimostrerà competenze sia nel _**frontend**_ che nel _**backend**_,
 
 ### 🖥️ Frontend
 - 🎨 _HTML_, _CSS_, _Bootstrap_: Per creare un'interfaccia utente moderna e _responsive_ (_UI_).
-- ✨ _JavaScript_/_TypeScript_: Per gestire l'interattività e migliorare l'esperienza utente (_UX_).
+- ✨ _JavaScript_: Per gestire l'interattività e migliorare l'esperienza utente (_UX_).
 
 ### ⚙️ Backend
 - 🛠 _ASP.NET MVC_: Per gestire la logica applicativa e la comunicazione con il _database_.
