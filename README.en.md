@@ -10,7 +10,7 @@ The main goal is to create a platform that simulates the experience of an online
 
 ### 🖥️ Frontend
 - 🎨 _HTML_, _CSS_, _Bootstrap_: To create a modern and responsive user interface (_UI_).
-- ✨ _JavaScript_/_TypeScript_: To manage interactivity and enhance user experience (_UX_).
+- ✨ _JavaScript_: To manage interactivity and enhance user experience (_UX_).
 
 ### ⚙️ Backend
 - 🛠 _ASP.NET MVC_: To manage application logic and communication with the database.
