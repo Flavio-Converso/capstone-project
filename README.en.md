@@ -1,4 +1,4 @@
-### [🏴 ITALIAN VERSION](README.md)
+### [🏴 VERSIONE ITALIANA](README.md)
 ---
 # 📖 Project Presentation
 The project involves the development of a digital distribution platform for video games, similar to _Steam_ or _G2A_. Users will be able to register, explore a catalog of games, purchase titles, and manage their profile and personal library. The application will feature a user-friendly interface and provide fundamental functionalities for managing accounts, purchases, and reviews.
