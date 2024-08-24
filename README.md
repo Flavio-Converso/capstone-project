@@ -1,4 +1,4 @@
-### [🏴 ENGLISH VERSION](README.en.md)
+### [🏴 VERSIONE ITALIANA](README.md)
 ---
 # 📖 Presentazione del Progetto
 Il progetto prevede lo sviluppo di una piattaforma di distribuzione digitale per videogiochi, simile a _Steam_ o _G2A_. Gli utenti potranno registrarsi, esplorare un catalogo di giochi, acquistare titoli e gestire il loro profilo e la loro libreria personale. L'applicazione sarà caratterizzata da un'interfaccia _user-friendly_ e offrirà funzionalità fondamentali per la gestione degli account, degli acquisti e delle recensioni.
@@ -15,6 +15,7 @@ Il progetto dimostrerà competenze sia nel **frontend** che nel **backend**, nel
 ### ⚙️ Backend
 - 🛠 _ASP.NET MVC_: Per gestire la logica applicativa e la comunicazione con il database.
 - 💻 _C#_: Linguaggio di programmazione per sviluppare la logica di business.
+- 📊 _Entity Framework Core_: Per la gestione dell'accesso ai dati e l'interazione con il database.
 
 ### 🗄️ Database
 - 💾 _SQL Server_: Per gestire i dati relativi agli utenti, ai giochi, agli acquisti e alle recensioni.
