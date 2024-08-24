@@ -1,7 +1,7 @@
 ### [🏴 ENGLISH VERSION](README.en.md)
 ---
 # 📖 Presentazione del Progetto
-Il progetto prevede lo sviluppo di una piattaforma di distribuzione digitale per videogiochi, simile a _Steam_ o _G2A_. Gli utenti potranno registrarsi, esplorare un catalogo di giochi, acquistare titoli e gestire la loro libreria personale. L'applicazione sarà caratterizzata da un'interfaccia _user-friendly_ e offrirà funzionalità fondamentali per la gestione degli account, degli acquisti e delle recensioni.
+Il progetto prevede lo sviluppo di una piattaforma di distribuzione digitale per videogiochi, simile a _Steam_ o _G2A_. Gli utenti potranno registrarsi, esplorare un catalogo di giochi, acquistare titoli e gestire il loro profilo e la loro libreria personale. L'applicazione sarà caratterizzata da un'interfaccia _user-friendly_ e offrirà funzionalità fondamentali per la gestione degli account, degli acquisti e delle recensioni.
 
 ## 🎯 Obiettivo del Progetto
 Il progetto dimostrerà competenze sia nel **frontend** che nel **backend**, nella **gestione dei database** e nell'integrazione di **API esterne**.
