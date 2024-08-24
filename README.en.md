@@ -15,6 +15,7 @@ The project will demonstrate skills in both **frontend** and **backend**, **data
 ### ⚙️ Backend
 - 🛠 _ASP.NET MVC_: To manage application logic and communication with the database.
 - 💻 _C#_: Programming language to develop business logic.
+- 📊 _Entity Framework Core_: For data access and interaction with the database.
 
 ### 🗄️ Database
 - 💾 _SQL Server_: To manage data related to users, games, purchases, and reviews.
