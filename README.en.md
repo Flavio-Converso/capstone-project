@@ -1,10 +1,10 @@
-### [🏴 VERSIONE ITALIANA](README.md)
+### [🏴 ITALIAN VERSION](README.md)
 ---
 # 📖 Project Presentation
-The project involves the development of a digital distribution platform for video games, similar to _Steam_ or _G2A_. Users will be able to register, explore a catalog of games, purchase titles, and manage their personal library. The application will feature a user-friendly interface and provide fundamental functionalities for managing accounts, purchases, and reviews.
+The project involves the development of a digital distribution platform for video games, similar to _Steam_ or _G2A_. Users will be able to register, explore a catalog of games, purchase titles, and manage their profile and personal library. The application will feature a user-friendly interface and provide fundamental functionalities for managing accounts, purchases, and reviews.
 
 ## 🎯 Project Goal
-The project will demonstrate skills in both **frontend** and **backend**, **database management**, and integration of **external APIs**. 
+The project will demonstrate skills in both **frontend** and **backend**, **database management**, and integration of **external APIs**.
 
 ## 💻 Technologies Used
 
