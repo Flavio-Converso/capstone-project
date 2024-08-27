@@ -398,3 +398,4 @@ FodyWeavers.xsd
 *.sln.iml
 /capstone-project/appsettings.json
 /capstone-project/appsettings.Development.json
+/capstone-project/app.txt
