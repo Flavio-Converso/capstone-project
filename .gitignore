@@ -396,3 +396,5 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/capstone-project/appsettings.json
+/capstone-project/appsettings.Development.json
