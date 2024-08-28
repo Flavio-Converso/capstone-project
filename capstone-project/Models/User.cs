@@ -14,6 +14,7 @@ namespace capstone_project.Models
     [Index(nameof(Username), IsUnique = true)]
     [Index(nameof(Email), IsUnique = true)]
     [Index(nameof(PhoneNumber), IsUnique = true)]
+
     public class User
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]

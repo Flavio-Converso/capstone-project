@@ -1,4 +1,11 @@
+using capstone_project.Data;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
+
+//CONNECTION - DATACONTEXT
+var conn = builder.Configuration.GetConnectionString("DB");
+builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer(conn));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace capstone_project.Models
 {
+
     [Index(nameof(Name), IsUnique = true)]
     public class Category
     {
