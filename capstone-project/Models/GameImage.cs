@@ -3,20 +3,16 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace capstone_project.Models
 {
-    public class CartItem
+    public class GameImage
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int CartItemId { get; set; }
+        public int GameImageId { get; set; }
+        [Required]
+        public required byte[] Img { get; set; }
+        [Required, MaxLength(50)]
+        public required string ImgType { get; set; }
 
-        [Required, Range(1, int.MaxValue)]
-        public required int Quantity { get; set; }
-
-        // EF REFERENCES
-        public int CartId { get; set; }
-
-        [ForeignKey("CartId")]
-        public required Cart Cart { get; set; }
-
+        //EF REFERENCES
         public int GameId { get; set; }
 
         [ForeignKey("GameId")]
