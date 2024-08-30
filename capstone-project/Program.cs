@@ -31,12 +31,16 @@ builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer(conn));
 //    });
 //});
 
-//SERVICES
-builder.Services
-    .AddScoped<IGameService, GameService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+// Services
+builder.Services
+    .AddScoped<ICategoryService, CategoryService>()
+    .AddScoped<IPegiService, PegiService>()
+    .AddScoped<IRestrictionService, RestrictionService>()
+    .AddScoped<IGameService, GameService>();
 
 var app = builder.Build();
 

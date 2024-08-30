@@ -32,6 +32,7 @@ namespace capstone_project.Models
         public required int QuantityAvail { get; set; }
 
         // EF REFERENCES
+        public List<GameImage> GameImages { get; set; } = [];
         public int PegiId { get; set; }
         [ForeignKey("PegiId")]
         public required Pegi Pegi { get; set; }

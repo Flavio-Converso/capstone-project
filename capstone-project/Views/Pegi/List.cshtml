@@ -1,0 +1,42 @@
+﻿@model IEnumerable<capstone_project.Models.Pegi>
+
+@{
+    ViewData["Title"] = "PegiList";
+}
+
+<h1>PegiList</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.PegiId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PegiId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PegiId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

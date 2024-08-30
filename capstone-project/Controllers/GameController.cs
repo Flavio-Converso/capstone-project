@@ -52,11 +52,12 @@ namespace capstone_project.Controllers
             if (ModelState.IsValid)
             {
                 await _gameSvc.CreateGameAsync(gameDto);
-                return RedirectToAction("List"); // Dopo la creazione, ritorna alla lista dei giochi
+                return RedirectToAction("List");
             }
             PopulateViewBags();
-            return View(gameDto); // Se ci sono errori di validazione, ritorna al form di creazione
+            return View(gameDto);
         }
+
 
         // GET: /Game/Edit/5
         public async Task<IActionResult> Edit(int id)

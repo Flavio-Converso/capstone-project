@@ -36,7 +36,6 @@ namespace capstone_project.Models.DTOs
 
         [Required(ErrorMessage = "La classificazione PEGI è obbligatoria.")]
         public int PegiId { get; set; }
-
         public List<int> RestrictionIds { get; set; } = [];
         public List<int> CategoryIds { get; set; } = [];
     }

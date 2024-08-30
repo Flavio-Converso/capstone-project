@@ -1,0 +1,37 @@
+﻿@model capstone_project.Models.DTOs.PegiDTO
+
+@{
+    ViewData["Title"] = "Edit Pegi";
+}
+
+<h1>Edit Pegi</h1>
+
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="PegiId" />
+
+    <div class="form-group">
+        <label asp-for="Name" class="control-label"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description" class="control-label"></label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Img" class="control-label">Upload Image</label>
+        <input asp-for="Img" class="form-control-file" type="file" />
+        <span asp-validation-for="Img" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+</form>
+
+<div>
+    <a asp-action="List">Back to List</a>
+</div>
