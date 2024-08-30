@@ -9,6 +9,7 @@
 <table class="table">
     <thead>
         <tr>
+            <th>Copertina</th> <!-- New column for the cover image -->
             <th>Nome</th>
             <th>Piattaforma</th>
             <th>Prezzo</th>
@@ -20,6 +21,27 @@
         @foreach (var game in Model)
         {
             <tr>
+                <td>
+                    @if (game.GameImages != null && game.GameImages.Any())
+                    {
+                        // Using integer comparison for ImgType
+                        var coverImage = game.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
+                        if (coverImage != null)
+                        {
+                            var base64Image = Convert.ToBase64String(coverImage.Img);
+                            var imgSrc = $"data:image/png;base64,{base64Image}"; // Assuming the image is a PNG
+                            <img src="@imgSrc" alt="@game.Name Cover" style="width:100px;height:auto;" />
+                        }
+                        else
+                        {
+                            <span>No cover image</span>
+                        }
+                    }
+                    else
+                    {
+                        <span>No cover image</span>
+                    }
+                </td>
                 <td>@game.Name</td>
                 <td>@game.Platform</td>
                 <td>@game.Price.ToString("C")</td>

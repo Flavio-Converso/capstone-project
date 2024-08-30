@@ -85,12 +85,17 @@ namespace capstone_project.Services
             else
             {
                 // Se nessuna nuova immagine è stata fornita, mantieni l'immagine esistente
-                pegi.Img = dto.ImgByte;
+                if (dto.ImgByte != null)
+                {
+                    pegi.Img = dto.ImgByte;
+                }
+                // Se anche dto.ImgByte è null, lascia pegi.Img invariato
             }
 
             await _dataContext.SaveChangesAsync();
             return dto;
         }
+
 
     }
 }

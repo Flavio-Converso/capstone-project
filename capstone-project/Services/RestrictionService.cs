@@ -85,8 +85,10 @@ namespace capstone_project.Services
             }
             else
             {
-                // Se nessuna nuova immagine è stata fornita, mantieni l'immagine esistente
-                restriction.Img = dto.ImgByte;
+                if (dto.ImgByte != null)
+                {
+                    restriction.Img = dto.ImgByte;
+                }
             }
 
             await _dataContext.SaveChangesAsync();

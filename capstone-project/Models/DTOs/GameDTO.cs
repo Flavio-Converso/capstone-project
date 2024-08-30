@@ -38,5 +38,6 @@ namespace capstone_project.Models.DTOs
         public int PegiId { get; set; }
         public List<int> RestrictionIds { get; set; } = [];
         public List<int> CategoryIds { get; set; } = [];
+        public List<GameImageDTO> GameImages { get; set; } = [];
     }
 }

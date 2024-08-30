@@ -32,7 +32,7 @@
         <dd class="col-sm-10">
             @foreach (var restriction in Model.Restrictions)
             {
-                <span class="badge badge-info">@restriction.Name</span>
+                <span>@restriction.Name</span>
             }
         </dd>
 
@@ -40,7 +40,7 @@
         <dd class="col-sm-10">
             @foreach (var category in Model.Categories)
             {
-                <span class="badge badge-secondary">@category.Name</span>
+                <span>@category.Name</span>
             }
         </dd>
     </dl>

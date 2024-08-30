@@ -1,5 +1,6 @@
 ﻿using capstone_project.Data;
 using capstone_project.Interfaces;
+using capstone_project.Models;
 using capstone_project.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -47,16 +48,34 @@ namespace capstone_project.Controllers
         // POST: /Game/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(GameDTO gameDto)
+        public async Task<IActionResult> Create(GameDTO gameDto, List<ImageUpload> images)
         {
             if (ModelState.IsValid)
             {
+                foreach (var imageUpload in images)
+                {
+                    if (imageUpload.ImageFile != null && imageUpload.ImageFile.Length > 0)
+                    {
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            await imageUpload.ImageFile.CopyToAsync(memoryStream);
+                            gameDto.GameImages.Add(new GameImageDTO
+                            {
+                                Img = memoryStream.ToArray(),
+                                ImgType = Enum.Parse<ImageType>(imageUpload.ImgType)
+                            });
+                        }
+                    }
+                }
+
                 await _gameSvc.CreateGameAsync(gameDto);
                 return RedirectToAction("List");
             }
             PopulateViewBags();
             return View(gameDto);
         }
+
+
 
 
         // GET: /Game/Edit/5

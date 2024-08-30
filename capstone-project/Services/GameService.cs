@@ -15,7 +15,7 @@ namespace capstone_project.Services
             _ctx = context;
         }
 
-        // Create
+
         public async Task<GameDTO> CreateGameAsync(GameDTO gameDto)
         {
             var pegi = await _ctx.Pegis.FindAsync(gameDto.PegiId);
@@ -41,12 +41,21 @@ namespace capstone_project.Services
                 Categories = categories
             };
 
+            // Associa l'oggetto Game a ciascuna GameImage
+            game.GameImages = gameDto.GameImages.Select(imgDto => new GameImage
+            {
+                Img = imgDto.Img,
+                ImgType = imgDto.ImgType,
+                Game = game // Associazione con l'oggetto Game corrente
+            }).ToList();
+
             _ctx.Games.Add(game);
             await _ctx.SaveChangesAsync();
 
             gameDto.GameId = game.GameId;
             return gameDto;
         }
+
 
         // Read
         public async Task<Game> GetGameByIdAsync(int gameId)
@@ -65,6 +74,7 @@ namespace capstone_project.Services
                 .Include(g => g.Pegi)
                 .Include(g => g.Restrictions)
                 .Include(g => g.Categories)
+                .Include(g => g.GameImages)
                 .ToListAsync();
         }
 
@@ -74,12 +84,14 @@ namespace capstone_project.Services
             var existingGame = await _ctx.Games
                 .Include(g => g.Restrictions)
                 .Include(g => g.Categories)
+                .Include(g => g.GameImages)
                 .FirstOrDefaultAsync(g => g.GameId == gameId);
+
+            if (existingGame == null) return null;
 
             var pegi = await _ctx.Pegis.FindAsync(updatedGameDto.PegiId);
 
-
-            existingGame!.Name = updatedGameDto.Name;
+            existingGame.Name = updatedGameDto.Name;
             existingGame.Description = updatedGameDto.Description;
             existingGame.Platform = updatedGameDto.Platform;
             existingGame.Publisher = updatedGameDto.Publisher;
@@ -87,7 +99,6 @@ namespace capstone_project.Services
             existingGame.ReleaseDate = updatedGameDto.ReleaseDate;
             existingGame.QuantityAvail = updatedGameDto.QuantityAvail;
             existingGame.Pegi = pegi!;
-
             existingGame.Restrictions = await _ctx.Restrictions
                                                 .Where(r => updatedGameDto.RestrictionIds.Contains(r.RestrictionId))
                                                 .ToListAsync();
@@ -95,8 +106,16 @@ namespace capstone_project.Services
                                                 .Where(c => updatedGameDto.CategoryIds.Contains(c.CategoryId))
                                                 .ToListAsync();
 
-            await _ctx.SaveChangesAsync();
+            // Aggiorna le immagini del gioco
+            existingGame.GameImages.Clear();
+            existingGame.GameImages.AddRange(updatedGameDto.GameImages.Select(imgDto => new GameImage
+            {
+                Img = imgDto.Img,
+                ImgType = imgDto.ImgType,
+                Game = existingGame // Necessario per mantenere la relazione corretta
+            }));
 
+            await _ctx.SaveChangesAsync();
             return updatedGameDto;
         }
 

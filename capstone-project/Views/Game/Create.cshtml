@@ -7,6 +7,8 @@
 <h2>Aggiungi Nuovo Gioco</h2>
 
 <form asp-action="Create" method="post" enctype="multipart/form-data">
+    <!-- Campi esistenti per il gioco -->
+
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
@@ -65,6 +67,16 @@
         <select asp-for="CategoryIds" asp-items="ViewBag.CategoryOptions" class="form-control" multiple="multiple"></select>
     </div>
 
+    <!-- Sezione per il caricamento delle immagini -->
+    <div id="imageUploadSection">
+        <div class="form-group image-upload-group">
+            <label>Carica Immagine di Copertina</label>
+            <input type="file" name="images[0].ImageFile" class="form-control-file" />
+            <input type="hidden" name="images[0].ImgType" value="Cover" />
+        </div>
+    </div>
+
+    <button type="button" id="addImageButton" class="btn btn-secondary">Aggiungi Immagine</button>
     <button type="submit" class="btn btn-primary">Salva Gioco</button>
 </form>
 
@@ -72,4 +84,47 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        // Funzione per aggiungere un nuovo campo di input per le immagini
+        function addImageField() {
+            const imageIndex = document.querySelectorAll('.image-upload-group').length;
+
+            const newImageDiv = document.createElement('div');
+            newImageDiv.classList.add('form-group', 'image-upload-group');
+            newImageDiv.innerHTML = `
+                        <label>Carica Immagine</label>
+                        <input type="file" name="images[${imageIndex}].ImageFile" class="form-control-file" />
+
+                        <label>Tipo di Immagine</label>
+                        <select name="images[${imageIndex}].ImgType" class="form-control">
+                            <option value="Screenshot">Screenshot</option>
+                            <option value="Artwork">Artwork</option>
+                            <option value="Icon">Icona</option>
+                            <option value="Logo">Logo</option>
+                            <option value="Banner">Banner</option>
+                            <option value="Other">Altro</option>
+                        </select>
+
+                        <button type="button" class="btn btn-danger remove-image-button">Rimuovi</button>
+                    `;
+            document.getElementById('imageUploadSection').appendChild(newImageDiv);
+
+            // Aggiungi l'evento di rimozione per il nuovo pulsante "Rimuovi"
+            newImageDiv.querySelector('.remove-image-button').addEventListener('click', function () {
+                this.parentElement.remove();
+            });
+        }
+
+        // Aggiungi un campo di input al clic del bottone
+        document.getElementById('addImageButton').addEventListener('click', function () {
+            addImageField();
+        });
+
+        // Aggiungi l'evento di rimozione per il pulsante "Rimuovi" esistente
+        document.querySelectorAll('.remove-image-button').forEach(function (button) {
+            button.addEventListener('click', function () {
+                this.parentElement.remove();
+            });
+        });
+    </script>
 }
