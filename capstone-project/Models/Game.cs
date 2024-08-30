@@ -19,6 +19,9 @@ namespace capstone_project.Models
         [Required, MaxLength(50)]
         public required string Platform { get; set; }
 
+        [Required, MaxLength(100)]
+        public required string Publisher { get; set; }
+
         [Required, Range(0.0, double.MaxValue)]
         public required decimal Price { get; set; }
 
