@@ -7,13 +7,13 @@ namespace capstone_project.Controllers
 {
     public class CategoryController : Controller
     {
-        private readonly ICategoryService _categoryService;
-        private readonly DataContext _dataContext;
+        private readonly ICategoryService _categorySvc;
+        private readonly DataContext _ctx;
 
         public CategoryController(ICategoryService categoryService, DataContext dataContext)
         {
-            _categoryService = categoryService;
-            _dataContext = dataContext;
+            _categorySvc = categoryService;
+            _ctx = dataContext;
         }
 
         public IActionResult Create()
@@ -21,33 +21,46 @@ namespace capstone_project.Controllers
             return View();
         }
 
-        // GET: /Category/Create
+        // POST: /Category/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CategoryDTO dto)
         {
-            await _categoryService.CreateCategoryAsync(dto);
-            return RedirectToAction("List");
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                await _categorySvc.CreateCategoryAsync(dto);
+                return RedirectToAction("List");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Name", ex.Message);
+                return View(dto);
+            }
         }
 
         // GET: /Category
         public async Task<IActionResult> List()
         {
-            var categoryList = await _categoryService.GetAllCategoriesAsync();
+            var categoryList = await _categorySvc.GetAllCategoriesAsync();
             return View(categoryList);
         }
 
         // GET: /Category/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var category = await _categoryService.GetCategoryById(id);
+            var category = await _categorySvc.GetCategoryById(id);
             return View(category);
         }
 
         // GET: /Category/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var category = _dataContext.Categories.FirstOrDefault(c => c.CategoryId == id);
+            var category = await _categorySvc.GetCategoryById(id);
             var dto = new CategoryDTO
             {
                 CategoryId = category.CategoryId,
@@ -56,31 +69,41 @@ namespace capstone_project.Controllers
             };
             return View(dto);
         }
-
         // POST: /Category/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(CategoryDTO dTO)
+        public async Task<IActionResult> Edit(CategoryDTO dto)
         {
-            await _categoryService.UpdateCategoryAsync(dTO);
-            return RedirectToAction("List");
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                await _categorySvc.UpdateCategoryAsync(dto);
+                return RedirectToAction("List");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError("Name", ex.Message);
+                return View(dto);
+            }
         }
 
         // GET: /Category/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await _categoryService.GetCategoryById(id);
-
-            return View(category); // Mostra la vista di conferma dell'eliminazione con i dettagli del gioco
+            var category = await _categorySvc.GetCategoryById(id);
+            return View(category); // Show the delete confirmation view with category details
         }
         // POST: /Category/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var success = await _categoryService.DeleteCategoryAsync(id);
-
-            return RedirectToAction("List"); // Dopo l'eliminazione, ritorna alla lista dei giochi
+            var success = await _categorySvc.DeleteCategoryAsync(id);
+            return RedirectToAction("List"); // Return to the list after deletion
         }
     }
 }

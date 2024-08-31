@@ -8,13 +8,13 @@ namespace capstone_project.Controllers
 {
     public class PegiController : Controller
     {
-        private readonly IPegiService _pegiService;
-        private readonly DataContext _dataContext;
+        private readonly IPegiService _pegiSvc;
+        private readonly DataContext _ctx;
 
         public PegiController(IPegiService pegiService, DataContext dataContext)
         {
-            _pegiService = pegiService;
-            _dataContext = dataContext;
+            _pegiSvc = pegiService;
+            _ctx = dataContext;
         }
 
         public IActionResult Create()
@@ -50,7 +50,7 @@ namespace capstone_project.Controllers
 
             try
             {
-                await _pegiService.CreatePegiAsync(dto);
+                await _pegiSvc.CreatePegiAsync(dto);
                 return RedirectToAction("List");
             }
             catch (ArgumentException ex)
@@ -60,19 +60,17 @@ namespace capstone_project.Controllers
             }
         }
 
-
-
         // GET: /Pegi
         public async Task<IActionResult> List()
         {
-            var pegiList = await _pegiService.GetAllPegiAsync();
+            var pegiList = await _pegiSvc.GetAllPegiAsync();
             return View(pegiList);
         }
 
         // GET: /Pegi/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var pegi = await _pegiService.GetPegiById(id);
+            var pegi = await _pegiSvc.GetPegiById(id);
             return View(pegi);
         }
 
@@ -80,7 +78,7 @@ namespace capstone_project.Controllers
         public async Task<IActionResult> Edit(int id)
         {
 
-            var pegi = await _dataContext.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
+            var pegi = await _ctx.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
             var dto = new PegiDTO
             {
                 PegiId = pegi!.PegiId,
@@ -90,7 +88,6 @@ namespace capstone_project.Controllers
             };
             return View(dto);
         }
-
         // POST: /Pegi/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -114,7 +111,7 @@ namespace capstone_project.Controllers
 
             try
             {
-                await _pegiService.UpdatePegiAsync(dto);
+                await _pegiSvc.UpdatePegiAsync(dto);
                 return RedirectToAction("List");
             }
             catch (ArgumentException ex)
@@ -124,11 +121,10 @@ namespace capstone_project.Controllers
             }
         }
 
-
         // GET: /Pegi/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var pegi = await _pegiService.GetPegiById(id);
+            var pegi = await _pegiSvc.GetPegiById(id);
 
             return View(pegi); // Mostra la vista di conferma dell'eliminazione con i dettagli del gioco
         }
@@ -137,7 +133,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var success = await _pegiService.DeletePegiAsync(id);
+            var success = await _pegiSvc.DeletePegiAsync(id);
 
             return RedirectToAction("List"); // Dopo l'eliminazione, ritorna alla lista dei giochi
         }

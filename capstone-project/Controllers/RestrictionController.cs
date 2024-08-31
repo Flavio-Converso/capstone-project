@@ -8,20 +8,19 @@ namespace capstone_project.Controllers
 {
     public class RestrictionController : Controller
     {
-        private readonly IRestrictionService _restrictionService;
-        private readonly DataContext _dataContext;
+        private readonly IRestrictionService _restrictionSvc;
+        private readonly DataContext _ctx;
 
         public RestrictionController(IRestrictionService restrictionService, DataContext dataContext)
         {
-            _restrictionService = restrictionService;
-            _dataContext = dataContext;
+            _restrictionSvc = restrictionService;
+            _ctx = dataContext;
         }
 
         public IActionResult Create()
         {
             return View();
         }
-
         // POST: /Restriction/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -49,7 +48,7 @@ namespace capstone_project.Controllers
 
             try
             {
-                await _restrictionService.CreateRestrictionAsync(dto);
+                await _restrictionSvc.CreateRestrictionAsync(dto);
                 return RedirectToAction("List");
             }
             catch (ArgumentException ex)
@@ -59,25 +58,24 @@ namespace capstone_project.Controllers
             }
         }
 
-
         // GET: /Restriction
         public async Task<IActionResult> List()
         {
-            var restrictionList = await _restrictionService.GetAllRestrictionAsync();
+            var restrictionList = await _restrictionSvc.GetAllRestrictionAsync();
             return View(restrictionList);
         }
 
         // GET: /Restriction/Details/5
         public async Task<IActionResult> Details(int id)
         {
-            var restriction = await _restrictionService.GetRestrictionById(id);
+            var restriction = await _restrictionSvc.GetRestrictionById(id);
             return View(restriction);
         }
 
         // GET: /Restriction/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var restriction = await _dataContext.Restrictions.FirstOrDefaultAsync(p => p.RestrictionId == id);
+            var restriction = await _ctx.Restrictions.FirstOrDefaultAsync(p => p.RestrictionId == id);
             var dto = new RestrictionDTO
             {
                 RestrictionId = restriction.RestrictionId,
@@ -87,7 +85,6 @@ namespace capstone_project.Controllers
             };
             return View(dto);
         }
-
         // POST: /Restriction/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -111,7 +108,7 @@ namespace capstone_project.Controllers
 
             try
             {
-                await _restrictionService.UpdateRestrictionAsync(dto);
+                await _restrictionSvc.UpdateRestrictionAsync(dto);
                 return RedirectToAction("List");
             }
             catch (ArgumentException ex)
@@ -121,11 +118,10 @@ namespace capstone_project.Controllers
             }
         }
 
-
         // GET: /Restriction/Delete/5
         public async Task<IActionResult> Delete(int id)
         {
-            var restriction = await _restrictionService.GetRestrictionById(id);
+            var restriction = await _restrictionSvc.GetRestrictionById(id);
 
             return View(restriction); // Mostra la vista di conferma dell'eliminazione con i dettagli del gioco
         }
@@ -134,7 +130,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var success = await _restrictionService.DeleteRestrictionAsync(id);
+            var success = await _restrictionSvc.DeleteRestrictionAsync(id);
 
             return RedirectToAction("List"); // Dopo l'eliminazione, ritorna alla lista dei giochi
         }

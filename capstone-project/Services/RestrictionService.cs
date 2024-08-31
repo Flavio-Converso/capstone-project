@@ -8,16 +8,16 @@ namespace capstone_project.Services
 {
     public class RestrictionService : IRestrictionService
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext _ctx;
 
         public RestrictionService(DataContext dataContext)
         {
-            _dataContext = dataContext;
+            _ctx = dataContext;
         }
 
         public async Task<RestrictionDTO> CreateRestrictionAsync(RestrictionDTO dto)
         {
-            if (await _dataContext.Restrictions.AnyAsync(r => r.Name == dto.Name))
+            if (await _ctx.Restrictions.AnyAsync(r => r.Name == dto.Name))
             {
                 throw new ArgumentException("Il nome specificato è già in uso.");
             }
@@ -37,45 +37,29 @@ namespace capstone_project.Services
                 Img = imageBytes,
                 Description = dto.Description,
             };
-            await _dataContext.Restrictions.AddAsync(restriction);
-            await _dataContext.SaveChangesAsync();
+            await _ctx.Restrictions.AddAsync(restriction);
+            await _ctx.SaveChangesAsync();
             return dto;
-        }
-
-
-        public async Task<bool> DeleteRestrictionAsync(int id)
-        {
-            var restriction = await _dataContext.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == id);
-            if (restriction != null)
-            {
-                _dataContext.Restrictions.Remove(restriction);
-                await _dataContext.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         public async Task<IEnumerable<Restriction>> GetAllRestrictionAsync()
         {
-            return await _dataContext.Restrictions.ToListAsync();
+            return await _ctx.Restrictions.ToListAsync();
         }
 
         public async Task<Restriction> GetRestrictionById(int id)
         {
-            return await _dataContext.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == id);
+            return await _ctx.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == id);
         }
 
         public async Task<RestrictionDTO> UpdateRestrictionAsync(RestrictionDTO dto)
         {
-            if (await _dataContext.Restrictions.AnyAsync(r => r.Name == dto.Name && r.RestrictionId != dto.RestrictionId))
+            if (await _ctx.Restrictions.AnyAsync(r => r.Name == dto.Name && r.RestrictionId != dto.RestrictionId))
             {
                 throw new ArgumentException("Il nome specificato è già in uso.");
             }
 
-            var restriction = await _dataContext.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == dto.RestrictionId);
+            var restriction = await _ctx.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == dto.RestrictionId);
 
             restriction!.Name = dto.Name;
             restriction.Description = dto.Description;
@@ -93,9 +77,22 @@ namespace capstone_project.Services
                 restriction.Img = dto.ImgByte;
             }
 
-            await _dataContext.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
             return dto;
         }
-
+        public async Task<bool> DeleteRestrictionAsync(int id)
+        {
+            var restriction = await _ctx.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == id);
+            if (restriction != null)
+            {
+                _ctx.Restrictions.Remove(restriction);
+                await _ctx.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }

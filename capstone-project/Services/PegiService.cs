@@ -8,14 +8,15 @@ namespace capstone_project.Services
 {
     public class PegiService : IPegiService
     {
-        private readonly DataContext _dataContext;
+        private readonly DataContext _ctx;
         public PegiService(DataContext dataContext)
         {
-            _dataContext = dataContext;
+            _ctx = dataContext;
         }
+
         public async Task<PegiDTO> CreatePegiAsync(PegiDTO dto)
         {
-            if (await _dataContext.Pegis.AnyAsync(p => p.Name == dto.Name))
+            if (await _ctx.Pegis.AnyAsync(p => p.Name == dto.Name))
             {
                 throw new ArgumentException("Il nome specificato è già in uso.");
             }
@@ -34,44 +35,27 @@ namespace capstone_project.Services
                 Img = imageBytes,
                 Description = dto.Description,
             };
-            await _dataContext.Pegis.AddAsync(pegi);
-            await _dataContext.SaveChangesAsync();
+            await _ctx.Pegis.AddAsync(pegi);
+            await _ctx.SaveChangesAsync();
             return dto;
         }
         public async Task<IEnumerable<Pegi>> GetAllPegiAsync()
         {
-            return await _dataContext.Pegis.ToListAsync();
+            return await _ctx.Pegis.ToListAsync();
         }
 
         public async Task<Pegi> GetPegiById(int id)
         {
-            return await _dataContext.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
-
+            return await _ctx.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
         }
-
-        public async Task<bool> DeletePegiAsync(int id)
-        {
-            var pegi = await _dataContext.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
-            if (pegi != null)
-            {
-                _dataContext.Pegis.Remove(pegi);
-                await _dataContext.SaveChangesAsync();
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
 
         public async Task<PegiDTO> UpdatePegiAsync(PegiDTO dto)
         {
-            if (await _dataContext.Pegis.AnyAsync(p => p.Name == dto.Name && p.PegiId != dto.PegiId))
+            if (await _ctx.Pegis.AnyAsync(p => p.Name == dto.Name && p.PegiId != dto.PegiId))
             {
                 throw new ArgumentException("Il nome specificato è già in uso.");
             }
-            var pegi = await _dataContext.Pegis.FirstOrDefaultAsync(p => p.PegiId == dto.PegiId);
+            var pegi = await _ctx.Pegis.FirstOrDefaultAsync(p => p.PegiId == dto.PegiId);
 
             pegi!.Name = dto.Name;
             pegi.Description = dto.Description;
@@ -86,10 +70,22 @@ namespace capstone_project.Services
                 }
             }
 
-            await _dataContext.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
             return dto;
         }
-
-
+        public async Task<bool> DeletePegiAsync(int id)
+        {
+            var pegi = await _ctx.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
+            if (pegi != null)
+            {
+                _ctx.Pegis.Remove(pegi);
+                await _ctx.SaveChangesAsync();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
 }
