@@ -22,14 +22,43 @@ namespace capstone_project.Controllers
             return View();
         }
 
-        // GET: /Restriction/Create
+        // POST: /Restriction/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RestrictionDTO dto)
         {
-            await _restrictionService.CreateRestrictionAsync(dto);
-            return RedirectToAction("List");
+            if (dto.Img != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(dto.Img.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("Img", "Devi inserire un'immagine.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                await _restrictionService.CreateRestrictionAsync(dto);
+                return RedirectToAction("List");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
         }
+
 
         // GET: /Restriction
         public async Task<IActionResult> List()
@@ -62,11 +91,36 @@ namespace capstone_project.Controllers
         // POST: /Restriction/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(RestrictionDTO dTO)
+        public async Task<IActionResult> Edit(RestrictionDTO dto)
         {
-            await _restrictionService.UpdateRestrictionAsync(dTO);
-            return RedirectToAction("List");
+            if (dto.Img != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(dto.Img.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                await _restrictionService.UpdateRestrictionAsync(dto);
+                return RedirectToAction("List");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
         }
+
 
         // GET: /Restriction/Delete/5
         public async Task<IActionResult> Delete(int id)

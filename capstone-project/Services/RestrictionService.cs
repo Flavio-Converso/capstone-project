@@ -17,6 +17,11 @@ namespace capstone_project.Services
 
         public async Task<RestrictionDTO> CreateRestrictionAsync(RestrictionDTO dto)
         {
+            if (await _dataContext.Restrictions.AnyAsync(r => r.Name == dto.Name))
+            {
+                throw new ArgumentException("Il nome specificato è già in uso.");
+            }
+
             byte[]? imageBytes = null;
             if (dto.Img != null)
             {
@@ -36,6 +41,7 @@ namespace capstone_project.Services
             await _dataContext.SaveChangesAsync();
             return dto;
         }
+
 
         public async Task<bool> DeleteRestrictionAsync(int id)
         {
@@ -64,17 +70,16 @@ namespace capstone_project.Services
 
         public async Task<RestrictionDTO> UpdateRestrictionAsync(RestrictionDTO dto)
         {
-            var restriction = await _dataContext.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == dto.RestrictionId);
-
-            if (restriction == null)
+            if (await _dataContext.Restrictions.AnyAsync(r => r.Name == dto.Name && r.RestrictionId != dto.RestrictionId))
             {
-                throw new Exception("Restriction not found");
+                throw new ArgumentException("Il nome specificato è già in uso.");
             }
 
-            restriction.Name = dto.Name;
+            var restriction = await _dataContext.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == dto.RestrictionId);
+
+            restriction!.Name = dto.Name;
             restriction.Description = dto.Description;
 
-            // Se un'immagine nuova è stata caricata, aggiornala
             if (dto.Img != null)
             {
                 using (var memoryStream = new MemoryStream())
@@ -83,16 +88,14 @@ namespace capstone_project.Services
                     restriction.Img = memoryStream.ToArray();
                 }
             }
-            else
+            else if (dto.ImgByte != null)
             {
-                if (dto.ImgByte != null)
-                {
-                    restriction.Img = dto.ImgByte;
-                }
+                restriction.Img = dto.ImgByte;
             }
 
             await _dataContext.SaveChangesAsync();
             return dto;
         }
+
     }
 }
