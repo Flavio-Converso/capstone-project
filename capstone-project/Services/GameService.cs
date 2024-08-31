@@ -64,6 +64,7 @@ namespace capstone_project.Services
                 .Include(g => g.Pegi)
                 .Include(g => g.Restrictions)
                 .Include(g => g.Categories)
+                .Include(g => g.GameImages)
                 .FirstOrDefaultAsync(g => g.GameId == gameId);
             return game!;
         }

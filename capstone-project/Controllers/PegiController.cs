@@ -27,9 +27,40 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PegiDTO dto)
         {
-            await _pegiService.CreatePegiAsync(dto);
-            return RedirectToAction("List");
+            if (dto.Img != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(dto.Img.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
+                }
+
+            }
+            else
+            {
+                ModelState.AddModelError("Img", "Devi inserire un'immagine.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                await _pegiService.CreatePegiAsync(dto);
+                return RedirectToAction("List");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
         }
+
+
 
         // GET: /Pegi
         public async Task<IActionResult> List()
@@ -48,10 +79,11 @@ namespace capstone_project.Controllers
         // GET: /Pegi/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
+
             var pegi = await _dataContext.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
             var dto = new PegiDTO
             {
-                PegiId = pegi.PegiId,
+                PegiId = pegi!.PegiId,
                 Name = pegi.Name,
                 Description = pegi.Description,
                 ImgByte = pegi.Img,
@@ -62,11 +94,36 @@ namespace capstone_project.Controllers
         // POST: /Pegi/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(PegiDTO dTO)
+        public async Task<IActionResult> Edit(PegiDTO dto)
         {
-            await _pegiService.UpdatePegiAsync(dTO);
-            return RedirectToAction("List");
+            if (dto.Img != null)
+            {
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                var extension = Path.GetExtension(dto.Img.FileName).ToLower();
+
+                if (!allowedExtensions.Contains(extension))
+                {
+                    ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(dto);
+            }
+
+            try
+            {
+                await _pegiService.UpdatePegiAsync(dto);
+                return RedirectToAction("List");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return View(dto);
+            }
         }
+
 
         // GET: /Pegi/Delete/5
         public async Task<IActionResult> Delete(int id)

@@ -15,6 +15,10 @@ namespace capstone_project.Services
         }
         public async Task<PegiDTO> CreatePegiAsync(PegiDTO dto)
         {
+            if (await _dataContext.Pegis.AnyAsync(p => p.Name == dto.Name))
+            {
+                throw new ArgumentException("Il nome specificato è già in uso.");
+            }
             byte[]? imageBytes = null;
             if (dto.Img != null)
             {
@@ -63,33 +67,23 @@ namespace capstone_project.Services
 
         public async Task<PegiDTO> UpdatePegiAsync(PegiDTO dto)
         {
+            if (await _dataContext.Pegis.AnyAsync(p => p.Name == dto.Name && p.PegiId != dto.PegiId))
+            {
+                throw new ArgumentException("Il nome specificato è già in uso.");
+            }
             var pegi = await _dataContext.Pegis.FirstOrDefaultAsync(p => p.PegiId == dto.PegiId);
 
-            if (pegi == null)
-            {
-                throw new Exception("Pegi not found");
-            }
-
-            pegi.Name = dto.Name;
+            pegi!.Name = dto.Name;
             pegi.Description = dto.Description;
 
             // Se un'immagine nuova è stata caricata, aggiornala
-            if (dto.Img != null)
+            if (dto.Img != null && dto.Img.Length > 0)
             {
                 using (var memoryStream = new MemoryStream())
                 {
                     await dto.Img.CopyToAsync(memoryStream);
                     pegi.Img = memoryStream.ToArray();
                 }
-            }
-            else
-            {
-                // Se nessuna nuova immagine è stata fornita, mantieni l'immagine esistente
-                if (dto.ImgByte != null)
-                {
-                    pegi.Img = dto.ImgByte;
-                }
-                // Se anche dto.ImgByte è null, lascia pegi.Img invariato
             }
 
             await _dataContext.SaveChangesAsync();

@@ -43,6 +43,147 @@
                 <span>@category.Name</span>
             }
         </dd>
+
+        <!-- Images Section -->
+        <dt class="col-sm-2">Cover</dt>
+        <dd class="col-sm-10">
+            @{
+                var coverImages = Model.GameImages.Where(img => img.ImgType == ImageType.Cover).ToList();
+                if (coverImages.Any())
+                {
+                    foreach (var image in coverImages)
+                    {
+                        var base64Image = Convert.ToBase64String(image.Img);
+                        var imgSrc = $"data:image/png;base64,{base64Image}";
+                        <img src="@imgSrc" alt="Cover Image" style="width:100px;height:auto;" />
+                    }
+                }
+                else
+                {
+                    <span>No cover image available</span>
+                }
+            }
+        </dd>
+
+        <dt class="col-sm-2">Screenshot</dt>
+        <dd class="col-sm-10">
+            @{
+                var screenshotImages = Model.GameImages.Where(img => img.ImgType == ImageType.Screenshot).ToList();
+                if (screenshotImages.Any())
+                {
+                    foreach (var image in screenshotImages)
+                    {
+                        var base64Image = Convert.ToBase64String(image.Img);
+                        var imgSrc = $"data:image/png;base64,{base64Image}";
+                        <img src="@imgSrc" alt="Screenshot" style="width:100px;height:auto;" />
+                    }
+                }
+                else
+                {
+                    <span>No screenshots available</span>
+                }
+            }
+        </dd>
+
+        <dt class="col-sm-2">Artwork</dt>
+        <dd class="col-sm-10">
+            @{
+                var artworkImages = Model.GameImages.Where(img => img.ImgType == ImageType.Artwork).ToList();
+                if (artworkImages.Any())
+                {
+                    foreach (var image in artworkImages)
+                    {
+                        var base64Image = Convert.ToBase64String(image.Img);
+                        var imgSrc = $"data:image/png;base64,{base64Image}";
+                        <img src="@imgSrc" alt="Artwork" style="width:100px;height:auto;" />
+                    }
+                }
+                else
+                {
+                    <span>No artwork available</span>
+                }
+            }
+        </dd>
+
+        <dt class="col-sm-2">Icon</dt>
+        <dd class="col-sm-10">
+            @{
+                var iconImages = Model.GameImages.Where(img => img.ImgType == ImageType.Icon).ToList();
+                if (iconImages.Any())
+                {
+                    foreach (var image in iconImages)
+                    {
+                        var base64Image = Convert.ToBase64String(image.Img);
+                        var imgSrc = $"data:image/png;base64,{base64Image}";
+                        <img src="@imgSrc" alt="Icon" style="width:100px;height:auto;" />
+                    }
+                }
+                else
+                {
+                    <span>No icon available</span>
+                }
+            }
+        </dd>
+
+        <dt class="col-sm-2">Logo</dt>
+        <dd class="col-sm-10">
+            @{
+                var logoImages = Model.GameImages.Where(img => img.ImgType == ImageType.Logo).ToList();
+                if (logoImages.Any())
+                {
+                    foreach (var image in logoImages)
+                    {
+                        var base64Image = Convert.ToBase64String(image.Img);
+                        var imgSrc = $"data:image/png;base64,{base64Image}";
+                        <img src="@imgSrc" alt="Logo" style="width:100px;height:auto;" />
+                    }
+                }
+                else
+                {
+                    <span>No logo available</span>
+                }
+            }
+        </dd>
+
+        <dt class="col-sm-2">Banner</dt>
+        <dd class="col-sm-10">
+            @{
+                var bannerImages = Model.GameImages.Where(img => img.ImgType == ImageType.Banner).ToList();
+                if (bannerImages.Any())
+                {
+                    foreach (var image in bannerImages)
+                    {
+                        var base64Image = Convert.ToBase64String(image.Img);
+                        var imgSrc = $"data:image/png;base64,{base64Image}";
+                        <img src="@imgSrc" alt="Banner" style="width:100px;height:auto;" />
+                    }
+                }
+                else
+                {
+                    <span>No banner available</span>
+                }
+            }
+        </dd>
+
+        <dt class="col-sm-2">Other</dt>
+        <dd class="col-sm-10">
+            @{
+                var otherImages = Model.GameImages.Where(img => img.ImgType == ImageType.Other).ToList();
+                if (otherImages.Any())
+                {
+                    foreach (var image in otherImages)
+                    {
+                        var base64Image = Convert.ToBase64String(image.Img);
+                        var imgSrc = $"data:image/png;base64,{base64Image}";
+                        <img src="@imgSrc" alt="Other Image" style="width:100px;height:auto;" />
+                    }
+                }
+                else
+                {
+                    <span>No other images available</span>
+                }
+            }
+        </dd>
     </dl>
 </div>
 
