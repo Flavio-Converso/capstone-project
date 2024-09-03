@@ -4,5 +4,6 @@
     {
         public IFormFile ImageFile { get; set; }
         public string ImgType { get; set; }
+
     }
 }

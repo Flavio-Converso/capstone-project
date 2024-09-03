@@ -1,78 +1,168 @@
 ﻿@model capstone_project.Models.DTOs.GameDTO
 
 @{
-    ViewBag.Title = "Modifica Gioco";
+    ViewData["Title"] = "Edit Game";
 }
 
-<h2>Modifica Gioco</h2>
+<h1>Edit Game</h1>
 
-<form asp-action="Edit" method="post">
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
     <input type="hidden" asp-for="GameId" />
-    <!-- Il resto del form è simile a Create.cshtml -->
-    <!-- Campi di input come in Create.cshtml -->
+
+    <!-- Game Name -->
     <div class="form-group">
-        <label asp-for="Name"></label>
+        <label asp-for="Name" class="control-label"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
 
+    <!-- Game Description -->
     <div class="form-group">
-        <label asp-for="Description"></label>
+        <label asp-for="Description" class="control-label"></label>
         <textarea asp-for="Description" class="form-control"></textarea>
         <span asp-validation-for="Description" class="text-danger"></span>
     </div>
 
+    <!-- Game Platform -->
     <div class="form-group">
-        <label asp-for="Platform"></label>
+        <label asp-for="Platform" class="control-label"></label>
         <input asp-for="Platform" class="form-control" />
         <span asp-validation-for="Platform" class="text-danger"></span>
     </div>
 
+    <!-- Game Publisher -->
     <div class="form-group">
-        <label asp-for="Publisher"></label>
+        <label asp-for="Publisher" class="control-label"></label>
         <input asp-for="Publisher" class="form-control" />
         <span asp-validation-for="Publisher" class="text-danger"></span>
     </div>
 
+    <!-- Game Price -->
     <div class="form-group">
-        <label asp-for="Price"></label>
+        <label asp-for="Price" class="control-label"></label>
         <input asp-for="Price" class="form-control" />
         <span asp-validation-for="Price" class="text-danger"></span>
     </div>
 
+    <!-- Game Release Date -->
     <div class="form-group">
-        <label asp-for="ReleaseDate"></label>
+        <label asp-for="ReleaseDate" class="control-label"></label>
         <input asp-for="ReleaseDate" type="date" class="form-control" />
         <span asp-validation-for="ReleaseDate" class="text-danger"></span>
     </div>
 
+    <!-- Game Quantity Available -->
     <div class="form-group">
-        <label asp-for="QuantityAvail"></label>
+        <label asp-for="QuantityAvail" class="control-label"></label>
         <input asp-for="QuantityAvail" class="form-control" />
         <span asp-validation-for="QuantityAvail" class="text-danger"></span>
     </div>
 
+    <!-- PEGI Rating -->
     <div class="form-group">
-        <label asp-for="PegiId">Classificazione PEGI</label>
+        <label asp-for="PegiId" class="control-label">Classificazione PEGI</label>
         <select asp-for="PegiId" asp-items="ViewBag.PegiOptions" class="form-control"></select>
         <span asp-validation-for="PegiId" class="text-danger"></span>
     </div>
 
+    <!-- Restriction Options -->
     <div class="form-group">
         <label>Restrizioni</label>
         <select asp-for="RestrictionIds" asp-items="ViewBag.RestrictionOptions" class="form-control" multiple="multiple"></select>
     </div>
 
+    <!-- Category Options -->
     <div class="form-group">
         <label>Categorie</label>
         <select asp-for="CategoryIds" asp-items="ViewBag.CategoryOptions" class="form-control" multiple="multiple"></select>
     </div>
+    <!-- Display Current Images -->
+    <h4>Immagini esistenti</h4>
+    <div id="existingImages">
+        @foreach (var image in Model.GameImages)
+        {
+            <div class="form-group">
+                <label>@image.ImgType</label>
+                <br />
+                <img src="data:image;base64,@(Convert.ToBase64String(image.Img))" alt="@image.ImgType" style="max-width:200px; max-height:200px;" />
+            </div>
+        }
+    </div>
 
-    <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+    <!-- Upload New Images -->
+    <h4>Carica nuove immagini (sostituisci)</h4>
+    <div id="imageUploadSection">
+        <div class="form-group image-upload-group">
+            <label>Carica Immagine</label>
+            <input type="file" name="images[0].ImageFile" class="form-control-file" accept=".jpg,.jpeg,.png" />
+
+            <label>Tipo di Immagine</label>
+            <select name="images[0].ImgType" class="form-control">
+                <option value="Cover">Cover</option>
+                <option value="Screenshot">Screenshot</option>
+                <option value="Artwork">Artwork</option>
+                <option value="Icon">Icona</option>
+                <option value="Logo">Logo</option>
+                <option value="Banner">Banner</option>
+                <option value="Other">Altro</option>
+            </select>
+        </div>
+    </div>
+
+    <button type="button" id="addImageButton" class="btn btn-secondary">Aggiungi Immagine</button>
+
+    <!-- Submit Button -->
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
 </form>
+
+<!-- Back to List Link -->
+<div>
+    <a asp-action="List">Back to List</a>
+</div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        // JavaScript for adding new image input fields
+        function addImageField() {
+            const imageIndex = document.querySelectorAll('.image-upload-group').length;
+
+            const newImageDiv = document.createElement('div');
+            newImageDiv.classList.add('form-group', 'image-upload-group');
+            newImageDiv.innerHTML = `
+                        <label>Carica Immagine</label>
+                        <input type="file" name="images[${imageIndex}].ImageFile" class="form-control-file" accept=".jpg,.jpeg,.png" />
+                        <label>Tipo di Immagine</label>
+                        <select name="images[${imageIndex}].ImgType" class="form-control">
+                            <option value="Cover">Cover</option>
+                            <option value="Screenshot">Screenshot</option>
+                            <option value="Artwork">Artwork</option>
+                            <option value="Icon">Icona</option>
+                            <option value="Logo">Logo</option>
+                            <option value="Banner">Banner</option>
+                            <option value="Other">Altro</option>
+                        </select>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="images[${imageIndex}].ReplaceExisting" value="true" />
+                            <label class="form-check-label">Sostituisci l'immagine esistente</label>
+                        </div>
+                        <button type="button" class="btn btn-danger remove-image-button">Rimuovi</button>
+                    `;
+            document.getElementById('imageUploadSection').appendChild(newImageDiv);
+
+            // Add remove event
+            newImageDiv.querySelector('.remove-image-button').addEventListener('click', function () {
+                this.parentElement.remove();
+            });
+        }
+
+        document.getElementById('addImageButton').addEventListener('click', function () {
+            addImageField();
+        });
+    </script>
 }

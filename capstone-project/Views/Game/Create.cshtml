@@ -7,8 +7,10 @@
 <h2>Aggiungi Nuovo Gioco</h2>
 
 <form asp-action="Create" method="post" enctype="multipart/form-data">
-    <!-- Campi esistenti per il gioco -->
+    <!-- Display validation summary -->
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
+    <!-- Fields for the game details -->
     <div class="form-group">
         <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
@@ -60,19 +62,22 @@
     <div class="form-group">
         <label>Restrizioni</label>
         <select asp-for="RestrictionIds" asp-items="ViewBag.RestrictionOptions" class="form-control" multiple="multiple"></select>
+        <span asp-validation-for="RestrictionIds" class="text-danger"></span>
     </div>
 
     <div class="form-group">
         <label>Categorie</label>
         <select asp-for="CategoryIds" asp-items="ViewBag.CategoryOptions" class="form-control" multiple="multiple"></select>
+        <span asp-validation-for="CategoryIds" class="text-danger"></span>
     </div>
 
-    <!-- Sezione per il caricamento delle immagini -->
+    <!-- Section for uploading images -->
     <div id="imageUploadSection">
         <div class="form-group image-upload-group">
             <label>Carica Immagine di Copertina</label>
-            <input type="file" name="images[0].ImageFile" class="form-control-file" />
+            <input type="file" name="images[0].ImageFile" class="form-control-file" accept=".jpg,.jpeg,.png" />
             <input type="hidden" name="images[0].ImgType" value="Cover" />
+            <span asp-validation-for="GameImages" class="text-danger"></span>
         </div>
     </div>
 
@@ -80,47 +85,52 @@
     <button type="submit" class="btn btn-primary">Salva Gioco</button>
 </form>
 
-@section Scripts {
+<div>
+    <a asp-action="List">Torna alla lista</a>
+</div>
+
+@section Scripts {s
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
     <script>
-        // Funzione per aggiungere un nuovo campo di input per le immagini
+        // Function to add a new image input field
         function addImageField() {
             const imageIndex = document.querySelectorAll('.image-upload-group').length;
 
             const newImageDiv = document.createElement('div');
             newImageDiv.classList.add('form-group', 'image-upload-group');
             newImageDiv.innerHTML = `
-                        <label>Carica Immagine</label>
-                        <input type="file" name="images[${imageIndex}].ImageFile" class="form-control-file" />
+                                <label>Carica Immagine</label>
+                                <input type="file" name="images[${imageIndex}].ImageFile" class="form-control-file" accept=".jpg,.jpeg,.png" />
+                                <span class="text-danger validation-message"></span>
 
-                        <label>Tipo di Immagine</label>
-                        <select name="images[${imageIndex}].ImgType" class="form-control">
-                            <option value="Screenshot">Screenshot</option>
-                            <option value="Artwork">Artwork</option>
-                            <option value="Icon">Icona</option>
-                            <option value="Logo">Logo</option>
-                            <option value="Banner">Banner</option>
-                            <option value="Other">Altro</option>
-                        </select>
+                                <label>Tipo di Immagine</label>
+                                <select name="images[${imageIndex}].ImgType" class="form-control">
+                                    <option value="Screenshot">Screenshot</option>
+                                    <option value="Artwork">Artwork</option>
+                                    <option value="Icon">Icona</option>
+                                    <option value="Logo">Logo</option>
+                                    <option value="Banner">Banner</option>
+                                    <option value="Other">Altro</option>
+                                </select>
 
-                        <button type="button" class="btn btn-danger remove-image-button">Rimuovi</button>
-                    `;
+                                <button type="button" class="btn btn-danger remove-image-button">Rimuovi</button>
+                            `;
             document.getElementById('imageUploadSection').appendChild(newImageDiv);
 
-            // Aggiungi l'evento di rimozione per il nuovo pulsante "Rimuovi"
+            // Add remove event to the new remove button
             newImageDiv.querySelector('.remove-image-button').addEventListener('click', function () {
                 this.parentElement.remove();
             });
         }
 
-        // Aggiungi un campo di input al clic del bottone
+        // Add new input field on button click
         document.getElementById('addImageButton').addEventListener('click', function () {
             addImageField();
         });
 
-        // Aggiungi l'evento di rimozione per il pulsante "Rimuovi" esistente
+        // Attach remove event to existing remove buttons
         document.querySelectorAll('.remove-image-button').forEach(function (button) {
             button.addEventListener('click', function () {
                 this.parentElement.remove();

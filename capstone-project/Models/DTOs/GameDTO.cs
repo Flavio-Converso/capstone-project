@@ -36,8 +36,13 @@ namespace capstone_project.Models.DTOs
 
         [Required(ErrorMessage = "La classificazione PEGI è obbligatoria.")]
         public int PegiId { get; set; }
+
+        [Required(ErrorMessage = "È necessario selezionare almeno una restrizione.")]
         public List<int> RestrictionIds { get; set; } = [];
+
+        [Required(ErrorMessage = "È necessario selezionare almeno una categoria.")]
         public List<int> CategoryIds { get; set; } = [];
         public List<GameImageDTO> GameImages { get; set; } = [];
+
     }
 }

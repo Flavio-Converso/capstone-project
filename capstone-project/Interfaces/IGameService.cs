@@ -5,17 +5,13 @@ namespace capstone_project.Interfaces
 {
     public interface IGameService
     {
-        // Create
         Task<GameDTO> CreateGameAsync(GameDTO gameDto);
 
-        // Read
         Task<Game> GetGameByIdAsync(int gameId);
         Task<IEnumerable<Game>> GetAllGamesAsync();
 
-        // Update
-        Task<GameDTO> UpdateGameAsync(int gameId, GameDTO updatedGameDto);
+        Task<bool> UpdateGameAsync(GameDTO gameDto);
 
-        // Delete
         Task<bool> DeleteGameAsync(int gameId);
     }
 }

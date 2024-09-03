@@ -15,17 +15,22 @@ namespace capstone_project.Services
             _ctx = context;
         }
 
-
         public async Task<GameDTO> CreateGameAsync(GameDTO gameDto)
         {
+            if (await _ctx.Games.AnyAsync(g => g.Name == gameDto.Name))
+            {
+                throw new ArgumentException("Il nome specificato è già in uso.");
+            }
+
             var pegi = await _ctx.Pegis.FindAsync(gameDto.PegiId);
 
             var restrictions = await _ctx.Restrictions
-                                      .Where(r => gameDto.RestrictionIds.Contains(r.RestrictionId))
-                                      .ToListAsync();
+                                        .Where(r => gameDto.RestrictionIds.Contains(r.RestrictionId))
+                                        .ToListAsync();
+
             var categories = await _ctx.Categories
-                                    .Where(c => gameDto.CategoryIds.Contains(c.CategoryId))
-                                    .ToListAsync();
+                                      .Where(c => gameDto.CategoryIds.Contains(c.CategoryId))
+                                      .ToListAsync();
 
             var game = new Game
             {
@@ -41,12 +46,11 @@ namespace capstone_project.Services
                 Categories = categories
             };
 
-            // Associa l'oggetto Game a ciascuna GameImage
             game.GameImages = gameDto.GameImages.Select(imgDto => new GameImage
             {
                 Img = imgDto.Img,
                 ImgType = imgDto.ImgType,
-                Game = game // Associazione con l'oggetto Game corrente
+                Game = game
             }).ToList();
 
             _ctx.Games.Add(game);
@@ -57,7 +61,17 @@ namespace capstone_project.Services
         }
 
 
-        // Read
+        public async Task<IEnumerable<Game>> GetAllGamesAsync()
+        {
+            var games = await _ctx.Games
+             .Include(g => g.Pegi)
+             .Include(g => g.Restrictions)
+             .Include(g => g.Categories)
+             .Include(g => g.GameImages)
+             .ToListAsync();
+            return games;
+        }
+
         public async Task<Game> GetGameByIdAsync(int gameId)
         {
             var game = await _ctx.Games
@@ -69,58 +83,65 @@ namespace capstone_project.Services
             return game!;
         }
 
-        public async Task<IEnumerable<Game>> GetAllGamesAsync()
+        public async Task<bool> UpdateGameAsync(GameDTO gameDto)
         {
-            return await _ctx.Games
-                .Include(g => g.Pegi)
-                .Include(g => g.Restrictions)
-                .Include(g => g.Categories)
-                .Include(g => g.GameImages)
-                .ToListAsync();
-        }
-
-        // Update
-        public async Task<GameDTO> UpdateGameAsync(int gameId, GameDTO updatedGameDto)
-        {
-            var existingGame = await _ctx.Games
-                .Include(g => g.Restrictions)
-                .Include(g => g.Categories)
-                .Include(g => g.GameImages)
-                .FirstOrDefaultAsync(g => g.GameId == gameId);
-
-            if (existingGame == null) return null;
-
-            var pegi = await _ctx.Pegis.FindAsync(updatedGameDto.PegiId);
-
-            existingGame.Name = updatedGameDto.Name;
-            existingGame.Description = updatedGameDto.Description;
-            existingGame.Platform = updatedGameDto.Platform;
-            existingGame.Publisher = updatedGameDto.Publisher;
-            existingGame.Price = updatedGameDto.Price;
-            existingGame.ReleaseDate = updatedGameDto.ReleaseDate;
-            existingGame.QuantityAvail = updatedGameDto.QuantityAvail;
-            existingGame.Pegi = pegi!;
-            existingGame.Restrictions = await _ctx.Restrictions
-                                                .Where(r => updatedGameDto.RestrictionIds.Contains(r.RestrictionId))
-                                                .ToListAsync();
-            existingGame.Categories = await _ctx.Categories
-                                                .Where(c => updatedGameDto.CategoryIds.Contains(c.CategoryId))
-                                                .ToListAsync();
-
-            // Aggiorna le immagini del gioco
-            existingGame.GameImages.Clear();
-            existingGame.GameImages.AddRange(updatedGameDto.GameImages.Select(imgDto => new GameImage
+            if (await _ctx.Games.AnyAsync(g => g.Name == gameDto.Name && g.GameId != gameDto.GameId))
             {
-                Img = imgDto.Img,
-                ImgType = imgDto.ImgType,
-                Game = existingGame // Necessario per mantenere la relazione corretta
-            }));
+                throw new ArgumentException("Il nome del gioco specificato è già in uso.");
+            }
+
+            var game = await _ctx.Games
+                .Include(g => g.GameImages)
+                .Include(g => g.Restrictions)
+                .Include(g => g.Categories)
+                .FirstOrDefaultAsync(g => g.GameId == gameDto.GameId);
+
+            game!.Name = gameDto.Name;
+            game.Description = gameDto.Description;
+            game.Platform = gameDto.Platform;
+            game.Publisher = gameDto.Publisher;
+            game.Price = gameDto.Price;
+            game.ReleaseDate = gameDto.ReleaseDate;
+            game.QuantityAvail = gameDto.QuantityAvail;
+
+            game.Pegi = await _ctx.Pegis.FindAsync(gameDto.PegiId) ?? throw new ArgumentException("Invalid PEGI ID.");
+
+            game.Restrictions = await _ctx.Restrictions
+                .Where(r => gameDto.RestrictionIds.Contains(r.RestrictionId))
+                .ToListAsync();
+
+            game.Categories = await _ctx.Categories
+                .Where(c => gameDto.CategoryIds.Contains(c.CategoryId))
+                .ToListAsync();
+
+            foreach (var imgDto in gameDto.GameImages)
+            {
+                var existingImage = game.GameImages.FirstOrDefault(img => img.ImgType == imgDto.ImgType);
+
+                if (imgDto.Img != null && imgDto.Img.Length > 0)
+                {
+                    if (existingImage != null)
+                    {
+                        existingImage.Img = imgDto.Img;
+                    }
+                    else
+                    {
+                        game.GameImages.Add(new GameImage
+                        {
+                            Img = imgDto.Img,
+                            ImgType = imgDto.ImgType,
+                            Game = game
+                        });
+                    }
+                }
+            }
 
             await _ctx.SaveChangesAsync();
-            return updatedGameDto;
+            return true;
         }
 
-        // Delete
+
+
         public async Task<bool> DeleteGameAsync(int gameId)
         {
             var game = await _ctx.Games.FindAsync(gameId);

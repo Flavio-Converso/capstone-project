@@ -1,4 +1,5 @@
-﻿using capstone_project.Data;
+﻿
+using capstone_project.Data;
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs;
@@ -23,20 +24,6 @@ namespace capstone_project.Controllers
             ViewBag.RestrictionOptions = new SelectList(_ctx.Restrictions, "RestrictionId", "Name");
             ViewBag.CategoryOptions = new SelectList(_ctx.Categories, "CategoryId", "Name");
         }
-        // GET: /Game
-        public async Task<IActionResult> List()
-        {
-            var games = await _gameSvc.GetAllGamesAsync();
-            return View(games);
-        }
-
-        // GET: /Game/Details/5
-        public async Task<IActionResult> Details(int id)
-        {
-            var game = await _gameSvc.GetGameByIdAsync(id);
-
-            return View(game); // Visualizza i dettagli del gioco
-        }
 
         // GET: /Game/Create
         public IActionResult Create()
@@ -50,7 +37,31 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(GameDTO gameDto, List<ImageUpload> images)
         {
-            if (ModelState.IsValid)
+            foreach (var imageUpload in images)
+            {
+                if (imageUpload.ImageFile != null && imageUpload.ImageFile.Length > 0)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                    var extension = Path.GetExtension(imageUpload.ImageFile.FileName).ToLower();
+
+                    if (!allowedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("GameImages", "Sono consentiti solo file JPG e PNG.");
+                    }
+                }
+                else
+                {
+                    ModelState.AddModelError("GameImages", "Devi inserire un'immagine di copertina.");
+                }
+            }
+
+            if (!ModelState.IsValid)
+            {
+                PopulateViewBags();
+                return View(gameDto);
+            }
+
+            try
             {
                 foreach (var imageUpload in images)
                 {
@@ -71,17 +82,38 @@ namespace capstone_project.Controllers
                 await _gameSvc.CreateGameAsync(gameDto);
                 return RedirectToAction("List");
             }
-            PopulateViewBags();
-            return View(gameDto);
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                PopulateViewBags();
+                return View(gameDto);
+            }
         }
 
+        // GET: /Game
+        public async Task<IActionResult> List()
+        {
+            var games = await _gameSvc.GetAllGamesAsync();
+            return View(games);
+        }
 
+        // GET: /Game/Details/5
+        public async Task<IActionResult> Details(int id)
+        {
+            var game = await _gameSvc.GetGameByIdAsync(id);
+
+            return View(game);
+        }
 
 
         // GET: /Game/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
+            if (game == null)
+            {
+                return NotFound();
+            }
 
             var gameDto = new GameDTO
             {
@@ -95,28 +127,77 @@ namespace capstone_project.Controllers
                 QuantityAvail = game.QuantityAvail,
                 PegiId = game.Pegi.PegiId,
                 RestrictionIds = game.Restrictions.Select(r => r.RestrictionId).ToList(),
-                CategoryIds = game.Categories.Select(c => c.CategoryId).ToList()
+                CategoryIds = game.Categories.Select(c => c.CategoryId).ToList(),
+                GameImages = game.GameImages.Select(img => new GameImageDTO
+                {
+                    Img = img.Img,
+                    ImgType = img.ImgType
+                }).ToList()
             };
 
             PopulateViewBags();
-            return View(gameDto); // Passa il GameDTO alla vista
+            return View(gameDto);
         }
-
 
         // POST: /Game/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, GameDTO gameDto)
+        public async Task<IActionResult> Edit(GameDTO gameDto, List<ImageUpload> images)
         {
-
-            if (ModelState.IsValid)
+            // Validate image extensions
+            foreach (var imageUpload in images)
             {
-                var updatedGame = await _gameSvc.UpdateGameAsync(id, gameDto);
+                if (imageUpload.ImageFile != null && imageUpload.ImageFile.Length > 0)
+                {
+                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+                    var extension = Path.GetExtension(imageUpload.ImageFile.FileName).ToLower();
 
-                return RedirectToAction("List"); // Dopo l'aggiornamento, ritorna alla lista dei giochi
+                    if (!allowedExtensions.Contains(extension))
+                    {
+                        ModelState.AddModelError("GameImages", "Sono consentiti solo file JPG e PNG.");
+                        continue;
+                    }
+
+                    using (var memoryStream = new MemoryStream())
+                    {
+                        await imageUpload.ImageFile.CopyToAsync(memoryStream);
+                        var imgType = Enum.Parse<ImageType>(imageUpload.ImgType);
+
+                        var existingImage = gameDto.GameImages.FirstOrDefault(img => img.ImgType == imgType);
+
+                        if (existingImage != null)
+                        {
+                            existingImage.Img = memoryStream.ToArray();
+                        }
+                        else
+                        {
+                            gameDto.GameImages.Add(new GameImageDTO
+                            {
+                                Img = memoryStream.ToArray(),
+                                ImgType = imgType
+                            });
+                        }
+                    }
+                }
             }
-            PopulateViewBags();
-            return View(gameDto); // Se ci sono errori di validazione, ritorna al form di modifica
+
+            if (!ModelState.IsValid)
+            {
+                PopulateViewBags();
+                return View(gameDto);
+            }
+
+            try
+            {
+                await _gameSvc.UpdateGameAsync(gameDto);
+                return RedirectToAction("List");
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                PopulateViewBags();
+                return View(gameDto);
+            }
         }
 
         // GET: /Game/Delete/5
@@ -124,17 +205,16 @@ namespace capstone_project.Controllers
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
 
-            return View(game); // Mostra la vista di conferma dell'eliminazione con i dettagli del gioco
+            return View(game);
         }
-
         // POST: /Game/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var success = await _gameSvc.DeleteGameAsync(id);
+            await _gameSvc.DeleteGameAsync(id);
 
-            return RedirectToAction("List"); // Dopo l'eliminazione, ritorna alla lista dei giochi
+            return RedirectToAction("List");
         }
 
     }
