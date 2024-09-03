@@ -102,7 +102,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var success = await _categorySvc.DeleteCategoryAsync(id);
+            await _categorySvc.DeleteCategoryAsync(id);
             return RedirectToAction("List"); // Return to the list after deletion
         }
     }
