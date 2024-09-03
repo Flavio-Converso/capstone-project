@@ -1,7 +1,11 @@
 using capstone_project.Data;
 using capstone_project.Interfaces;
+using capstone_project.Interfaces.Auth;
 using capstone_project.Services;
+using capstone_project.Services.Auth;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -9,27 +13,27 @@ var builder = WebApplication.CreateBuilder(args);
 var conn = builder.Configuration.GetConnectionString("DB");
 builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer(conn));
 
-//todo
-////AUTH
-//builder.Services
-//    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-//    .AddCookie(options =>
-//    {
-//        options.LoginPath = "/Auth/Login";
-//        options.AccessDeniedPath = "/Home/AccessDenied";  //todo
-//        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-//    });
 
-//todo
-//POLICIES 
-//builder.Services.AddAuthorization(options =>
-//{
-//    // Master Policy
-//    options.AddPolicy("MasterPolicy", policy =>
-//    {
-//        policy.RequireClaim(ClaimTypes.Role, "master"); // [Authorize(Policy = "MasterPolicy")]
-//    });
-//});
+////AUTH
+builder.Services
+    .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/Auth/Login";
+        options.AccessDeniedPath = "/Home/AccessDenied";  //todo
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    });
+
+
+//POLICIES
+builder.Services.AddAuthorization(options =>
+{
+    // Master Policy
+    options.AddPolicy("MasterPolicy", policy =>
+    {
+        policy.RequireClaim(ClaimTypes.Role, "master"); // [Authorize(Policy = "MasterPolicy")]
+    });
+});
 
 
 // Add services to the container.
@@ -40,7 +44,9 @@ builder.Services
     .AddScoped<ICategoryService, CategoryService>()
     .AddScoped<IPegiService, PegiService>()
     .AddScoped<IRestrictionService, RestrictionService>()
-    .AddScoped<IGameService, GameService>();
+    .AddScoped<IGameService, GameService>()
+    .AddScoped<IAuthService, AuthService>()
+    .AddScoped<IPasswordHelper, PasswordHelper>();
 
 var app = builder.Build();
 
@@ -58,7 +64,7 @@ app.UseStaticFiles();
 app.UseRouting();
 
 
-//app.UseAuthentication();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
