@@ -101,6 +101,9 @@ namespace capstone_project.Controllers
                 if (!allowedExtensions.Contains(extension))
                 {
                     ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
+
+                    ModelState.Remove("ImgByte");
+                    dto.ImgByte = (await _pegiSvc.GetPegiById(dto.PegiId))?.Img;
                 }
             }
 
@@ -133,7 +136,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var success = await _pegiSvc.DeletePegiAsync(id);
+            await _pegiSvc.DeletePegiAsync(id);
 
             return RedirectToAction("List"); // Dopo l'eliminazione, ritorna alla lista dei giochi
         }

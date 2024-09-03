@@ -32,21 +32,24 @@ namespace capstone_project.Services
             var pegi = new Pegi
             {
                 Name = dto.Name,
-                Img = imageBytes,
+                Img = imageBytes!,
                 Description = dto.Description,
             };
             await _ctx.Pegis.AddAsync(pegi);
             await _ctx.SaveChangesAsync();
             return dto;
         }
+
         public async Task<IEnumerable<Pegi>> GetAllPegiAsync()
         {
-            return await _ctx.Pegis.ToListAsync();
+            var pegis = await _ctx.Pegis.ToListAsync();
+            return pegis;
         }
 
         public async Task<Pegi> GetPegiById(int id)
         {
-            return await _ctx.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
+            var pegi = await _ctx.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
+            return pegi!;
         }
 
         public async Task<PegiDTO> UpdatePegiAsync(PegiDTO dto)
@@ -73,6 +76,7 @@ namespace capstone_project.Services
             await _ctx.SaveChangesAsync();
             return dto;
         }
+
         public async Task<bool> DeletePegiAsync(int id)
         {
             var pegi = await _ctx.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
