@@ -34,6 +34,7 @@ namespace capstone_project.Controllers
                 if (!allowedExtensions.Contains(extension))
                 {
                     ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
+
                 }
             }
             else
@@ -98,6 +99,9 @@ namespace capstone_project.Controllers
                 if (!allowedExtensions.Contains(extension))
                 {
                     ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
+                    // Mantieni l'immagine attuale nella vista se il file non è valido
+                    ModelState.Remove("ImgByte");  // Rimuove il valore nullo dal model binding
+                    dto.ImgByte = (await _restrictionSvc.GetRestrictionById(dto.RestrictionId))?.Img;
                 }
             }
 
@@ -130,7 +134,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var success = await _restrictionSvc.DeleteRestrictionAsync(id);
+            await _restrictionSvc.DeleteRestrictionAsync(id);
 
             return RedirectToAction("List"); // Dopo l'eliminazione, ritorna alla lista dei giochi
         }

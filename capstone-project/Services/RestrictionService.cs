@@ -44,12 +44,14 @@ namespace capstone_project.Services
 
         public async Task<IEnumerable<Restriction>> GetAllRestrictionAsync()
         {
-            return await _ctx.Restrictions.ToListAsync();
+            var restrictions = await _ctx.Restrictions.ToListAsync();
+            return restrictions;
         }
 
         public async Task<Restriction> GetRestrictionById(int id)
         {
-            return await _ctx.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == id);
+            var restriction = await _ctx.Restrictions.FirstOrDefaultAsync(r => r.RestrictionId == id);
+            return restriction!;
         }
 
         public async Task<RestrictionDTO> UpdateRestrictionAsync(RestrictionDTO dto)
