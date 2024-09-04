@@ -5,18 +5,21 @@ using capstone_project.Models;
 using capstone_project.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Security.Claims;
 
 namespace capstone_project.Controllers
 {
     public class GameController : Controller
     {
         private readonly IGameService _gameSvc;
+        private readonly IWishlistService _wishlistSvc;
         private readonly DataContext _ctx;
 
-        public GameController(IGameService gameService, DataContext context)
+        public GameController(IGameService gameService, IWishlistService wishlistService, DataContext context)
         {
             _gameSvc = gameService;
             _ctx = context;
+            _wishlistSvc = wishlistService;
         }
         private void PopulateViewBags()
         {
@@ -94,6 +97,14 @@ namespace capstone_project.Controllers
         public async Task<IActionResult> List()
         {
             var games = await _gameSvc.GetAllGamesAsync();
+
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+
+            var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
+            var wishlistGameIds = wishlistItems.Select(w => w.GameId).ToList();
+
+            ViewBag.WishlistGameIds = wishlistGameIds;
             return View(games);
         }
 
@@ -102,18 +113,20 @@ namespace capstone_project.Controllers
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
 
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+            var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
+            var isInWishlist = wishlistItems.Any(w => w.GameId == id);
+
+            ViewBag.IsInWishlist = isInWishlist;
+
             return View(game);
         }
-
 
         // GET: /Game/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
-            if (game == null)
-            {
-                return NotFound();
-            }
 
             var gameDto = new GameDTO
             {
@@ -215,6 +228,58 @@ namespace capstone_project.Controllers
             await _gameSvc.DeleteGameAsync(id);
 
             return RedirectToAction("List");
+        }
+
+        // GET: /Game/Wishlist
+        public async Task<IActionResult> Wishlist()
+        {
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+            var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
+            return View(wishlistItems);
+        }
+
+        // POST: /Game/AddToWishlist
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToWishlist(int gameId, string source)
+        {
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+            await _wishlistSvc.AddGameToWishlistAsync(userId, gameId);
+
+            switch (source)
+            {
+                case "List":
+                    return RedirectToAction("List");
+                case "Details":
+                    return RedirectToAction("Details", new { id = gameId });
+                default:
+                    return RedirectToAction("List");
+            }
+        }
+
+
+        // POST: /Game/RemoveFromWishlist
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveFromWishlist(int gameId, string source)
+        {
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+            await _wishlistSvc.RemoveGameFromWishlistAsync(userId, gameId);
+
+            switch (source)
+            {
+                case "List":
+                    return RedirectToAction("List");
+                case "Wishlist":
+                    return RedirectToAction("Wishlist");
+                case "Details":
+                    return RedirectToAction("Details", new { id = gameId });
+                default:
+                    return RedirectToAction("List");
+            }
         }
 
     }

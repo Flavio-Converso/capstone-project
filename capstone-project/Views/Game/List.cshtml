@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = "Lista Giochi";
+    var wishlistGameIds = ViewBag.WishlistGameIds as List<int> ?? new List<int>();
 }
 
 <h2>Lista Giochi</h2>
@@ -9,7 +10,7 @@
 <table class="table">
     <thead>
         <tr>
-            <th>Copertina</th> <!-- New column for the cover image -->
+            <th>Copertina</th>
             <th>Nome</th>
             <th>Piattaforma</th>
             <th>Prezzo</th>
@@ -24,12 +25,11 @@
                 <td>
                     @if (game.GameImages != null && game.GameImages.Any())
                     {
-                        // Using integer comparison for ImgType
                         var coverImage = game.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
                         if (coverImage != null)
                         {
                             var base64Image = Convert.ToBase64String(coverImage.Img);
-                            var imgSrc = $"data:image/png;base64,{base64Image}"; // Assuming the image is a PNG
+                            var imgSrc = $"data:image/png;base64,{base64Image}";
                             <img src="@imgSrc" alt="@game.Name Cover" style="width:100px;height:auto;" />
                         }
                         else
@@ -50,6 +50,26 @@
                     <a asp-action="Details" asp-route-id="@game.GameId" class="btn btn-info">Dettagli</a>
                     <a asp-action="Edit" asp-route-id="@game.GameId" class="btn btn-primary">Modifica</a>
                     <a asp-action="Delete" asp-route-id="@game.GameId" class="btn btn-danger">Elimina</a>
+                    @if (wishlistGameIds.Contains(game.GameId))
+                    {
+                        <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="gameId" value="@game.GameId" />
+                            <input type="hidden" name="source" value="List" />
+                            <button type="submit" class="btn btn-danger">Rimuovi dalla Wishlist</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <form asp-action="AddToWishlist" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="gameId" value="@game.GameId" />
+                            <input type="hidden" name="source" value="List" />
+                            <button type="submit" class="btn btn-warning">Aggiungi alla Wishlist</button>
+                        </form>
+                    }
+
+
                 </td>
             </tr>
         }

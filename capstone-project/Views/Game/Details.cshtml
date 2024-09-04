@@ -190,3 +190,23 @@
 <a asp-action="List" class="btn btn-secondary">Indietro alla Lista</a>
 <a asp-action="Edit" asp-route-id="@Model.GameId" class="btn btn-primary">Modifica</a>
 <a asp-action="Delete" asp-route-id="@Model.GameId" class="btn btn-danger">Elimina</a>
+@if (ViewBag.IsInWishlist)
+{
+    <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="gameId" value="@Model.GameId" />
+        <input type="hidden" name="source" value="Details" />
+        <button type="submit" class="btn btn-danger">Rimuovi dalla Wishlist</button>
+    </form>
+}
+else
+{
+    <form asp-action="AddToWishlist" method="post" style="display:inline;">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="gameId" value="@Model.GameId" />
+        <input type="hidden" name="source" value="Details" />
+        <button type="submit" class="btn btn-warning">Aggiungi alla Wishlist</button>
+    </form>
+}
+
+

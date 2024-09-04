@@ -1,0 +1,49 @@
+﻿@model IEnumerable<capstone_project.Models.DTOs.WishlistItemDTO>
+
+@{
+    ViewBag.Title = "Your Wishlist";
+}
+
+<h2>Your Wishlist</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>Cover</th>
+            <th>Name</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @if (item.CoverImage != null)
+                    {
+                        var base64Image = Convert.ToBase64String(item.CoverImage);
+                        var imgSrc = $"data:image/png;base64,{base64Image}"; // Assuming the image is a PNG
+                        <img src="@imgSrc" alt="@item.GameName Cover" style="width:100px;height:auto;" />
+                    }
+                    else
+                    {
+                        <span>No cover image</span>
+                    }
+                </td>
+                <td>@item.GameName</td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@item.GameId" class="btn btn-info">View Details</a>
+                    <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="gameId" value="@item.GameId" />
+                        <input type="hidden" name="source" value="Wishlist" />
+                        <button type="submit" class="btn btn-danger">Rimuovi dalla Wishlist</button>
+                    </form>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<a asp-action="List" class="btn btn-secondary">Back to Games List</a>
