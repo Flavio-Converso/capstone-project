@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Delete";
+    string base64Image = Model.Img != null ? Convert.ToBase64String(Model.Img) : string.Empty;
+    string imgSrc = !string.IsNullOrEmpty(base64Image) ? $"data:image/png;base64,{base64Image}" : "";
 }
 
 <h1>Delete</h1>
@@ -17,12 +19,21 @@
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Name)
         </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Img)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Img)
+            @if (!string.IsNullOrEmpty(imgSrc))
+            {
+                <img src="@imgSrc" alt="Restriction Image" style="max-width:200px; max-height:200px;" />
+            }
+            else
+            {
+                <span>No Image Available</span>
+            }
         </dd>
+
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Description)
         </dt>
