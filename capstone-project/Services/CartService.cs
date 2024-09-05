@@ -2,6 +2,7 @@
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs;
+using capstone_project.Models.DTOs.Cart;
 using Microsoft.EntityFrameworkCore;
 
 namespace capstone_project.Services

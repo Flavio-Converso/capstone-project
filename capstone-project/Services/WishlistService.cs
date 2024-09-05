@@ -1,7 +1,7 @@
 ﻿using capstone_project.Data;
 using capstone_project.Interfaces;
 using capstone_project.Models;
-using capstone_project.Models.DTOs;
+using capstone_project.Models.DTOs.Wishlist;
 using Microsoft.EntityFrameworkCore;
 
 namespace capstone_project.Services

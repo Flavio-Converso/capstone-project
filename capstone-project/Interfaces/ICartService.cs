@@ -1,4 +1,4 @@
-﻿using capstone_project.Models.DTOs;
+﻿using capstone_project.Models.DTOs.Cart;
 
 namespace capstone_project.Interfaces
 {

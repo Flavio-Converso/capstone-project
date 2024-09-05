@@ -16,6 +16,6 @@ namespace capstone_project.Models.DTOs
         public string? Description { get; set; }
 
         //EF REFERENCES
-        public List<Game> Games { get; set; } = [];
+        // public List<Game> Games { get; set; } = [];
     }
 }

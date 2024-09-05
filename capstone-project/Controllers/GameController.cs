@@ -3,7 +3,7 @@ using capstone_project.Data;
 using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
-using capstone_project.Models.DTOs;
+using capstone_project.Models.DTOs.Game;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
 namespace capstone_project.Models.DTOs
 {
     public class CategoryDTO
@@ -13,8 +12,8 @@ namespace capstone_project.Models.DTOs
 
 
         // EF REFERENCES
-        public List<User> Users { get; set; } = [];
+        // public List<User> Users { get; set; } = [];
 
-        public List<Game> Games { get; set; } = [];
+        // public List<Game> Games { get; set; } = [];
     }
 }

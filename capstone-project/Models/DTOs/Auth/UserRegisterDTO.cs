@@ -4,7 +4,7 @@ namespace capstone_project.Models.DTOs.Auth
 {
     public class UserRegisterDTO
     {
-        public int UserId { get; set; }
+        // public int UserId { get; set; }
 
         [Required(ErrorMessage = "Il nome utente è obbligatorio.")]
         [MaxLength(50, ErrorMessage = "Il nome utente non può superare i 50 caratteri.")]
@@ -59,11 +59,11 @@ namespace capstone_project.Models.DTOs.Auth
         [Required(ErrorMessage = "Il genere è obbligatorio.")]
         public required Gender Gender { get; set; }
 
-        public byte[]? ProfileImg { get; set; }
+        // public byte[]? ProfileImg { get; set; }
         public IFormFile? Img { get; set; }
 
         // EF REFERENCES 
-        public List<Role> Roles { get; set; } = [];
+        // public List<Role> Roles { get; set; } = [];
         public List<int> SelectedCategories { get; set; } = [];
     }
 }

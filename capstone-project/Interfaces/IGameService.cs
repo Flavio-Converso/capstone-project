@@ -1,5 +1,5 @@
 ﻿using capstone_project.Models;
-using capstone_project.Models.DTOs;
+using capstone_project.Models.DTOs.Game;
 
 namespace capstone_project.Interfaces
 {
