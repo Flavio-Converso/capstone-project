@@ -13,13 +13,15 @@ namespace capstone_project.Controllers
     {
         private readonly IGameService _gameSvc;
         private readonly IWishlistService _wishlistSvc;
+        private readonly ICartService _cartSvc;
         private readonly DataContext _ctx;
 
-        public GameController(IGameService gameService, IWishlistService wishlistService, DataContext context)
+        public GameController(IGameService gameService, IWishlistService wishlistService, ICartService cartService, DataContext context)
         {
             _gameSvc = gameService;
-            _ctx = context;
             _wishlistSvc = wishlistService;
+            _cartSvc = cartService;
+            _ctx = context;
         }
         private void PopulateViewBags()
         {
@@ -104,9 +106,15 @@ namespace capstone_project.Controllers
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             var wishlistGameIds = wishlistItems.Select(w => w.GameId).ToList();
 
+            var cart = await _cartSvc.GetCartByUserIdAsync(userId);
+            var cartGameIds = cart.CartItems.Select(c => c.GameId).ToList();
+
             ViewBag.WishlistGameIds = wishlistGameIds;
+            ViewBag.CartGameIds = cartGameIds;
+
             return View(games);
         }
+
 
         // GET: /Game/Details/5
         public async Task<IActionResult> Details(int id)
@@ -118,10 +126,15 @@ namespace capstone_project.Controllers
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             var isInWishlist = wishlistItems.Any(w => w.GameId == id);
 
+            var cart = await _cartSvc.GetCartByUserIdAsync(userId);
+            var cartGameIds = cart.CartItems.Select(c => c.GameId).ToList();
+
             ViewBag.IsInWishlist = isInWishlist;
+            ViewBag.CartGameIds = cartGameIds;
 
             return View(game);
         }
+
 
         // GET: /Game/Edit/5
         public async Task<IActionResult> Edit(int id)
@@ -220,6 +233,7 @@ namespace capstone_project.Controllers
 
             return View(game);
         }
+
         // POST: /Game/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
@@ -259,7 +273,6 @@ namespace capstone_project.Controllers
             }
         }
 
-
         // POST: /Game/RemoveFromWishlist
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -282,5 +295,63 @@ namespace capstone_project.Controllers
             }
         }
 
+        // GET: /Game/Cart
+        public async Task<IActionResult> Cart()
+        {
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+            var cart = await _cartSvc.GetCartByUserIdAsync(userId);
+            return View(cart);
+        }
+
+        // POST: /Game/AddToCart
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddToCart(int gameId, string source)
+        {
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+            await _cartSvc.AddGameToCartAsync(userId, gameId, 1);
+
+            switch (source)
+            {
+                case "List":
+                    return RedirectToAction("List");
+                case "Details":
+                    return RedirectToAction("Details", new { id = gameId });
+                default:
+                    return RedirectToAction("List");
+            }
+        }
+
+        // POST: /Game/RemoveFromCart
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveFromCart(int gameId, string source)
+        {
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+            await _cartSvc.RemoveGameFromCartAsync(userId, gameId);
+            return RedirectToAction("Cart");
+
+        }
+
+        // POST: /Game/UpdateCartItemQuantity
+        // POST: /Game/UpdateCartItemQuantity
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateCartItemQuantity(int gameId, int quantity)
+        {
+            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = int.Parse(userClaim!);
+
+            if (quantity < 1)
+            {
+                quantity = 1;
+            }
+
+            await _cartSvc.UpdateCartItemQuantityAsync(userId, gameId, quantity);
+            return RedirectToAction("Cart");
+        }
     }
 }

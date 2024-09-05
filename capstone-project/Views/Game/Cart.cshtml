@@ -1,0 +1,91 @@
+﻿@model capstone_project.Models.DTOs.CartDTO
+
+@{
+    ViewBag.Title = "Your Cart";
+}
+
+<h2>Your Cart</h2>
+
+@if (Model.CartItems.Any())
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Cover</th>
+                <th>Name</th>
+                <th>Price</th>
+                <th>Quantità disp.</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.CartItems)
+            {
+                <tr>
+                    <td>
+                        @if (item.CoverImage != null)
+                        {
+                            var base64Image = Convert.ToBase64String(item.CoverImage);
+                            var imgSrc = $"data:image/png;base64,{base64Image}"; // Assuming the image is a PNG
+                            <img src="@imgSrc" alt="@item.GameName Cover" style="width:100px;height:auto;" />
+                        }
+                        else
+                        {
+                            <span>No cover image</span>
+                        }
+                    </td>
+                    <td>@item.GameName</td>
+                    <td>@item.Price</td>
+                    <td>@item.QuantityAvail</td>
+                    <td>
+                        <form asp-action="UpdateCartItemQuantity" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="gameId" value="@item.GameId" />
+
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="updateQuantity(this, -1)">-</button>
+
+                            <!-- Add data-max-quantity to hold the maximum allowed quantity -->
+                            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control" style="width: 80px; text-align: center; display: inline;" data-max-quantity="@item.QuantityAvail" readonly />
+
+                            <button type="button" class="btn btn-secondary btn-sm" onclick="updateQuantity(this, 1)">+</button>
+                        </form>
+                    </td>
+
+                    <td>@(item.Quantity * item.Price)</td>
+                    <td>
+                        <form asp-action="RemoveFromCart" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="gameId" value="@item.GameId" />
+                            <input type="hidden" name="source" value="Cart" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <h3>Total: @Model.TotalPrice</h3>
+
+    <a asp-action="Cart" class="btn btn-success">Proceed to Checkout</a>
+}
+else
+{
+    <p>Your cart is empty.</p>
+}
+<script>
+    function updateQuantity(button, change) {
+        const form = button.parentElement;
+        const quantityInput = form.querySelector('input[name="quantity"]');
+        const currentQuantity = parseInt(quantityInput.value, 10);
+        const maxQuantity = parseInt(quantityInput.getAttribute('data-max-quantity'), 10);
+        const newQuantity = currentQuantity + change;
+
+        if (newQuantity >= 1 && newQuantity <= maxQuantity) {
+            quantityInput.value = newQuantity;
+            form.submit();
+        }
+    }
+</script>

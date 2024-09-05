@@ -5,6 +5,9 @@
 }
 
 <h2>Your Wishlist</h2>
+@if (Model.Any())
+{
+    
 
 <table class="table">
     <thead>
@@ -45,5 +48,9 @@
         }
     </tbody>
 </table>
-
+}
+else
+{
+    <p>Your wishlist is empty.</p>
+}
 <a asp-action="List" class="btn btn-secondary">Back to Games List</a>

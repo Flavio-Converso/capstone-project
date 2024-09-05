@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Lista Giochi";
     var wishlistGameIds = ViewBag.WishlistGameIds as List<int> ?? new List<int>();
+    var cartGameIds = ViewBag.CartGameIds as List<int> ?? new List<int>(); // List of games in the cart
 }
 
 <h2>Lista Giochi</h2>
@@ -15,6 +16,7 @@
             <th>Piattaforma</th>
             <th>Prezzo</th>
             <th>Data di Rilascio</th>
+            <th>Quantità disp.</th>
             <th>Azioni</th>
         </tr>
     </thead>
@@ -46,6 +48,7 @@
                 <td>@game.Platform</td>
                 <td>@game.Price.ToString("C")</td>
                 <td>@game.ReleaseDate.ToShortDateString()</td>
+                <td>@game.QuantityAvail</td>
                 <td>
                     <a asp-action="Details" asp-route-id="@game.GameId" class="btn btn-info">Dettagli</a>
                     <a asp-action="Edit" asp-route-id="@game.GameId" class="btn btn-primary">Modifica</a>
@@ -69,7 +72,19 @@
                         </form>
                     }
 
-
+                    @if (cartGameIds.Contains(game.GameId))
+                    {
+                        <button class="btn btn-secondary" disabled>Nel Carrello</button>
+                    }
+                    else
+                    {
+                        <form asp-action="AddToCart" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="gameId" value="@game.GameId" />
+                            <input type="hidden" name="source" value="List" />
+                            <button type="submit" class="btn btn-success">Aggiungi al Carrello</button>
+                        </form>
+                    }
                 </td>
             </tr>
         }

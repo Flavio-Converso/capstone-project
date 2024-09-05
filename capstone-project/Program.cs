@@ -46,6 +46,7 @@ builder.Services
     .AddScoped<IRestrictionService, RestrictionService>()
     .AddScoped<IGameService, GameService>()
     .AddScoped<IWishlistService, WishlistService>()
+    .AddScoped<ICartService, CartService>()
     .AddScoped<IAuthService, AuthService>()
     .AddScoped<IPasswordHelper, PasswordHelper>();
 

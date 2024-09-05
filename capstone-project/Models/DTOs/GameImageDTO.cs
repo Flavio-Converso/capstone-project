@@ -2,7 +2,7 @@
 {
     public class GameImageDTO
     {
-        public byte[] Img { get; set; }
+        public byte[]? Img { get; set; }
         public ImageType ImgType { get; set; }
     }
 }

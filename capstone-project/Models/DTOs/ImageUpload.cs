@@ -2,8 +2,8 @@
 {
     public class ImageUpload
     {
-        public IFormFile ImageFile { get; set; }
-        public string ImgType { get; set; }
+        public IFormFile? ImageFile { get; set; }
+        public string? ImgType { get; set; }
 
     }
 }

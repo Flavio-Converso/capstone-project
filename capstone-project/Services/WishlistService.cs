@@ -15,26 +15,6 @@ namespace capstone_project.Services
             _ctx = context;
         }
 
-        public async Task<WishlistDTO> GetWishlistByUserIdAsync(int userId)
-        {
-            var wishlist = await _ctx.Wishlists
-                .Include(w => w.WishlistItems)
-                .ThenInclude(wi => wi.Game)
-                .FirstOrDefaultAsync(w => w.UserId == userId);
-
-            return new WishlistDTO
-            {
-                WishlistId = wishlist!.WishlistId,
-                UserId = wishlist.UserId,
-                WishlistItems = wishlist.WishlistItems.Select(wi => new WishlistItemDTO
-                {
-                    WishlistItemId = wi.WishlistItemId,
-                    GameId = wi.GameId,
-                    GameName = wi.Game.Name
-                }).ToList()
-            };
-        }
-
         public async Task<WishlistDTO> AddGameToWishlistAsync(int userId, int gameId)
         {
             var wishlist = await _ctx.Wishlists
