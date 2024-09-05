@@ -1,4 +1,5 @@
 using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Interfaces.Auth;
 using capstone_project.Services;
@@ -48,7 +49,8 @@ builder.Services
     .AddScoped<IWishlistService, WishlistService>()
     .AddScoped<ICartService, CartService>()
     .AddScoped<IAuthService, AuthService>()
-    .AddScoped<IPasswordHelper, PasswordHelper>();
+    .AddScoped<IPasswordHelper, PasswordHelper>()
+    .AddScoped<IImgValidateHelper, ImgValidateHelper>();
 
 var app = builder.Build();
 

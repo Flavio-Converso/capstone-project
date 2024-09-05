@@ -1,4 +1,5 @@
 ﻿using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -10,10 +11,12 @@ namespace capstone_project.Controllers
     {
         private readonly IPegiService _pegiSvc;
         private readonly DataContext _ctx;
+        private readonly IImgValidateHelper _imgValidateHelper;
 
-        public PegiController(IPegiService pegiService, DataContext dataContext)
+        public PegiController(IPegiService pegiService, DataContext dataContext, IImgValidateHelper imgValidateHelper)
         {
             _pegiSvc = pegiService;
+            _imgValidateHelper = imgValidateHelper;
             _ctx = dataContext;
         }
 
@@ -27,20 +30,9 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(PegiDTO dto)
         {
-            if (dto.Img != null)
+            if (!_imgValidateHelper.IsValidImage(dto.Img!, out string errorMessage))
             {
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                var extension = Path.GetExtension(dto.Img.FileName).ToLower();
-
-                if (!allowedExtensions.Contains(extension))
-                {
-                    ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
-                }
-
-            }
-            else
-            {
-                ModelState.AddModelError("Img", "Devi inserire un'immagine.");
+                ModelState.AddModelError("Img", errorMessage);
             }
 
             if (!ModelState.IsValid)

@@ -1,5 +1,6 @@
 ﻿
 using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs;
@@ -15,13 +16,15 @@ namespace capstone_project.Controllers
         private readonly IWishlistService _wishlistSvc;
         private readonly ICartService _cartSvc;
         private readonly DataContext _ctx;
+        private readonly IImgValidateHelper _imgValidateHelper;
 
-        public GameController(IGameService gameService, IWishlistService wishlistService, ICartService cartService, DataContext context)
+        public GameController(IGameService gameService, IWishlistService wishlistService, ICartService cartService, DataContext context, IImgValidateHelper imgValidateHelper)
         {
             _gameSvc = gameService;
             _wishlistSvc = wishlistService;
             _cartSvc = cartService;
             _ctx = context;
+            _imgValidateHelper = imgValidateHelper;
         }
         private void PopulateViewBags()
         {
@@ -44,19 +47,9 @@ namespace capstone_project.Controllers
         {
             foreach (var imageUpload in images)
             {
-                if (imageUpload.ImageFile != null && imageUpload.ImageFile.Length > 0)
+                if (!_imgValidateHelper.IsValidImage(imageUpload.ImageFile!, out string errorMessage))
                 {
-                    var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                    var extension = Path.GetExtension(imageUpload.ImageFile.FileName).ToLower();
-
-                    if (!allowedExtensions.Contains(extension))
-                    {
-                        ModelState.AddModelError("GameImages", "Sono consentiti solo file JPG e PNG.");
-                    }
-                }
-                else
-                {
-                    ModelState.AddModelError("GameImages", "Devi inserire un'immagine di copertina.");
+                    ModelState.AddModelError("GameImages", errorMessage);
                 }
             }
 
@@ -78,7 +71,7 @@ namespace capstone_project.Controllers
                             gameDto.GameImages.Add(new GameImageDTO
                             {
                                 Img = memoryStream.ToArray(),
-                                ImgType = Enum.Parse<ImageType>(imageUpload.ImgType)
+                                ImgType = Enum.Parse<ImageType>(imageUpload.ImgType!)
                             });
                         }
                     }

@@ -1,4 +1,5 @@
 ﻿using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces.Auth;
 using capstone_project.Models;
 using capstone_project.Models.DTOs.Auth;

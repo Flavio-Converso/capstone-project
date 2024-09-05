@@ -1,4 +1,5 @@
 ﻿using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +11,13 @@ namespace capstone_project.Controllers
     {
         private readonly IRestrictionService _restrictionSvc;
         private readonly DataContext _ctx;
+        private readonly IImgValidateHelper _imgValidateHelper;
 
-        public RestrictionController(IRestrictionService restrictionService, DataContext dataContext)
+        public RestrictionController(IRestrictionService restrictionService, DataContext dataContext, IImgValidateHelper imgValidateHelper)
         {
             _restrictionSvc = restrictionService;
             _ctx = dataContext;
+            _imgValidateHelper = imgValidateHelper;
         }
 
         public IActionResult Create()
@@ -26,20 +29,9 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(RestrictionDTO dto)
         {
-            if (dto.Img != null)
+            if (!_imgValidateHelper.IsValidImage(dto.Img!, out string errorMessage))
             {
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                var extension = Path.GetExtension(dto.Img.FileName).ToLower();
-
-                if (!allowedExtensions.Contains(extension))
-                {
-                    ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
-
-                }
-            }
-            else
-            {
-                ModelState.AddModelError("Img", "Devi inserire un'immagine.");
+                ModelState.AddModelError("Img", errorMessage);
             }
 
             if (!ModelState.IsValid)
