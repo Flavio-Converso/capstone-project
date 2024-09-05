@@ -180,7 +180,7 @@ namespace capstone_project.Controllers
                     using (var memoryStream = new MemoryStream())
                     {
                         await imageUpload.ImageFile.CopyToAsync(memoryStream);
-                        var imgType = Enum.Parse<ImageType>(imageUpload.ImgType);
+                        var imgType = Enum.Parse<ImageType>(imageUpload.ImgType!);
 
                         var existingImage = gameDto.GameImages.FirstOrDefault(img => img.ImgType == imgType);
 
@@ -329,7 +329,6 @@ namespace capstone_project.Controllers
 
         }
 
-        // POST: /Game/UpdateCartItemQuantity
         // POST: /Game/UpdateCartItemQuantity
         [HttpPost]
         [ValidateAntiForgeryToken]

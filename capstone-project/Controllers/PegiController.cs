@@ -85,18 +85,12 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(PegiDTO dto)
         {
-            if (dto.Img != null)
+            if (dto.Img != null && !_imgValidateHelper.IsValidImage(dto.Img, out string errorMessage))
             {
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                var extension = Path.GetExtension(dto.Img.FileName).ToLower();
+                ModelState.AddModelError("Img", errorMessage);
+                ModelState.Remove("ImgByte");
 
-                if (!allowedExtensions.Contains(extension))
-                {
-                    ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
-
-                    ModelState.Remove("ImgByte");
-                    dto.ImgByte = (await _pegiSvc.GetPegiById(dto.PegiId))?.Img;
-                }
+                dto.ImgByte = await _imgValidateHelper.HandleInvalidImageForPegiEditAsync(dto.Img, _pegiSvc, dto.PegiId);
             }
 
             if (!ModelState.IsValid)
@@ -121,7 +115,7 @@ namespace capstone_project.Controllers
         {
             var pegi = await _pegiSvc.GetPegiById(id);
 
-            return View(pegi); // Mostra la vista di conferma dell'eliminazione con i dettagli del gioco
+            return View(pegi);
         }
         // POST: /Pegi/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -130,7 +124,7 @@ namespace capstone_project.Controllers
         {
             await _pegiSvc.DeletePegiAsync(id);
 
-            return RedirectToAction("List"); // Dopo l'eliminazione, ritorna alla lista dei giochi
+            return RedirectToAction("List");
         }
     }
 }

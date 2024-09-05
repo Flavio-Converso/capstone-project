@@ -1,4 +1,6 @@
-﻿namespace capstone_project.Helpers
+﻿using capstone_project.Interfaces;
+
+namespace capstone_project.Helpers
 {
     public class ImgValidateHelper : IImgValidateHelper
     {
@@ -23,6 +25,25 @@
             }
 
             return true;
+        }
+        public async Task<byte[]> HandleInvalidImageForPegiEditAsync(IFormFile file, IPegiService pegiService, int pegiId)
+        {
+            if (!IsValidImage(file, out _))
+            {
+                var existingPegiImg = (await pegiService.GetPegiById(pegiId))?.Img;
+                return existingPegiImg!;
+            }
+            return null!;
+        }
+
+        public async Task<byte[]> HandleInvalidImageForRestrictionEditAsync(IFormFile file, IRestrictionService restrictionService, int restrictionId)
+        {
+            if (!IsValidImage(file, out _))
+            {
+                var existingRestrictionImg = (await restrictionService.GetRestrictionById(restrictionId))?.Img;
+                return existingRestrictionImg!;
+            }
+            return null!;
         }
     }
 }

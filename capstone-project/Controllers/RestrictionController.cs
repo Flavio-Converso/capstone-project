@@ -71,7 +71,7 @@ namespace capstone_project.Controllers
             var restriction = await _ctx.Restrictions.FirstOrDefaultAsync(p => p.RestrictionId == id);
             var dto = new RestrictionDTO
             {
-                RestrictionId = restriction.RestrictionId,
+                RestrictionId = restriction!.RestrictionId,
                 Name = restriction.Name,
                 Description = restriction.Description,
                 ImgByte = restriction.Img,
@@ -83,18 +83,12 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(RestrictionDTO dto)
         {
-            if (dto.Img != null)
+            if (dto.Img != null && !_imgValidateHelper.IsValidImage(dto.Img, out string errorMessage))
             {
-                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
-                var extension = Path.GetExtension(dto.Img.FileName).ToLower();
+                ModelState.AddModelError("Img", errorMessage);
+                ModelState.Remove("ImgByte");
 
-                if (!allowedExtensions.Contains(extension))
-                {
-                    ModelState.AddModelError("Img", "Sono consentiti solo file JPG e PNG.");
-                    // Mantieni l'immagine attuale nella vista se il file non è valido
-                    ModelState.Remove("ImgByte");  // Rimuove il valore nullo dal model binding
-                    dto.ImgByte = (await _restrictionSvc.GetRestrictionById(dto.RestrictionId))?.Img;
-                }
+                dto.ImgByte = await _imgValidateHelper.HandleInvalidImageForRestrictionEditAsync(dto.Img, _restrictionSvc, dto.RestrictionId);
             }
 
             if (!ModelState.IsValid)
@@ -119,7 +113,7 @@ namespace capstone_project.Controllers
         {
             var restriction = await _restrictionSvc.GetRestrictionById(id);
 
-            return View(restriction); // Mostra la vista di conferma dell'eliminazione con i dettagli del gioco
+            return View(restriction);
         }
         // POST: /Restriction/Delete/5
         [HttpPost, ActionName("Delete")]
@@ -128,7 +122,7 @@ namespace capstone_project.Controllers
         {
             await _restrictionSvc.DeleteRestrictionAsync(id);
 
-            return RedirectToAction("List"); // Dopo l'eliminazione, ritorna alla lista dei giochi
+            return RedirectToAction("List");
         }
     }
 }
