@@ -90,14 +90,13 @@
         }
     </div>
 
-    <!-- Upload New Images -->
     <h4>Carica nuove immagini (sostituisci)</h4>
     <div id="imageUploadSection">
         <div class="form-group image-upload-group">
             <label>Carica Immagine</label>
             <input type="file" name="images[0].ImageFile" class="form-control-file" accept=".jpg,.jpeg,.png" />
-
-            <label>Tipo di Immagine</label>
+            <span asp-validation-for="GameImages" class="text-danger"></span>
+            <h6>Tipo di Immagine</h6>
             <select name="images[0].ImgType" class="form-control">
                 <option value="Cover">Cover</option>
                 <option value="Screenshot">Screenshot</option>
