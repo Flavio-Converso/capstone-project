@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using capstone_project.Data;
 
@@ -11,9 +12,11 @@ using capstone_project.Data;
 namespace capstone_project.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240904150423_new")]
+    partial class @new
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -676,7 +679,7 @@ namespace capstone_project.Migrations
             modelBuilder.Entity("capstone_project.Models.ReviewLike", b =>
                 {
                     b.HasOne("capstone_project.Models.Review", "Review")
-                        .WithMany("ReviewLikes")
+                        .WithMany()
                         .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -732,11 +735,6 @@ namespace capstone_project.Migrations
                     b.Navigation("GameImages");
 
                     b.Navigation("Reviews");
-                });
-
-            modelBuilder.Entity("capstone_project.Models.Review", b =>
-                {
-                    b.Navigation("ReviewLikes");
                 });
 
             modelBuilder.Entity("capstone_project.Models.Wishlist", b =>

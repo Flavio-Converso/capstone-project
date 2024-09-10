@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using capstone_project.Data;
 
@@ -11,9 +12,11 @@ using capstone_project.Data;
 namespace capstone_project.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20240904154559_up")]
+    partial class up
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -365,12 +368,17 @@ namespace capstone_project.Migrations
                     b.Property<int>("ReviewId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ReviewId1")
+                        .HasColumnType("int");
+
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
                     b.HasKey("ReviewLikeId");
 
                     b.HasIndex("ReviewId");
+
+                    b.HasIndex("ReviewId1");
 
                     b.HasIndex("UserId");
 
@@ -676,10 +684,14 @@ namespace capstone_project.Migrations
             modelBuilder.Entity("capstone_project.Models.ReviewLike", b =>
                 {
                     b.HasOne("capstone_project.Models.Review", "Review")
-                        .WithMany("ReviewLikes")
+                        .WithMany()
                         .HasForeignKey("ReviewId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("capstone_project.Models.Review", null)
+                        .WithMany("ReviewLikes")
+                        .HasForeignKey("ReviewId1");
 
                     b.HasOne("capstone_project.Models.User", "User")
                         .WithMany()
