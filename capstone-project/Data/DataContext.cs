@@ -20,6 +20,7 @@ namespace capstone_project.Data
         public virtual DbSet<Wishlist> Wishlists { get; set; }
         public virtual DbSet<WishlistItem> WishlistItems { get; set; }
         public virtual DbSet<ReviewLike> ReviewLikes { get; set; }
+        public virtual DbSet<OrderSummary> OrderSummaries { get; set; }
 
         public DataContext(DbContextOptions<DataContext> opt) : base(opt)
         {
