@@ -79,6 +79,10 @@ namespace capstone_project.Services
                 .Include(g => g.Restrictions)
                 .Include(g => g.Categories)
                 .Include(g => g.GameImages)
+                .Include(g => g.Reviews)
+                .ThenInclude(r => r.User)
+                .Include(g => g.Reviews)
+                .ThenInclude(r => r.ReviewLikes)
                 .FirstOrDefaultAsync(g => g.GameId == gameId);
             return game!;
         }

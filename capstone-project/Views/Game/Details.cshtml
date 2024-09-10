@@ -189,11 +189,54 @@
             }
         </dd>
     </dl>
+    <div>
+        <h3>Recensioni</h3>
+        <ul>
+            @if (Model.Reviews != null && Model.Reviews.Count > 0)
+            {
+                @foreach (var review in Model.Reviews)
+                {
+                    <li>
+                        <strong>@review.User.Username:</strong> @review.Title
+                        <p>@review.Content</p>
+                        <span>Data: @review.Date.ToShortDateString()</span><br />
+                        <span>Valutazione: @review.Rating</span><br />
+                        <span>Likes: <span class="like-count" data-review-id="@review.ReviewId">0</span></span>
+                        <button class="btn btn-primary like-button" data-review-id="@review.ReviewId">Like</button>
+                        <hr />
+                    </li>
+                }
+            }
+            else
+            {
+                <p>Nessuna recensione.</p>
+            }
+        </ul>
+
+        <h4>Aggiungi una recensione</h4>
+        <form asp-action="CreateReview" asp-controller="Review" method="post">
+            <div class="form-group">
+                <label for="Title">Titolo</label>
+                <input id="Title" name="Title" class="form-control" required maxlength="100" />
+            </div>
+            <div class="form-group">
+                <label for="Rating">Valutazione</label>
+                <input id="Rating" name="Rating" type="number" class="form-control" required min="0" max="5" step="0.1" />
+            </div>
+            <div class="form-group">
+                <label for="Content">Commento</label>
+                <textarea id="Content" name="Content" class="form-control" required maxlength="2000"></textarea>
+            </div>
+            <input type="hidden" name="GameId" value="@Model.GameId" />
+            <button type="submit" class="btn btn-primary">Invia</button>
+        </form>
+    </div>
 </div>
 
 <a asp-action="List" class="btn btn-secondary">Indietro alla Lista</a>
 <a asp-action="Edit" asp-route-id="@Model.GameId" class="btn btn-primary">Modifica</a>
 <a asp-action="Delete" asp-route-id="@Model.GameId" class="btn btn-danger">Elimina</a>
+
 @if (ViewBag.IsInWishlist)
 {
     <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
@@ -225,3 +268,44 @@ else
         <button type="submit" class="btn btn-success">Aggiungi al carrello</button>
     </form>
 }
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.like-button').click(function () {
+            var button = $(this);
+            var reviewId = button.data('review-id');
+
+            $.ajax({
+                url: '@Url.Action("ToggleLike", "Review")',
+                type: 'POST',
+                data: { id: reviewId },
+                success: function (response) {
+                    var likeCountSpan = $('.like-count[data-review-id="' + reviewId + '"]');
+                    likeCountSpan.text(response.likeCount);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                    alert('Si è verificato un errore durante l\'operazione di like/unlike.');
+                }
+            });
+        });
+
+        // Carica i conteggi iniziali dei like quando la pagina viene caricata
+        $('.like-count').each(function () {
+            var reviewId = $(this).data('review-id');
+            $.ajax({
+                url: '@Url.Action("GetLikeCount", "Review")',
+                type: 'GET',
+                data: { id: reviewId },
+                success: function (response) {
+                    var likeCountSpan = $('.like-count[data-review-id="' + reviewId + '"]');
+                    likeCountSpan.text(response.likeCount);
+                },
+                error: function (xhr, status, error) {
+                    console.error("AJAX Error:", status, error);
+                }
+            });
+        });
+    });
+</script>

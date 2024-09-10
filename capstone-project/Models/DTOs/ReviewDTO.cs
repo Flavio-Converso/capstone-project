@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace capstone_project.Models
+namespace capstone_project.Models.DTOs
 {
-    public class Review
+    public class ReviewDTO
     {
-        [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ReviewId { get; set; }
 
         [Required, MaxLength(100)]
@@ -20,15 +19,17 @@ namespace capstone_project.Models
         [Required, Range(0.0, 5.0)]
         public required decimal Rating { get; set; }
 
+        [Required, Range(0, int.MaxValue)]
+        public required int Likes { get; set; }
+
         // EF REFERENCES
-
-
-        public int GameId { get; set; }
-        [ForeignKey("GameId")]
-        public required Game Game { get; set; }
         public int UserId { get; set; }
         [ForeignKey("UserId")]
         public required User User { get; set; }
+
+        public int GameId { get; set; }
+        [ForeignKey("GameId")]
+        public required Models.Game Game { get; set; }
         public List<ReviewLike> ReviewLikes { get; set; } = [];
 
     }

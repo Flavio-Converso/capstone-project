@@ -50,6 +50,8 @@ builder.Services
     .AddScoped<ICartService, CartService>()
     .AddScoped<IAuthService, AuthService>()
     .AddScoped<IPasswordHelper, PasswordHelper>()
+    .AddScoped<IReviewService, ReviewService>()
+    .AddScoped<IReviewLikeService, ReviewLikeService>()
     .AddScoped<IImgValidateHelper, ImgValidateHelper>();
 
 var app = builder.Build();
