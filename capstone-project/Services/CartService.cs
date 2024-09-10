@@ -9,10 +9,12 @@ namespace capstone_project.Services
     public class CartService : ICartService
     {
         private readonly DataContext _ctx;
+        private readonly IGameService _gameSvc;
 
-        public CartService(DataContext context)
+        public CartService(DataContext context, IGameService gameService)
         {
             _ctx = context;
+            _gameSvc = gameService;
         }
 
         public async Task<CartDTO> GetCartByUserIdAsync(int userId)
@@ -50,10 +52,11 @@ namespace capstone_project.Services
 
             if (cart == null)
             {
+                var user = await _ctx.Users.FindAsync(userId);
                 cart = new Cart
                 {
                     UserId = userId,
-                    User = await _ctx.Users.FindAsync(userId)
+                    User = user!
                 };
                 _ctx.Carts.Add(cart);
                 await _ctx.SaveChangesAsync();
@@ -66,11 +69,12 @@ namespace capstone_project.Services
             }
             else
             {
+                var game = await _ctx.Games.FindAsync(gameId);
                 cartItem = new CartItem
                 {
                     Cart = cart,
                     GameId = gameId,
-                    Game = await _ctx.Games.FindAsync(gameId),
+                    Game = game!,
                     Quantity = quantity
                 };
                 _ctx.CartItems.Add(cartItem);
@@ -111,6 +115,69 @@ namespace capstone_project.Services
                 return true;
             }
             return false;
+        }
+
+        public async Task CompleteCheckoutAsync(int userId)
+        {
+            var cart = await _ctx.Carts
+                                 .Include(c => c.CartItems)
+                                 .ThenInclude(ci => ci.Game)
+                                 .FirstOrDefaultAsync(c => c.UserId == userId);
+
+
+            // Calculate the total amount
+            var totalAmount = cart!.CartItems.Sum(item => item.Game.Price * item.Quantity);
+
+            // Get the username
+            var user = await _ctx.Users.FindAsync(userId);
+            var username = user!.Username;
+
+            // Generate order number
+            int lastOrderNumber = await _ctx.OrderSummaries
+                                            .OrderByDescending(o => o.OrderNumber)
+                                            .Select(o => o.OrderNumber)
+                                            .FirstOrDefaultAsync();
+            int orderNumber = lastOrderNumber > 100 ? lastOrderNumber + 1 : 101;
+
+            // Concatenate game names and quantities for summary
+            var gamesOrdered = string.Join(", ", cart.CartItems.Select(item =>
+                $"{item.Game.Name} (x{item.Quantity})"));
+
+            // Create the order summary
+            var orderSummary = new OrderSummary
+            {
+                UserId = userId,
+                Username = username,
+                OrderDate = DateTime.Now,
+                TotalAmount = totalAmount,
+                GamesOrdered = gamesOrdered,
+                OrderNumber = orderNumber,
+            };
+
+            _ctx.OrderSummaries.Add(orderSummary);
+
+            // Process each item in the cart
+            foreach (var cartItem in cart.CartItems)
+            {
+                // Generate keys for each game purchased
+                await _gameSvc.GenerateGameKeysAsync(cartItem.GameId, userId, cartItem.Quantity);
+
+                // Decrease the quantity available for the game
+                var game = cartItem.Game;
+                game.QuantityAvail -= cartItem.Quantity;  // Subtract the purchased quantity from available quantity
+
+                if (game.QuantityAvail < 0)
+                {
+                    game.QuantityAvail = 0;  // Ensure quantity does not go below 0
+                }
+            }
+
+            // Clear the cart
+            _ctx.CartItems.RemoveRange(cart.CartItems);
+
+            // Save all changes to the database
+            await _ctx.SaveChangesAsync();
+
         }
     }
 }

@@ -23,8 +23,8 @@
     <tbody>
         @foreach (var game in Model)
         {
-            <tr>
-                <td>
+                <tr>
+                    <td>
                     @if (game.GameImages != null && game.GameImages.Any())
                     {
                         var coverImage = game.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
@@ -32,61 +32,70 @@
                         {
                             var base64Image = Convert.ToBase64String(coverImage.Img);
                             var imgSrc = $"data:image/png;base64,{base64Image}";
-                            <img src="@imgSrc" alt="@game.Name Cover" style="width:100px;height:auto;" />
+                                        <img src="@imgSrc" alt="@game.Name Cover" style="width:100px;height:auto;" />
                         }
                         else
                         {
-                            <span>No cover image</span>
+                                        <span>No cover image</span>
                         }
                     }
                     else
                     {
-                        <span>No cover image</span>
+                                <span>No cover image</span>
                     }
-                </td>
-                <td>@game.Name</td>
-                <td>@game.Platform</td>
-                <td>@game.Price.ToString("C")</td>
-                <td>@game.ReleaseDate.ToShortDateString()</td>
-                <td>@game.QuantityAvail</td>
-                <td>
-                    <a asp-action="Details" asp-route-id="@game.GameId" class="btn btn-info">Dettagli</a>
-                    <a asp-action="Edit" asp-route-id="@game.GameId" class="btn btn-primary">Modifica</a>
-                    <a asp-action="Delete" asp-route-id="@game.GameId" class="btn btn-danger">Elimina</a>
-                    @if (wishlistGameIds.Contains(game.GameId))
+                    </td>
+                    <td>@game.Name</td>
+                    <td>@game.Platform</td>
+                    <td>@game.Price.ToString("C")</td>
+                    <td>@game.ReleaseDate.ToShortDateString()</td>
+                    <td>
+                    @if (game.QuantityAvail > 0)
                     {
-                        <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="gameId" value="@game.GameId" />
-                            <input type="hidden" name="source" value="List" />
-                            <button type="submit" class="btn btn-danger">Rimuovi dalla Wishlist</button>
-                        </form>
+                        @game.QuantityAvail
                     }
                     else
                     {
-                        <form asp-action="AddToWishlist" method="post" style="display:inline;">
+                                <span class="text-danger">Esaurito</span>
+                    }
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@game.GameId" class="btn btn-info">Dettagli</a>
+                        <a asp-action="Edit" asp-route-id="@game.GameId" class="btn btn-primary">Modifica</a>
+                        <a asp-action="Delete" asp-route-id="@game.GameId" class="btn btn-danger">Elimina</a>
+                    @if (wishlistGameIds.Contains(game.GameId))
+                    {
+                                <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="gameId" value="@game.GameId" />
-                            <input type="hidden" name="source" value="List" />
-                            <button type="submit" class="btn btn-warning">Aggiungi alla Wishlist</button>
-                        </form>
+                                    <input type="hidden" name="gameId" value="@game.GameId" />
+                                    <input type="hidden" name="source" value="List" />
+                                    <button type="submit" class="btn btn-danger">Rimuovi dalla Wishlist</button>
+                                </form>
+                    }
+                    else
+                    {
+                                <form asp-action="AddToWishlist" method="post" style="display:inline;">
+                            @Html.AntiForgeryToken()
+                                    <input type="hidden" name="gameId" value="@game.GameId" />
+                                    <input type="hidden" name="source" value="List" />
+                                    <button type="submit" class="btn btn-warning">Aggiungi alla Wishlist</button>
+                                </form>
                     }
 
                     @if (cartGameIds.Contains(game.GameId))
                     {
-                        <button class="btn btn-secondary" disabled>Nel Carrello</button>
+                                <button class="btn btn-secondary" disabled>Nel Carrello</button>
                     }
                     else
                     {
-                        <form asp-action="AddToCart" method="post" style="display:inline;">
+                                <form asp-action="AddToCart" method="post" style="display:inline;">
                             @Html.AntiForgeryToken()
-                            <input type="hidden" name="gameId" value="@game.GameId" />
-                            <input type="hidden" name="source" value="List" />
-                            <button type="submit" class="btn btn-success">Aggiungi al Carrello</button>
-                        </form>
+                                    <input type="hidden" name="gameId" value="@game.GameId" />
+                                    <input type="hidden" name="source" value="List" />
+                                    <button type="submit" class="btn btn-success" @(game.QuantityAvail == 0 ? "disabled" : "")>Aggiungi al Carrello</button>
+                                </form>
                     }
-                </td>
-            </tr>
+                    </td>
+                </tr>
         }
     </tbody>
 </table>

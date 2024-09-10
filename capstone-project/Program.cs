@@ -49,10 +49,12 @@ builder.Services
     .AddScoped<IWishlistService, WishlistService>()
     .AddScoped<ICartService, CartService>()
     .AddScoped<IAuthService, AuthService>()
-    .AddScoped<IPasswordHelper, PasswordHelper>()
     .AddScoped<IReviewService, ReviewService>()
     .AddScoped<IReviewLikeService, ReviewLikeService>()
-    .AddScoped<IImgValidateHelper, ImgValidateHelper>();
+    .AddScoped<IStripeService, StripeService>()
+    .AddScoped<IPasswordHelper, PasswordHelper>()
+    .AddScoped<IImgValidateHelper, ImgValidateHelper>()
+    .AddScoped<IGameKeyHelper, GameKeyHelper>();
 
 var app = builder.Build();
 

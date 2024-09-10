@@ -13,5 +13,7 @@ namespace capstone_project.Interfaces
         Task<bool> UpdateGameAsync(GameDTO gameDto);
 
         Task<bool> DeleteGameAsync(int gameId);
+
+        Task GenerateGameKeysAsync(int gameId, int userId, int quantity);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs.Game;
@@ -9,10 +10,12 @@ namespace capstone_project.Services
     public class GameService : IGameService
     {
         private readonly DataContext _ctx;
+        private readonly IGameKeyHelper _gameKeyHelper;
 
-        public GameService(DataContext context)
+        public GameService(DataContext context, IGameKeyHelper gameKeyHelper)
         {
             _ctx = context;
+            _gameKeyHelper = gameKeyHelper;
         }
 
         public async Task<GameDTO> CreateGameAsync(GameDTO gameDto)
@@ -48,7 +51,7 @@ namespace capstone_project.Services
 
             game.GameImages = gameDto.GameImages.Select(imgDto => new GameImage
             {
-                Img = imgDto.Img,
+                Img = imgDto.Img!,
                 ImgType = imgDto.ImgType,
                 Game = game
             }).ToList();
@@ -153,6 +156,30 @@ namespace capstone_project.Services
             _ctx.Games.Remove(game!);
             await _ctx.SaveChangesAsync();
             return true;
+        }
+
+
+        public async Task GenerateGameKeysAsync(int gameId, int userId, int quantity)
+        {
+            var game = await _ctx.Games.FindAsync(gameId);
+            var user = await _ctx.Users.FindAsync(userId);
+
+
+            for (int i = 0; i < quantity; i++)
+            {
+                var gameKey = new GameKey
+                {
+                    GameId = gameId,
+                    UserId = userId,
+                    KeyNum = _gameKeyHelper.GenerateUniqueKey(),
+                    Game = game!,
+                    User = user!
+                };
+
+                _ctx.GameKeys.Add(gameKey);
+            }
+
+            await _ctx.SaveChangesAsync();  // Save changes to the database
         }
     }
 }
