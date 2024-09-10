@@ -19,9 +19,28 @@ namespace capstone_project.Data
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Wishlist> Wishlists { get; set; }
         public virtual DbSet<WishlistItem> WishlistItems { get; set; }
+        public virtual DbSet<ReviewLike> ReviewLikes { get; set; }
 
         public DataContext(DbContextOptions<DataContext> opt) : base(opt)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+            // Configura le relazioni con eliminazione a cascata
+            modelBuilder.Entity<ReviewLike>()
+            .HasOne(rl => rl.Review)
+            .WithMany(r => r.ReviewLikes) // Configura la relazione inversa
+            .HasForeignKey(rl => rl.ReviewId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ReviewLike>()
+                .HasOne(rl => rl.User)
+                .WithMany()
+                .HasForeignKey(rl => rl.UserId)
+                .OnDelete(DeleteBehavior.NoAction);
         }
     }
 }
