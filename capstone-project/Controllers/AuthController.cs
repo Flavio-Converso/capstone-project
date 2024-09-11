@@ -12,11 +12,11 @@ namespace capstone_project.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        private readonly DataContext _dataContext;
+        private readonly DataContext _ctx;
         public AuthController(IAuthService authService, DataContext dataContext)
         {
             _authService = authService;
-            _dataContext = dataContext;
+            _ctx = dataContext;
         }
 
         public IActionResult Login()
@@ -64,7 +64,7 @@ namespace capstone_project.Controllers
 
         public async Task<IActionResult> Register()
         {
-            var categories = await _dataContext.Categories.ToListAsync();
+            var categories = await _ctx.Categories.ToListAsync();
             ViewBag.Categories = categories;
             return View();
         }

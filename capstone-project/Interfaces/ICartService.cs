@@ -8,6 +8,7 @@ namespace capstone_project.Interfaces
         Task<CartDTO> AddGameToCartAsync(int userId, int gameId, int quantity);
         Task<bool> RemoveGameFromCartAsync(int userId, int gameId);
         Task<bool> UpdateCartItemQuantityAsync(int userId, int gameId, int newQuantity);
+        Task<string> CreateCheckoutSessionAsync(CartDTO cart, string successUrl);
         Task CompleteCheckoutAsync(int userId);
     }
 }

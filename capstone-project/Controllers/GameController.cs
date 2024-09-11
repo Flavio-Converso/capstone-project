@@ -17,17 +17,15 @@ namespace capstone_project.Controllers
         private readonly IWishlistService _wishlistSvc;
         private readonly ICartService _cartSvc;
         private readonly IImgValidateHelper _imgValidateHelper;
-        private readonly IStripeService _stripeSvc;
 
         public GameController(IGameService gameService, IWishlistService wishlistService, ICartService cartService,
-            DataContext context, IImgValidateHelper imgValidateHelper, IStripeService stripeService)
+            DataContext context, IImgValidateHelper imgValidateHelper)
         {
             _gameSvc = gameService;
             _wishlistSvc = wishlistService;
             _cartSvc = cartService;
             _ctx = context;
             _imgValidateHelper = imgValidateHelper;
-            _stripeSvc = stripeService;
         }
         private void PopulateViewBags()
         {
@@ -239,144 +237,5 @@ namespace capstone_project.Controllers
 
             return RedirectToAction("List");
         }
-
-        // GET: /Game/Wishlist
-        public async Task<IActionResult> Wishlist()
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-            var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
-            return View(wishlistItems);
-        }
-
-        // POST: /Game/AddToWishlist
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddToWishlist(int gameId, string source)
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-            await _wishlistSvc.AddGameToWishlistAsync(userId, gameId);
-
-            switch (source)
-            {
-                case "List":
-                    return RedirectToAction("List");
-                case "Details":
-                    return RedirectToAction("Details", new { id = gameId });
-                default:
-                    return RedirectToAction("List");
-            }
-        }
-
-        // POST: /Game/RemoveFromWishlist
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveFromWishlist(int gameId, string source)
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-            await _wishlistSvc.RemoveGameFromWishlistAsync(userId, gameId);
-
-            switch (source)
-            {
-                case "List":
-                    return RedirectToAction("List");
-                case "Wishlist":
-                    return RedirectToAction("Wishlist");
-                case "Details":
-                    return RedirectToAction("Details", new { id = gameId });
-                default:
-                    return RedirectToAction("List");
-            }
-        }
-
-        // GET: /Game/Cart
-        public async Task<IActionResult> Cart()
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-            var cart = await _cartSvc.GetCartByUserIdAsync(userId);
-            return View(cart);
-        }
-
-        // POST: /Game/AddToCart
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddToCart(int gameId, string source)
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-            await _cartSvc.AddGameToCartAsync(userId, gameId, 1);
-
-            switch (source)
-            {
-                case "List":
-                    return RedirectToAction("List");
-                case "Details":
-                    return RedirectToAction("Details", new { id = gameId });
-                default:
-                    return RedirectToAction("List");
-            }
-        }
-
-        // POST: /Game/RemoveFromCart
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> RemoveFromCart(int gameId, string source)
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-            await _cartSvc.RemoveGameFromCartAsync(userId, gameId);
-            return RedirectToAction("Cart");
-
-        }
-
-        // POST: /Game/UpdateCartItemQuantity
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> UpdateCartItemQuantity(int gameId, int quantity)
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-
-            if (quantity < 1)
-            {
-                quantity = 1;
-            }
-
-            await _cartSvc.UpdateCartItemQuantityAsync(userId, gameId, quantity);
-            return RedirectToAction("Cart");
-        }
-
-        public async Task<IActionResult> Checkout()
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-            var cart = await _cartSvc.GetCartByUserIdAsync(userId);
-
-            if (cart == null || !cart.CartItems.Any())
-            {
-                return RedirectToAction("Cart");
-            }
-
-            var successUrl = Url.Action("CheckoutSuccess", "Game", null, Request.Scheme);
-            var cancelUrl = Url.Action("CheckoutCancel", "Game", null, Request.Scheme);
-
-            var checkoutUrl = await _stripeSvc.CreateCheckoutSessionAsync(cart, successUrl!);
-
-            return Redirect(checkoutUrl);
-        }
-
-        public async Task<IActionResult> CheckoutSuccess()
-        {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
-
-            await _cartSvc.CompleteCheckoutAsync(userId);
-
-            return View();
-        }
-
     }
 }

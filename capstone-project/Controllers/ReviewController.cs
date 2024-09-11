@@ -11,13 +11,13 @@ namespace capstone_project.Controllers
     {
         private readonly IReviewService _reviewService;
         private readonly IReviewLikeService _reviewLikeService;
-        private readonly DataContext _dataContext;
+        private readonly DataContext _ctx;
 
         public ReviewController(IReviewService reviewService, IReviewLikeService reviewLikeService, DataContext dataContext)
         {
             _reviewService = reviewService;
             _reviewLikeService = reviewLikeService;
-            _dataContext = dataContext;
+            _ctx = dataContext;
         }
 
         [HttpPost]
@@ -52,7 +52,7 @@ namespace capstone_project.Controllers
             }
 
             // Ottieni il conteggio aggiornato dei like
-            var review = await _dataContext.Reviews
+            var review = await _ctx.Reviews
                 .Include(r => r.ReviewLikes)
                 .FirstOrDefaultAsync(r => r.ReviewId == id);
 
@@ -68,7 +68,7 @@ namespace capstone_project.Controllers
         [HttpGet]
         public async Task<IActionResult> GetLikeCount(int id)
         {
-            var review = await _dataContext.Reviews
+            var review = await _ctx.Reviews
                 .Include(r => r.ReviewLikes)
                 .FirstOrDefaultAsync(r => r.ReviewId == id);
 

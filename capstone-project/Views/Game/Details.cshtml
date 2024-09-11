@@ -239,7 +239,7 @@
 
 @if (ViewBag.IsInWishlist)
 {
-    <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
+    <form asp-controller="Wishlist" asp-action="RemoveFromWishlist" method="post" style="display:inline;">
         @Html.AntiForgeryToken()
         <input type="hidden" name="gameId" value="@Model.GameId" />
         <input type="hidden" name="source" value="Details" />
@@ -248,20 +248,22 @@
 }
 else
 {
-    <form asp-action="AddToWishlist" method="post" style="display:inline;">
+    <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display:inline;">
         @Html.AntiForgeryToken()
         <input type="hidden" name="gameId" value="@Model.GameId" />
         <input type="hidden" name="source" value="Details" />
         <button type="submit" class="btn btn-warning">Aggiungi alla Wishlist</button>
     </form>
 }
-@if (cartGameIds.Contains(Model.GameId))
+@if (cartGameIds.Contains(Model.GameId) || Model.QuantityAvail == 0)
 {
-    <button class="btn btn-secondary" disabled>Nel Carrello</button>
+    <button class="btn btn-secondary" disabled>
+        @(Model.QuantityAvail == 0 ? "Esaurito" : "Nel Carrello")
+    </button>
 }
 else
 {
-    <form asp-action="AddToCart" method="post" style="display:inline;">
+    <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline;">
         @Html.AntiForgeryToken()
         <input type="hidden" name="gameId" value="@Model.GameId" />
         <input type="hidden" name="source" value="Details" />

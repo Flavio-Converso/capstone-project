@@ -1,5 +1,4 @@
-﻿using capstone_project.Data;
-using capstone_project.Interfaces;
+﻿using capstone_project.Interfaces;
 using capstone_project.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,12 +7,10 @@ namespace capstone_project.Controllers
     public class CategoryController : Controller
     {
         private readonly ICategoryService _categorySvc;
-        private readonly DataContext _ctx;
 
-        public CategoryController(ICategoryService categoryService, DataContext dataContext)
+        public CategoryController(ICategoryService categoryService)
         {
             _categorySvc = categoryService;
-            _ctx = dataContext;
         }
 
         public IActionResult Create()

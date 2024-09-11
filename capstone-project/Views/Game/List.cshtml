@@ -1,4 +1,4 @@
-﻿@model IEnumerable<capstone_project.Models.Game>
+﻿    @model IEnumerable<capstone_project.Models.Game>
 
 @{
     ViewBag.Title = "Lista Giochi";
@@ -64,7 +64,7 @@
                         <a asp-action="Delete" asp-route-id="@game.GameId" class="btn btn-danger">Elimina</a>
                     @if (wishlistGameIds.Contains(game.GameId))
                     {
-                                <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
+                        <form asp-controller="Wishlist" asp-action="RemoveFromWishlist" method="post" style="display:inline;">
                             @Html.AntiForgeryToken()
                                     <input type="hidden" name="gameId" value="@game.GameId" />
                                     <input type="hidden" name="source" value="List" />
@@ -73,7 +73,7 @@
                     }
                     else
                     {
-                                <form asp-action="AddToWishlist" method="post" style="display:inline;">
+                        <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display:inline;">
                             @Html.AntiForgeryToken()
                                     <input type="hidden" name="gameId" value="@game.GameId" />
                                     <input type="hidden" name="source" value="List" />
@@ -87,7 +87,7 @@
                     }
                     else
                     {
-                                <form asp-action="AddToCart" method="post" style="display:inline;">
+                                <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline;">
                             @Html.AntiForgeryToken()
                                     <input type="hidden" name="gameId" value="@game.GameId" />
                                     <input type="hidden" name="source" value="List" />

@@ -3,6 +3,8 @@ using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs.Cart;
 using Microsoft.EntityFrameworkCore;
+using Stripe;
+using Stripe.Checkout;
 
 namespace capstone_project.Services
 {
@@ -10,11 +12,14 @@ namespace capstone_project.Services
     {
         private readonly DataContext _ctx;
         private readonly IGameService _gameSvc;
+        private readonly IConfiguration _config;
 
-        public CartService(DataContext context, IGameService gameService)
+        public CartService(DataContext context, IGameService gameService, IConfiguration config)
         {
             _ctx = context;
             _gameSvc = gameService;
+            _config = config;
+            StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
         }
 
         public async Task<CartDTO> GetCartByUserIdAsync(int userId)
@@ -117,6 +122,33 @@ namespace capstone_project.Services
             return false;
         }
 
+        public async Task<string> CreateCheckoutSessionAsync(CartDTO cart, string successUrl)
+        {
+            var options = new SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> { "card" },
+                LineItems = cart.CartItems.Select(item => new SessionLineItemOptions
+                {
+                    PriceData = new SessionLineItemPriceDataOptions
+                    {
+                        Currency = "eur",
+                        ProductData = new SessionLineItemPriceDataProductDataOptions
+                        {
+                            Name = item.GameName
+                        },
+                        UnitAmount = (long)(item.Price * 100)
+                    },
+                    Quantity = item.Quantity
+                }).ToList(),
+                Mode = "payment",
+                SuccessUrl = successUrl,
+            };
+
+            var service = new SessionService();
+            var session = await service.CreateAsync(options);
+            return session.Url;
+        }
+
         public async Task CompleteCheckoutAsync(int userId)
         {
             var cart = await _ctx.Carts
@@ -177,7 +209,6 @@ namespace capstone_project.Services
 
             // Save all changes to the database
             await _ctx.SaveChangesAsync();
-
         }
     }
 }
