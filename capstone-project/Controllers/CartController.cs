@@ -81,7 +81,7 @@ namespace capstone_project.Controllers
                 return RedirectToAction("Cart");
             }
 
-            var successUrl = Url.Action("CheckoutSuccess", null, Request.Scheme);
+            var successUrl = Url.Action("CheckoutSuccess", "Cart", null, Request.Scheme);
 
             var checkoutUrl = await _cartSvc.CreateCheckoutSessionAsync(cart, successUrl!);
 
