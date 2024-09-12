@@ -159,11 +159,12 @@ namespace capstone_project.Services
         }
 
 
-        public async Task GenerateGameKeysAsync(int gameId, int userId, int quantity)
+        public async Task<List<string>> GenerateGameKeysAsync(int gameId, int userId, int quantity)
         {
             var game = await _ctx.Games.FindAsync(gameId);
             var user = await _ctx.Users.FindAsync(userId);
 
+            var generatedKeys = new List<string>();
 
             for (int i = 0; i < quantity; i++)
             {
@@ -171,15 +172,18 @@ namespace capstone_project.Services
                 {
                     GameId = gameId,
                     UserId = userId,
-                    KeyNum = _gameKeyHelper.GenerateUniqueKey(),
+                    KeyNum = _gameKeyHelper.GenerateUniqueKey(), // Generate unique key
                     Game = game!,
                     User = user!
                 };
 
                 _ctx.GameKeys.Add(gameKey);
+                generatedKeys.Add(gameKey.KeyNum); // Add the generated key to the list
             }
 
             await _ctx.SaveChangesAsync();  // Save changes to the database
+
+            return generatedKeys; // Return the list of generated keys
         }
     }
 }

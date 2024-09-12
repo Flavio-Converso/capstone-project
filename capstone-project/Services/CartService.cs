@@ -13,13 +13,15 @@ namespace capstone_project.Services
         private readonly DataContext _ctx;
         private readonly IGameService _gameSvc;
         private readonly IConfiguration _config;
+        private readonly IEmailService _emailService;
 
-        public CartService(DataContext context, IGameService gameService, IConfiguration config)
+        public CartService(DataContext context, IGameService gameService, IConfiguration config, IEmailService emailService)
         {
             _ctx = context;
             _gameSvc = gameService;
             _config = config;
             StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
+            _emailService = emailService;
         }
 
         public async Task<CartDTO> GetCartByUserIdAsync(int userId)
@@ -156,9 +158,13 @@ namespace capstone_project.Services
                                  .ThenInclude(ci => ci.Game)
                                  .FirstOrDefaultAsync(c => c.UserId == userId);
 
+            if (cart == null || !cart.CartItems.Any())
+            {
+                throw new ArgumentException("The cart is empty or invalid.");
+            }
 
             // Calculate the total amount
-            var totalAmount = cart!.CartItems.Sum(item => item.Game.Price * item.Quantity);
+            var totalAmount = cart.CartItems.Sum(item => item.Game.Price * item.Quantity);
 
             // Get the username
             var user = await _ctx.Users.FindAsync(userId);
@@ -188,15 +194,21 @@ namespace capstone_project.Services
 
             _ctx.OrderSummaries.Add(orderSummary);
 
+            // Prepare email body with game details and keys
+            string emailBody = "<h1>Grazie per il tuo acquisto!</h1><ul>";
+
             // Process each item in the cart
             foreach (var cartItem in cart.CartItems)
             {
                 // Generate keys for each game purchased
-                await _gameSvc.GenerateGameKeysAsync(cartItem.GameId, userId, cartItem.Quantity);
+                var generatedKeys = await _gameSvc.GenerateGameKeysAsync(cartItem.GameId, userId, cartItem.Quantity);
+
+                // Add game name and keys to email body
+                emailBody += $"<li>Dettaglio per {cartItem.Game.Name}, Chiavi gioco: {string.Join(", ", generatedKeys)}</li>";
 
                 // Decrease the quantity available for the game
                 var game = cartItem.Game;
-                game.QuantityAvail -= cartItem.Quantity;  // Subtract the purchased quantity from available quantity
+                game.QuantityAvail -= cartItem.Quantity;
 
                 if (game.QuantityAvail < 0)
                 {
@@ -204,11 +216,16 @@ namespace capstone_project.Services
                 }
             }
 
+            emailBody += "</ul>";
+
             // Clear the cart
             _ctx.CartItems.RemoveRange(cart.CartItems);
 
             // Save all changes to the database
             await _ctx.SaveChangesAsync();
+
+            // Send email with keys (assuming you have an email service)
+            await _emailService.SendEmailAsync(user.Email, "Le tue chiavi di gioco", emailBody);
         }
     }
 }

@@ -50,6 +50,7 @@ builder.Services
     .AddScoped<ICartService, CartService>()
     .AddScoped<IAuthService, AuthService>()
     .AddScoped<IReviewService, ReviewService>()
+    .AddScoped<IEmailService, EmailService>()
     .AddScoped<IReviewLikeService, ReviewLikeService>()
     .AddScoped<IPasswordHelper, PasswordHelper>()
     .AddScoped<IImgValidateHelper, ImgValidateHelper>()
