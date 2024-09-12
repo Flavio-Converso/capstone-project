@@ -1,22 +1,18 @@
-﻿using capstone_project.Data;
-using capstone_project.Helpers;
+﻿using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace capstone_project.Controllers
 {
     public class RestrictionController : Controller
     {
         private readonly IRestrictionService _restrictionSvc;
-        private readonly DataContext _ctx;
         private readonly IImgValidateHelper _imgValidateHelper;
 
-        public RestrictionController(IRestrictionService restrictionService, DataContext dataContext, IImgValidateHelper imgValidateHelper)
+        public RestrictionController(IRestrictionService restrictionService, IImgValidateHelper imgValidateHelper)
         {
             _restrictionSvc = restrictionService;
-            _ctx = dataContext;
             _imgValidateHelper = imgValidateHelper;
         }
 
@@ -68,7 +64,7 @@ namespace capstone_project.Controllers
         // GET: /Restriction/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
-            var restriction = await _ctx.Restrictions.FirstOrDefaultAsync(p => p.RestrictionId == id);
+            var restriction = await _restrictionSvc.GetRestrictionById(id);
             var dto = new RestrictionDTO
             {
                 RestrictionId = restriction!.RestrictionId,

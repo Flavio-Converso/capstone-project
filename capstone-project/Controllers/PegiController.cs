@@ -1,23 +1,19 @@
-﻿using capstone_project.Data;
-using capstone_project.Helpers;
+﻿using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace capstone_project.Controllers
 {
     public class PegiController : Controller
     {
         private readonly IPegiService _pegiSvc;
-        private readonly DataContext _ctx;
         private readonly IImgValidateHelper _imgValidateHelper;
 
-        public PegiController(IPegiService pegiService, DataContext dataContext, IImgValidateHelper imgValidateHelper)
+        public PegiController(IPegiService pegiService, IImgValidateHelper imgValidateHelper)
         {
             _pegiSvc = pegiService;
             _imgValidateHelper = imgValidateHelper;
-            _ctx = dataContext;
         }
 
         public IActionResult Create()
@@ -70,7 +66,7 @@ namespace capstone_project.Controllers
         public async Task<IActionResult> Edit(int id)
         {
 
-            var pegi = await _ctx.Pegis.FirstOrDefaultAsync(p => p.PegiId == id);
+            var pegi = await _pegiSvc.GetPegiById(id);
             var dto = new PegiDTO
             {
                 PegiId = pegi!.PegiId,
