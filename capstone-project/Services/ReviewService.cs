@@ -24,8 +24,8 @@ namespace capstone_project.Services
             var game = await _dataContext.Games.FirstOrDefaultAsync(g => g.GameId == dto.GameId);
             var review = new Review
             {
-                User = user,
-                Game = game,
+                User = user!,
+                Game = game!,
                 Title = dto.Title,
                 Content = dto.Content,
                 Rating = dto.Rating,
