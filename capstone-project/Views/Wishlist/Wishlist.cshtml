@@ -36,7 +36,7 @@
                 </td>
                 <td>@item.GameName</td>
                 <td>
-                    <a asp-action="Details" asp-route-id="@item.GameId" class="btn btn-info">View Details</a>
+                    <a asp-controller="Game" asp-action="Details" asp-route-id="@item.GameId" class="btn btn-info">View Details</a>
                     <form asp-action="RemoveFromWishlist" method="post" style="display:inline;">
                         @Html.AntiForgeryToken()
                         <input type="hidden" name="gameId" value="@item.GameId" />
