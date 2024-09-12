@@ -1,4 +1,5 @@
 ﻿using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs.Cart;
@@ -14,14 +15,16 @@ namespace capstone_project.Services
         private readonly IGameService _gameSvc;
         private readonly IConfiguration _config;
         private readonly IEmailService _emailService;
+        private readonly IUserHelper _userHelper;
 
-        public CartService(DataContext context, IGameService gameService, IConfiguration config, IEmailService emailService)
+        public CartService(DataContext context, IGameService gameService, IConfiguration config, IEmailService emailService, IUserHelper userHelper)
         {
             _ctx = context;
             _gameSvc = gameService;
             _config = config;
             StripeConfiguration.ApiKey = _config["Stripe:SecretKey"];
             _emailService = emailService;
+            _userHelper = userHelper;
         }
 
         public async Task<CartDTO> GetCartByUserIdAsync(int userId)
@@ -59,7 +62,7 @@ namespace capstone_project.Services
 
             if (cart == null)
             {
-                var user = await _ctx.Users.FindAsync(userId);
+                var user = await _userHelper.GetUserIdAsync(userId);
                 cart = new Cart
                 {
                     UserId = userId,
@@ -167,7 +170,7 @@ namespace capstone_project.Services
             var totalAmount = cart.CartItems.Sum(item => item.Game.Price * item.Quantity);
 
             // Get the username
-            var user = await _ctx.Users.FindAsync(userId);
+            var user = await _userHelper.GetUserIdAsync(userId);
             var username = user!.Username;
 
             // Generate order number

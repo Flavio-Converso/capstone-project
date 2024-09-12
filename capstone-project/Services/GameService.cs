@@ -11,11 +11,13 @@ namespace capstone_project.Services
     {
         private readonly DataContext _ctx;
         private readonly IGameKeyHelper _gameKeyHelper;
+        private readonly IUserHelper _userHelper;
 
-        public GameService(DataContext context, IGameKeyHelper gameKeyHelper)
+        public GameService(DataContext context, IGameKeyHelper gameKeyHelper, IUserHelper userHelper)
         {
             _ctx = context;
             _gameKeyHelper = gameKeyHelper;
+            _userHelper = userHelper;
         }
 
         public async Task<GameDTO> CreateGameAsync(GameDTO gameDto)
@@ -162,7 +164,7 @@ namespace capstone_project.Services
         public async Task<List<string>> GenerateGameKeysAsync(int gameId, int userId, int quantity)
         {
             var game = await _ctx.Games.FindAsync(gameId);
-            var user = await _ctx.Users.FindAsync(userId);
+            var user = await _userHelper.GetUserIdAsync(userId);
 
             var generatedKeys = new List<string>();
 

@@ -1,22 +1,23 @@
-﻿using capstone_project.Interfaces;
+﻿using capstone_project.Helpers;
+using capstone_project.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace capstone_project.Controllers
 {
     public class CartController : Controller
     {
         private readonly ICartService _cartSvc;
-        public CartController(ICartService cartService)
+        private readonly IUserHelper _userHelper;
+        public CartController(ICartService cartService, IUserHelper userHelper)
         {
             _cartSvc = cartService;
+            _userHelper = userHelper;
         }
 
         // GET: /Game/Cart
         public async Task<IActionResult> Cart()
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
             var cart = await _cartSvc.GetCartByUserIdAsync(userId);
             return View(cart);
         }
@@ -26,8 +27,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToCart(int gameId, string source)
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
             await _cartSvc.AddGameToCartAsync(userId, gameId, 1);
 
             switch (source)
@@ -46,8 +46,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveFromCart(int gameId, string source)
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
             await _cartSvc.RemoveGameFromCartAsync(userId, gameId);
             return RedirectToAction("Cart");
 
@@ -58,8 +57,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> UpdateCartItemQuantity(int gameId, int quantity)
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
 
             if (quantity < 1)
             {
@@ -72,8 +70,7 @@ namespace capstone_project.Controllers
 
         public async Task<IActionResult> Checkout()
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
             var cart = await _cartSvc.GetCartByUserIdAsync(userId);
 
             if (cart == null || !cart.CartItems.Any())
@@ -90,8 +87,7 @@ namespace capstone_project.Controllers
 
         public async Task<IActionResult> CheckoutSuccess()
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
 
             await _cartSvc.CompleteCheckoutAsync(userId);
 

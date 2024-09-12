@@ -54,7 +54,11 @@ builder.Services
     .AddScoped<IReviewLikeService, ReviewLikeService>()
     .AddScoped<IPasswordHelper, PasswordHelper>()
     .AddScoped<IImgValidateHelper, ImgValidateHelper>()
-    .AddScoped<IGameKeyHelper, GameKeyHelper>();
+    .AddScoped<IGameKeyHelper, GameKeyHelper>()
+    .AddScoped<IUserHelper, UserHelper>();
+
+//IHttpContextAccessor for userhelper
+builder.Services.AddHttpContextAccessor();
 
 var app = builder.Build();
 

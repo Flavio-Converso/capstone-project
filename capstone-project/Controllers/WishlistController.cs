@@ -1,21 +1,22 @@
-﻿using capstone_project.Interfaces;
+﻿using capstone_project.Helpers;
+using capstone_project.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace capstone_project.Controllers
 {
     public class WishlistController : Controller
     {
         private readonly IWishlistService _wishlistSvc;
-        public WishlistController(IWishlistService wishlistService)
+        private readonly IUserHelper _userHelper;
+        public WishlistController(IWishlistService wishlistService, IUserHelper userHelper)
         {
             _wishlistSvc = wishlistService;
+            _userHelper = userHelper;
         }
         // GET: /Game/Wishlist
         public async Task<IActionResult> Wishlist()
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             return View(wishlistItems);
         }
@@ -25,8 +26,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddToWishlist(int gameId, string source)
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
             await _wishlistSvc.AddGameToWishlistAsync(userId, gameId);
 
             switch (source)
@@ -45,8 +45,7 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveFromWishlist(int gameId, string source)
         {
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
             await _wishlistSvc.RemoveGameFromWishlistAsync(userId, gameId);
 
             switch (source)

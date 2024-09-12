@@ -1,9 +1,9 @@
 ﻿using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System.Security.Claims;
 
 namespace capstone_project.Controllers
 {
@@ -12,21 +12,21 @@ namespace capstone_project.Controllers
         private readonly IReviewService _reviewService;
         private readonly IReviewLikeService _reviewLikeService;
         private readonly DataContext _ctx;
+        private readonly IUserHelper _userHelper;
 
-        public ReviewController(IReviewService reviewService, IReviewLikeService reviewLikeService, DataContext dataContext)
+        public ReviewController(IReviewService reviewService, IReviewLikeService reviewLikeService, DataContext dataContext, IUserHelper userHelper)
         {
             _reviewService = reviewService;
             _reviewLikeService = reviewLikeService;
             _ctx = dataContext;
+            _userHelper = userHelper;
         }
 
         [HttpPost]
         public async Task<IActionResult> CreateReview(ReviewDTO dto, int id)
         {
             // Recupera l'ID dell'utente loggato (es. da User.Identity)
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-
-            int.TryParse(userIdString, out int userId);
+            var userId = _userHelper.GetUserIdClaim();
             var result = await _reviewService.CreateReviewAsync(dto, userId);
 
 
@@ -42,8 +42,7 @@ namespace capstone_project.Controllers
         [HttpPost]
         public async Task<IActionResult> ToggleLike(int id)
         {
-            var userIdString = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            int.TryParse(userIdString, out int userId);
+            var userId = _userHelper.GetUserIdClaim();
 
             var result = await _reviewLikeService.LikeReviewAsync(id, userId);
             if (!result)

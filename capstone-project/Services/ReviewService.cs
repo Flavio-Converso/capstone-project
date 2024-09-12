@@ -1,4 +1,5 @@
 ﻿using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs;
@@ -8,11 +9,12 @@ namespace capstone_project.Services
 {
     public class ReviewService : IReviewService
     {
-        private readonly DataContext _dataContext;
-
-        public ReviewService(DataContext dataContext)
+        private readonly DataContext _ctx;
+        private readonly IUserHelper _userHelper;
+        public ReviewService(DataContext dataContext, IUserHelper userHelper)
         {
-            _dataContext = dataContext;
+            _ctx = dataContext;
+            _userHelper = userHelper;
         }
         public async Task<Review?> CreateReviewAsync(ReviewDTO dto, int userId)
         {
@@ -20,8 +22,8 @@ namespace capstone_project.Services
             {
                 return null;
             }
-            var user = await _dataContext.Users.FirstOrDefaultAsync(u => u.UserId == userId);
-            var game = await _dataContext.Games.FirstOrDefaultAsync(g => g.GameId == dto.GameId);
+            var user = await _userHelper.GetUserIdAsync(userId);
+            var game = await _ctx.Games.FirstOrDefaultAsync(g => g.GameId == dto.GameId);
             var review = new Review
             {
                 User = user!,
@@ -32,8 +34,8 @@ namespace capstone_project.Services
                 Date = DateTime.Now,
                 GameId = dto.GameId,
             };
-            await _dataContext.AddAsync(review);
-            await _dataContext.SaveChangesAsync();
+            await _ctx.AddAsync(review);
+            await _ctx.SaveChangesAsync();
             return review;
         }
     }

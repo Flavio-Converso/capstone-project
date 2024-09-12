@@ -6,7 +6,6 @@ using capstone_project.Models;
 using capstone_project.Models.DTOs.Game;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using System.Security.Claims;
 
 namespace capstone_project.Controllers
 {
@@ -17,15 +16,17 @@ namespace capstone_project.Controllers
         private readonly IWishlistService _wishlistSvc;
         private readonly ICartService _cartSvc;
         private readonly IImgValidateHelper _imgValidateHelper;
+        private readonly IUserHelper _userHelper;
 
         public GameController(IGameService gameService, IWishlistService wishlistService, ICartService cartService,
-            DataContext context, IImgValidateHelper imgValidateHelper)
+            DataContext context, IImgValidateHelper imgValidateHelper, IUserHelper userHelper)
         {
             _gameSvc = gameService;
             _wishlistSvc = wishlistService;
             _cartSvc = cartService;
             _ctx = context;
             _imgValidateHelper = imgValidateHelper;
+            _userHelper = userHelper;
         }
         private void PopulateViewBags()
         {
@@ -94,8 +95,7 @@ namespace capstone_project.Controllers
         {
             var games = await _gameSvc.GetAllGamesAsync();
 
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
 
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             var wishlistGameIds = wishlistItems.Select(w => w.GameId).ToList();
@@ -115,8 +115,7 @@ namespace capstone_project.Controllers
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
 
-            var userClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var userId = int.Parse(userClaim!);
+            var userId = _userHelper.GetUserIdClaim();
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             var isInWishlist = wishlistItems.Any(w => w.GameId == id);
 

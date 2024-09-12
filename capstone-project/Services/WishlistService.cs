@@ -1,4 +1,5 @@
 ﻿using capstone_project.Data;
+using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs.Wishlist;
@@ -9,10 +10,12 @@ namespace capstone_project.Services
     public class WishlistService : IWishlistService
     {
         private readonly DataContext _ctx;
+        private readonly IUserHelper _userHelper;
 
-        public WishlistService(DataContext context)
+        public WishlistService(DataContext context, IUserHelper userHelper)
         {
             _ctx = context;
+            _userHelper = userHelper;
         }
 
         public async Task<WishlistDTO> AddGameToWishlistAsync(int userId, int gameId)
@@ -21,7 +24,7 @@ namespace capstone_project.Services
                 .Include(w => w.WishlistItems)
                 .ThenInclude(wi => wi.Game)
                 .FirstOrDefaultAsync(w => w.UserId == userId);
-            var user = await _ctx.Users.FindAsync(userId);
+            var user = await _userHelper.GetUserIdAsync(userId);
             if (wishlist == null)
             {
                 wishlist = new Wishlist
