@@ -97,19 +97,27 @@
     <div class="form-group mt-3">
         <label class="control-label mb-1">Inserisci categorie di videogiochi preferiti:</label>
         <div id="categoriesCheckboxes">
-            @foreach (var c in categories)
+            @if (categories != null && categories.Any())
             {
-                <div class="form-check">
-                    <input type="checkbox"
-                           class="form-check-input"
-                           id="category-@c.CategoryId"
-                           name="SelectedCategories"
-                           value="@c.CategoryId" />
-                    <label class="form-check-label" for="category-@c.CategoryId">
-                        @c.Name
-                    </label>
-                </div>
+                foreach (var c in categories)
+                {
+                    <div class="form-check">
+                        <input type="checkbox"
+                               class="form-check-input"
+                               id="category-@c.CategoryId"
+                               name="SelectedCategories"
+                               value="@c.CategoryId" />
+                        <label class="form-check-label" for="category-@c.CategoryId">
+                            @c.Name
+                        </label>
+                    </div>
+                }
             }
+            else
+            {
+                <p class="text-warning">Nessuna categoria disponibile.</p>
+            }
+
         </div>
         <span asp-validation-for="SelectedCategories" class="text-danger"></span>
     </div>

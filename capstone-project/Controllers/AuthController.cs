@@ -1,10 +1,9 @@
-﻿using capstone_project.Data;
+﻿using capstone_project.Interfaces;
 using capstone_project.Interfaces.Auth;
 using capstone_project.Models.DTOs.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace capstone_project.Controllers
@@ -12,11 +11,12 @@ namespace capstone_project.Controllers
     public class AuthController : Controller
     {
         private readonly IAuthService _authService;
-        private readonly DataContext _ctx;
-        public AuthController(IAuthService authService, DataContext dataContext)
+        private readonly ICategoryService _categorySvc;
+
+        public AuthController(IAuthService authService, ICategoryService categoryService)
         {
             _authService = authService;
-            _ctx = dataContext;
+            _categorySvc = categoryService;
         }
 
         public IActionResult Login()
@@ -64,7 +64,7 @@ namespace capstone_project.Controllers
 
         public async Task<IActionResult> Register()
         {
-            var categories = await _ctx.Categories.ToListAsync();
+            var categories = await _categorySvc.GetAllCategoriesAsync();
             ViewBag.Categories = categories;
             return View();
         }
@@ -75,6 +75,8 @@ namespace capstone_project.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var categories = await _categorySvc.GetAllCategoriesAsync();
+                ViewBag.Categories = categories;
                 return View(dto);
             }
 
@@ -85,6 +87,8 @@ namespace capstone_project.Controllers
             }
             catch (Exception ex)
             {
+                var categories = await _categorySvc.GetAllCategoriesAsync();
+                ViewBag.Categories = categories;
                 ModelState.AddModelError(string.Empty, "Registrazione fallita: " + ex.Message);
                 return View(dto);
             }

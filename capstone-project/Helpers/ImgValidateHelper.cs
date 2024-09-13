@@ -45,5 +45,18 @@ namespace capstone_project.Helpers
             }
             return null!;
         }
+        public async Task<byte[]> HandleUserImageAsync(IFormFile file)
+        {
+            if (!IsValidImage(file, out var errorMessage))
+            {
+                throw new Exception(errorMessage);
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
     }
 }

@@ -7,5 +7,6 @@ namespace capstone_project.Helpers
         bool IsValidImage(IFormFile file, out string errorMessage);
         Task<byte[]> HandleInvalidImageForPegiEditAsync(IFormFile file, IPegiService pegiService, int pegiId);
         Task<byte[]> HandleInvalidImageForRestrictionEditAsync(IFormFile file, IRestrictionService restrictionService, int restrictionId);
+        Task<byte[]> HandleUserImageAsync(IFormFile file);
     }
 }

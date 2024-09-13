@@ -12,12 +12,14 @@ namespace capstone_project.Services.Auth
         private readonly DataContext _ctx;
         private readonly IPasswordHelper _passwordHelper;
         private readonly ILogger<AuthService> _logger;
+        private readonly IImgValidateHelper _imgValidateHelper;
 
-        public AuthService(DataContext dataContext, IPasswordHelper passwordHelper, ILogger<AuthService> logger)
+        public AuthService(DataContext dataContext, IPasswordHelper passwordHelper, ILogger<AuthService> logger, IImgValidateHelper imgValidateHelper)
         {
             _ctx = dataContext;
             _passwordHelper = passwordHelper;
             _logger = logger;
+            _imgValidateHelper = imgValidateHelper;
         }
 
         public async Task<User> LoginAsync(UserLoginDTO dto)
@@ -87,12 +89,10 @@ namespace capstone_project.Services.Auth
                 byte[]? imageBytes = null;
                 if (dto.Img != null)
                 {
-                    using (var memoryStream = new MemoryStream())
-                    {
-                        await dto.Img.CopyToAsync(memoryStream);
-                        imageBytes = memoryStream.ToArray();
-                    }
+                    // Use the ImgValidateHelper to handle image validation and conversion
+                    imageBytes = await _imgValidateHelper.HandleUserImageAsync(dto.Img);
                 }
+
                 var selectedCategories = await _ctx.Categories
                     .Where(g => dto.SelectedCategories.Contains(g.CategoryId))
                     .ToListAsync();
@@ -118,7 +118,6 @@ namespace capstone_project.Services.Auth
                 userRegister.PasswordHash = _passwordHelper.HashPassword(dto.PasswordHash);
 
                 var userRole = await _ctx.Roles.Where(r => r.RoleId == 1).FirstOrDefaultAsync();
-
                 userRegister.Roles.Add(userRole!);
 
                 await _ctx.Users.AddAsync(userRegister);
@@ -133,5 +132,7 @@ namespace capstone_project.Services.Auth
                 throw;
             }
         }
+
+
     }
 }
