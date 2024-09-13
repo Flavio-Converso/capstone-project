@@ -7,29 +7,29 @@ namespace capstone_project.Models.DTOs
     {
         public int ReviewId { get; set; }
 
-        [Required, MaxLength(100)]
+        [Required(ErrorMessage = "Please enter a title for your review"), MaxLength(100, ErrorMessage = "The title cannot exceed 100 characters")]
         public required string Title { get; set; }
 
-        [Required, MaxLength(2000)]
+        [Required(ErrorMessage = "Please provide content for your review"), MaxLength(2000, ErrorMessage = "The review content cannot exceed 2000 characters")]
         public required string Content { get; set; }
 
         [Required]
-        public required DateTime Date { get; set; } = DateTime.Now;
+        public DateTime Date { get; set; } = DateTime.Now;
 
-        [Required, Range(0.0, 5.0)]
+        [Required(ErrorMessage = "Please give a rating between 0 and 5"), Range(0.0, 5.0, ErrorMessage = "Rating must be between 0 and 5")]
         public required decimal Rating { get; set; }
 
         [Required, Range(0, int.MaxValue)]
-        public required int Likes { get; set; }
+        public int Likes { get; set; }
 
         // EF REFERENCES
         public int UserId { get; set; }
         [ForeignKey("UserId")]
-        public required User User { get; set; }
+        public User User { get; set; }
 
         public int GameId { get; set; }
         [ForeignKey("GameId")]
-        public required Models.Game Game { get; set; }
+        public Models.Game Game { get; set; }
         public List<ReviewLike> ReviewLikes { get; set; } = [];
 
     }

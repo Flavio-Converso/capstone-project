@@ -3,7 +3,9 @@ using capstone_project.Data;
 using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
+using capstone_project.Models.DTOs;
 using capstone_project.Models.DTOs.Game;
+using capstone_project.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -114,19 +116,29 @@ namespace capstone_project.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
-
             var userId = _userHelper.GetUserIdClaim();
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             var isInWishlist = wishlistItems.Any(w => w.GameId == id);
-
             var cart = await _cartSvc.GetCartByUserIdAsync(userId);
             var cartGameIds = cart.CartItems.Select(c => c.GameId).ToList();
+
+            var viewModel = new GameDetailsViewModel
+            {
+                Game = game,
+                Review = new ReviewDTO
+                {
+                    Title = "",
+                    Content = "",
+                    Rating = 1,
+                }
+            };
 
             ViewBag.IsInWishlist = isInWishlist;
             ViewBag.CartGameIds = cartGameIds;
 
-            return View(game);
+            return View(viewModel);
         }
+
 
 
         // GET: /Game/Edit/5

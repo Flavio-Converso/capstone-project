@@ -1,4 +1,5 @@
-﻿@model capstone_project.Models.Game
+﻿@model capstone_project.Models.ViewModels.GameDetailsViewModel
+
 
 @{
     ViewBag.Title = "Dettagli Gioco";
@@ -8,33 +9,33 @@
 <h2>Dettagli Gioco</h2>
 
 <div>
-    <h4>@Model.Name</h4>
+    <h4>@Model.Game.Name</h4>
     <hr />
     <dl class="row">
         <dt class="col-sm-2">Descrizione</dt>
-        <dd class="col-sm-10">@Model.Description</dd>
+        <dd class="col-sm-10">@Model.Game.Description</dd>
 
         <dt class="col-sm-2">Piattaforma</dt>
-        <dd class="col-sm-10">@Model.Platform</dd>
+        <dd class="col-sm-10">@Model.Game.Platform</dd>
 
         <dt class="col-sm-2">Produttore</dt>
-        <dd class="col-sm-10">@Model.Publisher</dd>
+        <dd class="col-sm-10">@Model.Game.Publisher</dd>
 
         <dt class="col-sm-2">Quantità disponibile</dt>
-        <dd class="col-sm-10">@Model.QuantityAvail</dd>
+        <dd class="col-sm-10">@Model.Game.QuantityAvail</dd>
 
         <dt class="col-sm-2">Prezzo</dt>
-        <dd class="col-sm-10">@Model.Price.ToString("C")</dd>
+        <dd class="col-sm-10">@Model.Game.Price.ToString("C")</dd>
 
         <dt class="col-sm-2">Data di Rilascio</dt>
-        <dd class="col-sm-10">@Model.ReleaseDate.ToShortDateString()</dd>
+        <dd class="col-sm-10">@Model.Game.ReleaseDate.ToShortDateString()</dd>
 
         <dt class="col-sm-2">PEGI</dt>
-        <dd class="col-sm-10">@Model.Pegi.Name</dd>
+        <dd class="col-sm-10">@Model.Game.Pegi.Name</dd>
 
         <dt class="col-sm-2">Restrizioni</dt>
         <dd class="col-sm-10">
-            @foreach (var restriction in Model.Restrictions)
+            @foreach (var restriction in Model.Game.Restrictions)
             {
                 <span>@restriction.Name</span>
             }
@@ -42,7 +43,7 @@
 
         <dt class="col-sm-2">Categorie</dt>
         <dd class="col-sm-10">
-            @foreach (var category in Model.Categories)
+            @foreach (var category in Model.Game.Categories)
             {
                 <span>@category.Name</span>
             }
@@ -52,7 +53,7 @@
         <dt class="col-sm-2">Cover</dt>
         <dd class="col-sm-10">
             @{
-                var coverImages = Model.GameImages.Where(img => img.ImgType == ImageType.Cover).ToList();
+                var coverImages = Model.Game.GameImages.Where(img => img.ImgType == ImageType.Cover).ToList();
                 if (coverImages.Any())
                 {
                     foreach (var image in coverImages)
@@ -72,7 +73,7 @@
         <dt class="col-sm-2">Screenshot</dt>
         <dd class="col-sm-10">
             @{
-                var screenshotImages = Model.GameImages.Where(img => img.ImgType == ImageType.Screenshot).ToList();
+                var screenshotImages = Model.Game.GameImages.Where(img => img.ImgType == ImageType.Screenshot).ToList();
                 if (screenshotImages.Any())
                 {
                     foreach (var image in screenshotImages)
@@ -92,7 +93,7 @@
         <dt class="col-sm-2">Artwork</dt>
         <dd class="col-sm-10">
             @{
-                var artworkImages = Model.GameImages.Where(img => img.ImgType == ImageType.Artwork).ToList();
+                var artworkImages = Model.Game.GameImages.Where(img => img.ImgType == ImageType.Artwork).ToList();
                 if (artworkImages.Any())
                 {
                     foreach (var image in artworkImages)
@@ -112,7 +113,7 @@
         <dt class="col-sm-2">Icon</dt>
         <dd class="col-sm-10">
             @{
-                var iconImages = Model.GameImages.Where(img => img.ImgType == ImageType.Icon).ToList();
+                var iconImages = Model.Game.GameImages.Where(img => img.ImgType == ImageType.Icon).ToList();
                 if (iconImages.Any())
                 {
                     foreach (var image in iconImages)
@@ -132,7 +133,7 @@
         <dt class="col-sm-2">Logo</dt>
         <dd class="col-sm-10">
             @{
-                var logoImages = Model.GameImages.Where(img => img.ImgType == ImageType.Logo).ToList();
+                var logoImages = Model.Game.GameImages.Where(img => img.ImgType == ImageType.Logo).ToList();
                 if (logoImages.Any())
                 {
                     foreach (var image in logoImages)
@@ -152,7 +153,7 @@
         <dt class="col-sm-2">Banner</dt>
         <dd class="col-sm-10">
             @{
-                var bannerImages = Model.GameImages.Where(img => img.ImgType == ImageType.Banner).ToList();
+                var bannerImages = Model.Game.GameImages.Where(img => img.ImgType == ImageType.Banner).ToList();
                 if (bannerImages.Any())
                 {
                     foreach (var image in bannerImages)
@@ -172,7 +173,7 @@
         <dt class="col-sm-2">Other</dt>
         <dd class="col-sm-10">
             @{
-                var otherImages = Model.GameImages.Where(img => img.ImgType == ImageType.Other).ToList();
+                var otherImages = Model.Game.GameImages.Where(img => img.ImgType == ImageType.Other).ToList();
                 if (otherImages.Any())
                 {
                     foreach (var image in otherImages)
@@ -190,11 +191,12 @@
         </dd>
     </dl>
     <div>
+        <!-- Reviews Section -->
         <h3>Recensioni</h3>
         <ul>
-            @if (Model.Reviews != null && Model.Reviews.Count > 0)
+            @if (Model.Game.Reviews != null && Model.Game.Reviews.Count > 0)
             {
-                @foreach (var review in Model.Reviews)
+                foreach (var review in Model.Game.Reviews)
                 {
                     <li>
                         <strong>@review.User.Username:</strong> @review.Title
@@ -213,35 +215,39 @@
             }
         </ul>
 
+        <!-- Add Review Section -->
         <h4>Aggiungi una recensione</h4>
         <form asp-action="CreateReview" asp-controller="Review" method="post">
             <div class="form-group">
-                <label for="Title">Titolo</label>
-                <input id="Title" name="Title" class="form-control" maxlength="100" />
+                <label asp-for="Review.Title"></label>
+                <input asp-for="Review.Title" class="form-control" />
+                <span asp-validation-for="Review.Title" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label for="Rating">Valutazione</label>
-                <input id="Rating" name="Rating" type="number" class="form-control" min="0" max="5" step="0.1" />
+                <label asp-for="Review.Rating"></label>
+                <input asp-for="Review.Rating" class="form-control" />
+                <span asp-validation-for="Review.Rating" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label for="Content">Commento</label>
-                <textarea id="Content" name="Content" class="form-control" maxlength="2000"></textarea>
+                <label asp-for="Review.Content"></label>
+                <textarea asp-for="Review.Content" class="form-control"></textarea>
+                <span asp-validation-for="Review.Content" class="text-danger"></span>
             </div>
-            <input type="hidden" name="GameId" value="@Model.GameId" />
+            <input type="hidden" asp-for="Review.GameId" value="@Model.Game.GameId" />
             <button type="submit" class="btn btn-primary">Invia</button>
         </form>
     </div>
 </div>
 
 <a asp-action="List" class="btn btn-secondary">Indietro alla Lista</a>
-<a asp-action="Edit" asp-route-id="@Model.GameId" class="btn btn-primary">Modifica</a>
-<a asp-action="Delete" asp-route-id="@Model.GameId" class="btn btn-danger">Elimina</a>
+<a asp-action="Edit" asp-route-id="@Model.Game.GameId" class="btn btn-primary">Modifica</a>
+<a asp-action="Delete" asp-route-id="@Model.Game.GameId" class="btn btn-danger">Elimina</a>
 
 @if (ViewBag.IsInWishlist)
 {
     <form asp-controller="Wishlist" asp-action="RemoveFromWishlist" method="post" style="display:inline;">
         @Html.AntiForgeryToken()
-        <input type="hidden" name="gameId" value="@Model.GameId" />
+        <input type="hidden" name="gameId" value="@Model.Game.GameId" />
         <input type="hidden" name="source" value="Details" />
         <button type="submit" class="btn btn-danger">Rimuovi dalla Wishlist</button>
     </form>
@@ -250,64 +256,70 @@ else
 {
     <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display:inline;">
         @Html.AntiForgeryToken()
-        <input type="hidden" name="gameId" value="@Model.GameId" />
+        <input type="hidden" name="gameId" value="@Model.Game.GameId" />
         <input type="hidden" name="source" value="Details" />
         <button type="submit" class="btn btn-warning">Aggiungi alla Wishlist</button>
     </form>
 }
-@if (cartGameIds.Contains(Model.GameId) || Model.QuantityAvail == 0)
+@if (cartGameIds.Contains(Model.Game.GameId) || Model.Game.QuantityAvail == 0)
 {
     <button class="btn btn-secondary" disabled>
-        @(Model.QuantityAvail == 0 ? "Esaurito" : "Nel Carrello")
+        @(Model.Game.QuantityAvail == 0 ? "Esaurito" : "Nel Carrello")
     </button>
 }
 else
 {
     <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline;">
         @Html.AntiForgeryToken()
-        <input type="hidden" name="gameId" value="@Model.GameId" />
+        <input type="hidden" name="gameId" value="@Model.Game.GameId" />
         <input type="hidden" name="source" value="Details" />
         <button type="submit" class="btn btn-success">Aggiungi al carrello</button>
     </form>
 }
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('.like-button').click(function () {
-            var button = $(this);
-            var reviewId = button.data('review-id');
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 
-            $.ajax({
-                url: '@Url.Action("ToggleLike", "Review")',
-                type: 'POST',
-                data: { id: reviewId },
-                success: function (response) {
-                    var likeCountSpan = $('.like-count[data-review-id="' + reviewId + '"]');
-                    likeCountSpan.text(response.likeCount);
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Error:", status, error);
-                    alert('Si è verificato un errore durante l\'operazione di like/unlike.');
-                }
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.like-button').click(function () {
+                var button = $(this);
+                var reviewId = button.data('review-id');
+
+                $.ajax({
+                    url: '@Url.Action("ToggleLike", "Review")',
+                    type: 'POST',
+                    data: { id: reviewId },
+                    success: function (response) {
+                        var likeCountSpan = $('.like-count[data-review-id="' + reviewId + '"]');
+                        likeCountSpan.text(response.likeCount);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                        alert('Si è verificato un errore durante l\'operazione di like/unlike.');
+                    }
+                });
+            });
+
+            // Carica i conteggi iniziali dei like quando la pagina viene caricata
+            $('.like-count').each(function () {
+                var reviewId = $(this).data('review-id');
+                $.ajax({
+                    url: '@Url.Action("GetLikeCount", "Review")',
+                    type: 'GET',
+                    data: { id: reviewId },
+                    success: function (response) {
+                        var likeCountSpan = $('.like-count[data-review-id="' + reviewId + '"]');
+                        likeCountSpan.text(response.likeCount);
+                    },
+                    error: function (xhr, status, error) {
+                        console.error("AJAX Error:", status, error);
+                    }
+                });
             });
         });
-
-        // Carica i conteggi iniziali dei like quando la pagina viene caricata
-        $('.like-count').each(function () {
-            var reviewId = $(this).data('review-id');
-            $.ajax({
-                url: '@Url.Action("GetLikeCount", "Review")',
-                type: 'GET',
-                data: { id: reviewId },
-                success: function (response) {
-                    var likeCountSpan = $('.like-count[data-review-id="' + reviewId + '"]');
-                    likeCountSpan.text(response.likeCount);
-                },
-                error: function (xhr, status, error) {
-                    console.error("AJAX Error:", status, error);
-                }
-            });
-        });
-    });
-</script>
+    </script>
+}
