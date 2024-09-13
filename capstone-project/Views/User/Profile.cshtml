@@ -1,0 +1,67 @@
+﻿@model capstone_project.Models.ViewModels.UserProfileViewModel
+
+<h1>@Model.Username's Profile</h1>
+
+<div class="profile-container">
+    <div class="profile-img">
+        @if (Model.ProfileImg != null)
+        {
+            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ProfileImg)" alt="Profile Image" class="profile-image" />
+        }
+        else
+        {
+            <img src="/images/default-profile.png" alt="Default Profile Image" class="profile-image" />
+        }
+    </div>
+
+    <div class="profile-details">
+        <p><strong>Name:</strong> @Model.Name</p>
+        <p><strong>Surname:</strong> @Model.Surname</p>
+        <p><strong>Email:</strong> @Model.Email</p>
+        <p><strong>Birth Date:</strong> @Model.BirthDate.ToString("d")</p>
+        <p><strong>Country:</strong> @Model.Country</p>
+        <p><strong>City:</strong> @Model.City</p>
+        <p><strong>Address:</strong> @Model.Address</p>
+        <p><strong>ZIP Code:</strong> @Model.ZipCode</p>
+        <p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
+        <p><strong>Gender:</strong> @Model.Gender</p>
+    </div>
+</div>
+<div>
+<a asp-action="EditProfile">Edit Profile</a><br />
+<a asp-action="ChangePassword">Change Password</a>
+</div>
+
+<!-- Display the games owned by the user -->
+<h3>Owned Games</h3>
+@if (Model.OwnedGames.Any())
+{
+    <ul>
+        @foreach (var gameKey in Model.OwnedGames)
+        {
+            <li>
+                <div class="game-info">
+                    <!-- Game Image -->
+                    @if (gameKey.Game.GameImages.Any())
+                    {
+                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(gameKey.Game.GameImages.First().Img)" alt="@gameKey.Game.Name" class="game-image" />
+                    }
+                    else
+                    {
+                        <img src="/images/default-game.png" alt="Default Game Image" class="game-image" />
+                    }
+
+                    <!-- Game Title and Key -->
+                    <div class="game-details">
+                        <p><strong>Game Title:</strong> @gameKey.Game.Name</p>
+                        <p><strong>Game Key:</strong> @gameKey.KeyNum</p>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No games owned yet.</p>
+}

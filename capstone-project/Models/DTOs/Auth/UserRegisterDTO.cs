@@ -59,7 +59,8 @@ namespace capstone_project.Models.DTOs.Auth
         [Required(ErrorMessage = "Il genere è obbligatorio.")]
         public required Gender Gender { get; set; }
 
-        // public byte[]? ProfileImg { get; set; }
+        public string? SelectedPredefinedImage { get; set; }
+
         public IFormFile? Img { get; set; }
 
         // EF REFERENCES 

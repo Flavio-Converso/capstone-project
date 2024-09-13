@@ -54,6 +54,9 @@ builder.Services
     .AddScoped<IReviewLikeService, ReviewLikeService>()
     .AddScoped<IPasswordHelper, PasswordHelper>()
     .AddScoped<IImgValidateHelper, ImgValidateHelper>()
+    .AddScoped<IMasterService, MasterService>()
+    .AddScoped<IUserService, UserService>()
+    .AddScoped<IRoleService, RoleService>()
     .AddScoped<IGameKeyHelper, GameKeyHelper>()
     .AddScoped<IUserHelper, UserHelper>();
 

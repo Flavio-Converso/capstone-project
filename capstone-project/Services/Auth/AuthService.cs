@@ -13,13 +13,15 @@ namespace capstone_project.Services.Auth
         private readonly IPasswordHelper _passwordHelper;
         private readonly ILogger<AuthService> _logger;
         private readonly IImgValidateHelper _imgValidateHelper;
+        private readonly IUserHelper _userHelper;
 
-        public AuthService(DataContext dataContext, IPasswordHelper passwordHelper, ILogger<AuthService> logger, IImgValidateHelper imgValidateHelper)
+        public AuthService(DataContext dataContext, IPasswordHelper passwordHelper, IUserHelper userHelper, ILogger<AuthService> logger, IImgValidateHelper imgValidateHelper)
         {
             _ctx = dataContext;
             _passwordHelper = passwordHelper;
             _logger = logger;
             _imgValidateHelper = imgValidateHelper;
+            _userHelper = userHelper;
         }
 
         public async Task<User> LoginAsync(UserLoginDTO dto)
@@ -87,9 +89,16 @@ namespace capstone_project.Services.Auth
                 }
 
                 byte[]? imageBytes = null;
-                if (dto.Img != null)
+
+                // If the user selected a predefined image, use that
+                if (!string.IsNullOrEmpty(dto.SelectedPredefinedImage))
                 {
-                    // Use the ImgValidateHelper to handle image validation and conversion
+                    var predefinedImagePath = Path.Combine("wwwroot/images/predefined/", dto.SelectedPredefinedImage);
+                    imageBytes = await File.ReadAllBytesAsync(predefinedImagePath);
+                }
+                else if (dto.Img != null)
+                {
+                    // Otherwise, handle the uploaded image
                     imageBytes = await _imgValidateHelper.HandleUserImageAsync(dto.Img);
                 }
 

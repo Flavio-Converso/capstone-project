@@ -7,5 +7,6 @@ namespace capstone_project.Interfaces.Auth
     {
         Task<User> RegisterAsync(UserRegisterDTO dto);
         Task<User> LoginAsync(UserLoginDTO dto);
+
     }
 }

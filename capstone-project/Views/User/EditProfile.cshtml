@@ -1,0 +1,147 @@
+﻿@model capstone_project.Models.ViewModels.UserEditProfileViewModel
+
+<h1>Edit Your Profile</h1>
+
+<form asp-action="EditProfile" method="post" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="All" class="text-danger"></div> <!-- This shows the validation errors -->
+
+    <div>
+        @if (Model.ProfileImg != null)
+        {
+            <div>
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ProfileImg)" alt="Current Profile Image" class="profile-image" />
+            </div>
+        }
+    </div>
+    <div class="form-group">
+        <label asp-for="Username" class="control-label">Username</label>
+        <input asp-for="Username" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Email" class="control-label">Email</label>
+        <input asp-for="Email" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="BirthDate" class="control-label">Birth Date</label>
+        <input asp-for="BirthDate" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Gender" class="control-label">Gender</label>
+        <input asp-for="Gender" class="form-control" readonly />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Surname" class="control-label">Surname</label>
+        <input asp-for="Surname" class="form-control" />
+        <span asp-validation-for="Surname" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Country" class="control-label">Country</label>
+        <input asp-for="Country" class="form-control" />
+        <span asp-validation-for="Country" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="City" class="control-label">City</label>
+        <input asp-for="City" class="form-control" />
+        <span asp-validation-for="City" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Address" class="control-label">Address</label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ZipCode" class="control-label">ZIP Code</label>
+        <input asp-for="ZipCode" class="form-control" />
+        <span asp-validation-for="ZipCode" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
+        <input asp-for="PhoneNumber" class="form-control" />
+        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+    </div>
+
+    <!-- Pre-set image selection -->
+    <div class="form-group">
+        <label>Choose a Pre-set Profile Image:</label>
+        <button type="button" id="toggle-predefined-images" class="btn btn-info">Select Predefined Image</button>
+
+        <!-- Hidden by default -->
+        <div id="predefined-images-container" style="display: none; margin-top: 10px;">
+            <div class="form-check predefined-image" data-image="image1.jpg">
+                <img src="/images/predefined/image1.jpg" alt="Predefined Image 1" class="selectable-image" width="100" />
+            </div>
+            <div class="form-check predefined-image" data-image="image2.jpg">
+                <img src="/images/predefined/image2.jpg" alt="Predefined Image 2" class="selectable-image" width="100" />
+            </div>
+            <div class="form-check predefined-image" data-image="image3.jpg">
+                <img src="/images/predefined/image3.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden field to capture the selected predefined image -->
+    <input type="hidden" id="SelectedPredefinedImage" name="SelectedPredefinedImage" value="@Model.SelectedPredefinedImage" />
+
+    <!-- File upload for custom image -->
+    <div class="form-group" id="upload-image-section">
+        <label asp-for="NewProfileImg" class="control-label">Or Upload Your Own Image</label>
+        <input asp-for="NewProfileImg" type="file" class="form-control-file" accept=".jpg,.jpeg,.png" />
+        <span asp-validation-for="NewProfileImg" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+    </div>
+</form>
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Toggle pre-defined images visibility
+            $('#toggle-predefined-images').click(function() {
+                $('#predefined-images-container').toggle();
+                var isVisible = $('#predefined-images-container').is(':visible');
+                $(this).text(isVisible ? 'Hide Predefined Images' : 'Select Predefined Image');
+            });
+
+            // Handle image click
+            $('.selectable-image').click(function() {
+                var selectedImage = $(this).parent().data('image');
+
+                // If the image is already selected, unselect it
+                if ($(this).hasClass('selected')) {
+                    $('#SelectedPredefinedImage').val(''); // Clear the hidden input
+                    $('.selectable-image').removeClass('selected'); // Remove the selected class
+                    $('#upload-image-section').show(); // Show the file upload section again
+                } else {
+                    $('#SelectedPredefinedImage').val(selectedImage); // Set the selected image
+                    $('#predefined-images-container').hide(); // Hide predefined images container
+                    $('#upload-image-section').hide(); // Hide file upload section
+                    $('.selectable-image').removeClass('selected'); // Remove selected class from other images
+                    $(this).addClass('selected'); // Add selected class to clicked image
+                }
+            });
+        });
+    </script>
+
+    <style>
+        .selectable-image {
+            border: 5px solid transparent;
+            cursor: pointer;
+        }
+
+            .selectable-image.selected {
+                border-color: red;
+            }
+    </style>
+}

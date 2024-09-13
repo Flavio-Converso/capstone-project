@@ -90,10 +90,39 @@
     </div>
 
     <div class="form-group">
-        <label asp-for="Img" class="control-label">Profile Image</label>
+        <label>Choose a Pre-set Profile Image:</label>
+        <button type="button" id="toggle-predefined-images" class="btn btn-info">Select Predefined Image</button>
+
+        <!-- Hidden by default -->
+        <div id="predefined-images-container" style="display: none; margin-top: 10px;">
+            <!-- Make the images act as radio buttons -->
+            <div class="form-check predefined-image" data-image="image1.jpg">
+                <img src="/images/predefined/image1.jpg" alt="Predefined Image 1" class="selectable-image" width="100" />
+            </div>
+
+            <div class="form-check predefined-image" data-image="image2.jpg">
+                <img src="/images/predefined/image2.jpg" alt="Predefined Image 2" class="selectable-image" width="100" />
+            </div>
+
+            <div class="form-check predefined-image" data-image="image3.jpg">
+                <img src="/images/predefined/image3.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden field to capture the selected predefined image -->
+    <input type="hidden" id="SelectedPredefinedImage" name="SelectedPredefinedImage" />
+
+    <div class="form-group" id="upload-image-section">
+        <label asp-for="Img" class="control-label">Or Upload Your Own Image</label>
         <input asp-for="Img" type="file" class="form-control-file" accept=".jpg,.jpeg,.png" />
         <span asp-validation-for="Img" class="text-danger"></span>
     </div>
+
+
+
+
+
     <div class="form-group mt-3">
         <label class="control-label mb-1">Inserisci categorie di videogiochi preferiti:</label>
         <div id="categoriesCheckboxes">
@@ -136,5 +165,58 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // Toggle pre-defined images visibility
+            $('#toggle-predefined-images').click(function() {
+                $('#predefined-images-container').toggle();
+
+                var isVisible = $('#predefined-images-container').is(':visible');
+                $(this).text(isVisible ? 'Hide Predefined Images' : 'Select Predefined Image');
+            });
+
+            // Handle image click
+            $('.selectable-image').click(function() {
+                var selectedImage = $(this).parent().data('image');
+                
+                // If the image is already selected, unselect it
+                if ($(this).hasClass('selected')) {
+                    // Unselect image
+                    $('#SelectedPredefinedImage').val(''); // Clear the hidden input
+                    $('.selectable-image').removeClass('selected'); // Remove the selected class
+
+                    // Show the file upload section again
+                    $('#upload-image-section').show();
+
+                    // Change button text to allow selection again
+                    $('#toggle-predefined-images').text('Select Predefined Image');
+                } else {
+                    // Set the selected image value to the hidden input
+                    $('#SelectedPredefinedImage').val(selectedImage);
+
+                    // Hide the pre-defined images section
+                    $('#predefined-images-container').hide();
+
+                    // Hide the file upload section
+                    $('#upload-image-section').hide();
+
+                    // Optionally, highlight the selected image
+                    $('.selectable-image').removeClass('selected'); // Remove any previous selected class
+                    $(this).addClass('selected'); // Add selected class to the clicked image
+                }
+            });
+        });
+    </script>
+    <style>
+        /* todo / temporary */
+        .selectable-image {
+            border: 5px solid transparent;
+            cursor: pointer;
+        }
+        .selectable-image.selected {
+            border-color: red
+        }
+    </style>
     }
 }
