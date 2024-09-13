@@ -25,10 +25,10 @@ namespace capstone_project.Models
 
         public int GameId { get; set; }
         [ForeignKey("GameId")]
-        public required Game Game { get; set; }
+        public Game Game { get; set; }
         public int UserId { get; set; }
         [ForeignKey("UserId")]
-        public required User User { get; set; }
+        public User User { get; set; }
         public List<ReviewLike> ReviewLikes { get; set; } = [];
 
     }

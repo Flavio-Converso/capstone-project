@@ -1,7 +1,5 @@
-﻿using capstone_project.Data;
-using capstone_project.Helpers;
+﻿using capstone_project.Helpers;
 using capstone_project.Interfaces;
-using capstone_project.Models.DTOs;
 using capstone_project.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,61 +8,51 @@ namespace capstone_project.Controllers
     public class ReviewController : Controller
     {
         private readonly IReviewService _reviewSvc;
-        private readonly IReviewLikeService _reviewLikeSvc;
         private readonly IUserHelper _userHelper;
-        private readonly DataContext _ctx;
 
-        public ReviewController(IReviewService reviewService, IReviewLikeService reviewLikeService, IUserHelper userHelper, DataContext dataContext)
+        public ReviewController(IReviewService reviewService, IUserHelper userHelper)
         {
             _reviewSvc = reviewService;
-            _reviewLikeSvc = reviewLikeService;
             _userHelper = userHelper;
-            _ctx = dataContext;
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateReview(ReviewDTO dto)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create(ReviewViewModel reviewVm)
         {
-            var userId = _userHelper.GetUserIdClaim();
-
             if (!ModelState.IsValid)
             {
-                // Return to the Game Details view with the validation errors.
-                var game = await _ctx.Games.FindAsync(dto.GameId);
-                var viewModel = new GameDetailsViewModel
-                {
-                    Game = game!,
-                    Review = dto // Pass the invalid ReviewDTO back for validation errors
-                };
-                return View("Details", viewModel);
+                return RedirectToAction("Details", "Game", new { id = reviewVm.GameId });
             }
 
-            await _reviewSvc.CreateReviewAsync(dto, userId);
-            return RedirectToAction("Details", "Game", new { id = dto.GameId });
-        }
-
-
-        [HttpPost]
-        public async Task<IActionResult> ToggleLike(int id)
-        {
             var userId = _userHelper.GetUserIdClaim();
 
-            var result = await _reviewLikeSvc.LikeReviewAsync(id, userId);
+            await _reviewSvc.CreateReviewAsync(reviewVm, userId);
 
-            var likeCount = await _reviewLikeSvc.GetLikeCountAsync(id);
-
-            return Json(new { likeCount });
+            return RedirectToAction("Details", "Game", new { id = reviewVm.GameId });
         }
 
-
-
-        [HttpGet]
-        public async Task<IActionResult> GetLikeCount(int id)
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> LikeReview(int reviewId)
         {
-            var likeCount = await _reviewLikeSvc.GetLikeCountAsync(id);
+            var userId = _userHelper.GetUserIdClaim();
+            bool hasLiked = await _reviewSvc.HasUserLikedReviewAsync(reviewId, userId);
 
-            return Json(new { likeCount });
+            if (hasLiked)
+            {
+                await _reviewSvc.UnlikeReviewAsync(reviewId, userId);
+            }
+            else
+            {
+                await _reviewSvc.LikeReviewAsync(reviewId, userId);
+            }
+
+            // Get the updated like count
+            var likeCount = await _reviewSvc.GetReviewLikeCountAsync(reviewId);
+
+            // Return JSON response
+            return Json(new { success = true, liked = !hasLiked, likeCount = likeCount });
         }
-
     }
 }

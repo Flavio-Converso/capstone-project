@@ -10,10 +10,10 @@ namespace capstone_project.Models
 
         public int ReviewId { get; set; }
         [ForeignKey("ReviewId")]
-        public required Review Review { get; set; }
+        public Review Review { get; set; }
 
         public int UserId { get; set; }
         [ForeignKey("UserId")]
-        public required User User { get; set; }
+        public User User { get; set; }
     }
 }

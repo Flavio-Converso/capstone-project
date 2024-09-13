@@ -3,9 +3,7 @@ using capstone_project.Data;
 using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
-using capstone_project.Models.DTOs;
 using capstone_project.Models.DTOs.Game;
-using capstone_project.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -17,11 +15,12 @@ namespace capstone_project.Controllers
         private readonly IGameService _gameSvc;
         private readonly IWishlistService _wishlistSvc;
         private readonly ICartService _cartSvc;
+        private readonly IReviewService _reviewSvc;
         private readonly IImgValidateHelper _imgValidateHelper;
         private readonly IUserHelper _userHelper;
 
         public GameController(IGameService gameService, IWishlistService wishlistService, ICartService cartService,
-            DataContext context, IImgValidateHelper imgValidateHelper, IUserHelper userHelper)
+            DataContext context, IImgValidateHelper imgValidateHelper, IUserHelper userHelper, IReviewService reviewSvc)
         {
             _gameSvc = gameService;
             _wishlistSvc = wishlistService;
@@ -29,6 +28,7 @@ namespace capstone_project.Controllers
             _ctx = context;
             _imgValidateHelper = imgValidateHelper;
             _userHelper = userHelper;
+            _reviewSvc = reviewSvc;
         }
         private void PopulateViewBags()
         {
@@ -116,27 +116,35 @@ namespace capstone_project.Controllers
         public async Task<IActionResult> Details(int id)
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
+
             var userId = _userHelper.GetUserIdClaim();
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             var isInWishlist = wishlistItems.Any(w => w.GameId == id);
+
             var cart = await _cartSvc.GetCartByUserIdAsync(userId);
             var cartGameIds = cart.CartItems.Select(c => c.GameId).ToList();
-
-            var viewModel = new GameDetailsViewModel
-            {
-                Game = game,
-                Review = new ReviewDTO
-                {
-                    Title = "",
-                    Content = "",
-                    Rating = 1,
-                }
-            };
 
             ViewBag.IsInWishlist = isInWishlist;
             ViewBag.CartGameIds = cartGameIds;
 
-            return View(viewModel);
+            bool hasReviewed = await _reviewSvc.HasUserReviewedGameAsync(userId, id);
+            ViewBag.HasReviewed = hasReviewed;
+
+            // Get reviews the user has liked
+            var likedReviewIds = _ctx.ReviewLikes
+                .Where(rl => rl.UserId == userId)
+                .Select(rl => rl.ReviewId)
+                .ToList();
+            ViewBag.LikedReviews = likedReviewIds;
+
+            var likeCounts = new Dictionary<int, int>();
+            foreach (var review in game.Reviews)
+            {
+                likeCounts[review.ReviewId] = await _reviewSvc.GetReviewLikeCountAsync(review.ReviewId);
+            }
+            ViewBag.LikeCounts = likeCounts;
+
+            return View(game);
         }
 
 
