@@ -18,5 +18,60 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: column;
+    justify-content: space-between;
+    background-color: #323232;
+}
+a {
+    text-decoration: none;
+    color:inherit;
+}
+ul{
+    list-style:none !important
+}
+
+
+/* Basic input styling */
+input {
+    background-color: #1D1D1D; /* Dark background */
+    color: #fff; /* White text */
+    border: 2px solid transparent;
+    padding: 10px;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.3s ease;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+    /* Set the outline color when input is focused */
+    input:focus {
+        border-color: #ff5722;
+        outline: none;
+    }
+
+    /* Change placeholder color */
+    input::placeholder {
+        color: #888;
+    }
+
+    /* Styling for autofill (Chrome and Safari) */
+    input:-webkit-autofill {
+        -webkit-box-shadow: 0 0 0px 1000px #1D1D1D inset; /* Keeps the background dark */
+        -webkit-text-fill-color: #fff; /* Ensures white text */
+        transition: background-color 5000s ease-in-out 0s; /* Prevent background color change */
+    }
+
+        input:-webkit-autofill:focus {
+            -webkit-box-shadow: 0 0 0px 1000px #1D1D1D inset; /* Same background for focus */
+            -webkit-text-fill-color: #fff; /* White text */
+        }
+
+
+
+
+.text-valid {
+    color: #ff5722;
+    font-weight:bold;
 }

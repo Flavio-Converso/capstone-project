@@ -53,11 +53,11 @@ namespace capstone_project.Controllers
 
                 await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("List", "Game");
             }
             catch (Exception ex)
             {
-                ModelState.AddModelError(string.Empty, "Tentativo di login fallito: " + ex.Message);
+                ModelState.AddModelError("LoginError", "Tentativo di login fallito: " + ex.Message);
                 return View(dto);
             }
         }

@@ -1,0 +1,60 @@
+﻿a{
+    color:white !important;
+}
+a:hover {
+    color: #ff5722 !important;
+}
+.myGreyBg {
+   background-color: #323232;
+}
+img {
+    max-width: 100%;
+    max-height: 100%;
+    min-height:100%;
+    object-fit: cover;
+    overflow:hidden;
+}
+
+.auth-btn, .auth-btn2 {
+    background: rgb(255,53,31);
+    background: linear-gradient(225deg, rgba(255,53,31,1) 0%, rgba(255,124,1,1) 100%);
+    border: none; /* No border */
+    color: #fff; /* White text */
+    padding: 10px 30px; /* Padding for button size */
+    border-radius: 30px; /* Rounded corners */
+    font-size: 18px; /* Font size */
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for 3D effect */
+    transition: background 0.4s ease, transform 0.3s ease; /* Smooth transition for background and scale */
+    z-index: 100 !important;
+}
+
+    .auth-btn:hover, .auth-btn2:hover {
+        background: linear-gradient(52deg, rgba(244,134,32,1) 9%, rgba(237,69,16,1) 49%);
+        transform: scale(1.05); /* Slight scaling effect on hover */
+    }
+
+    .auth-btn:active,.auth-btn2:active  {
+        transform: scale(1); /* Reset the button to its original size when clicked */
+    }
+
+.auth-btn2 {
+    font-size: 16px; /* Font size */
+    padding: 5px 15px; /* Padding for button size */
+    border-radius: 0 !important;
+    margin-left:3px;
+}
+
+    /*todo*/
+    .selectable-image {
+        border: 5px solid transparent;
+        cursor: pointer;
+    }
+
+    .selectable-image.selected {
+        border-color: red
+    }
+
+#continue-btn{
+    z-index:100 !important;
+}

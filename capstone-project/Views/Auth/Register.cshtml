@@ -2,221 +2,177 @@
 
 @{
     ViewData["Title"] = "Register";
-    var categories = ViewBag.Categories as List<Category>; 
+    var categories = ViewBag.Categories as List<Category>;
 }
+<link rel="stylesheet" href="~/css/auth.css" />
 
-<h1>Register</h1>
 
-<form asp-action="Register" method="post" enctype="multipart/form-data">
-    @Html.AntiForgeryToken()
-    <div asp-validation-summary="All" class="text-danger"></div>
-
-    <div class="form-group">
-        <label asp-for="Username" class="control-label"></label>
-        <input asp-for="Username" class="form-control" />
-        <span asp-validation-for="Username" class="text-danger"></span>
+<div class="row myGreyBg ">
+    <span class="px-4 pt-4 position-fixed w-25">
+        <a asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="https://placehold.co/150x80" alt="logo"> </a>
+    </span>
+    <div class="d-none d-lg-block col-lg-6 px-0">
+        <img src="~/images/banner/login_banner.jpg" />
     </div>
 
-    <div class="form-group">
-        <label asp-for="PasswordHash" class="control-label"></label>
-        <input asp-for="PasswordHash" type="password" class="form-control" />
-        <span asp-validation-for="PasswordHash" class="text-danger"></span>
-    </div>
 
-    <div class="form-group">
-        <label asp-for="ConfirmPassword" class="control-label"></label>
-        <input asp-for="ConfirmPassword" type="password" class="form-control" />
-        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-    </div>
+    <div class="col-12 col-lg-6 d-flex flex-column justify-content-center min-vh-100">
+        <h1 class="text-white text-center mb-5 contHide">Register</h1>
+        <form asp-action="Register" method="post" enctype="multipart/form-data">
+            @Html.AntiForgeryToken()
+           @*  <div asp-validation-summary="All" class="text-valid mt-1"></div> *@
 
-    <div class="form-group">
-        <label asp-for="Email" class="control-label"></label>
-        <input asp-for="Email" class="form-control" />
-        <span asp-validation-for="Email" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Surname" class="control-label"></label>
-        <input asp-for="Surname" class="form-control" />
-        <span asp-validation-for="Surname" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="BirthDate" class="control-label"></label>
-        <input asp-for="BirthDate" class="form-control" type="date" />
-        <span asp-validation-for="BirthDate" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Country" class="control-label"></label>
-        <input asp-for="Country" class="form-control" />
-        <span asp-validation-for="Country" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="City" class="control-label"></label>
-        <input asp-for="City" class="form-control" />
-        <span asp-validation-for="City" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Address" class="control-label"></label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ZipCode" class="control-label"></label>
-        <input asp-for="ZipCode" class="form-control" />
-        <span asp-validation-for="ZipCode" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="PhoneNumber" class="control-label"></label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Gender" class="control-label"></label>
-        <select class="form-control" asp-items="Html.GetEnumSelectList<Gender>()"></select>
-        <span asp-validation-for="Gender" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Choose a Pre-set Profile Image:</label>
-        <button type="button" id="toggle-predefined-images" class="btn btn-info">Select Predefined Image</button>
-
-        <!-- Hidden by default -->
-        <div id="predefined-images-container" style="display: none; margin-top: 10px;">
-            <!-- Make the images act as radio buttons -->
-            <div class="form-check predefined-image" data-image="image1.jpg">
-                <img src="/images/predefined/image1.jpg" alt="Predefined Image 1" class="selectable-image" width="100" />
+            <div class="form-group d-flex flex-column align-items-center mb-3">
+                <input asp-for="Username" class="w-50 contHide" placeholder="Username"/>
+                <span asp-validation-for="Username" class="text-valid mt-1 contHide"></span>
             </div>
 
-            <div class="form-check predefined-image" data-image="image2.jpg">
-                <img src="/images/predefined/image2.jpg" alt="Predefined Image 2" class="selectable-image" width="100" />
+            <div class="form-group d-flex flex-column align-items-center mb-3">
+                <input asp-for="PasswordHash" type="password" class="w-50 contHide" placeholder="Password" />
+                <span asp-validation-for="PasswordHash" class="text-valid mt-1 contHide"></span>
             </div>
 
-            <div class="form-check predefined-image" data-image="image3.jpg">
-                <img src="/images/predefined/image3.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+            <div class="form-group d-flex flex-column align-items-center mb-3">
+                <input asp-for="ConfirmPassword" type="password" class="w-50 contHide" placeholder="Conferma password" />
+                <span asp-validation-for="ConfirmPassword" class="text-valid mt-1 contHide"></span>
             </div>
-        </div>
-    </div>
 
-    <!-- Hidden field to capture the selected predefined image -->
-    <input type="hidden" id="SelectedPredefinedImage" name="SelectedPredefinedImage" />
+            <div class="form-group d-flex flex-column align-items-center mb-3">
+                <input asp-for="Email" class="w-50 contHide" placeholder="Email" />
+                <span asp-validation-for="Email" class="text-valid mt-1 contHide"></span>
+            </div>
+            <div class="form-group text-center">
+                <button type="button" id="continue-btn" class="auth-btn">Prosegui</button>
+            </div>            
+            <div class="form-group d-none contShow mb-3 mt-2">
+                <input asp-for="Name" class="w-50" placeholder="Nome"/>
+                <span asp-validation-for="Name" class="text-valid mt-1 contShow"></span>
+            </div>
 
-    <div class="form-group" id="upload-image-section">
-        <label asp-for="Img" class="control-label">Or Upload Your Own Image</label>
-        <input asp-for="Img" type="file" class="form-control-file" accept=".jpg,.jpeg,.png" />
-        <span asp-validation-for="Img" class="text-danger"></span>
-    </div>
+            <div class="form-group d-none contShow mb-3">
+                <input asp-for="Surname" class="w-50" placeholder="Cognome"/>
+                <span asp-validation-for="Surname" class="text-valid mt-1 contShow"></span>
+            </div>
+
+            <div class="form-group d-none contShow mb-3">
+                <input asp-for="BirthDate" class="w-50" type="date" />
+                <span asp-validation-for="BirthDate" class="text-valid mt-1 contShow"></span>
+            </div>
+
+            <div class="form-group d-none contShow mb-3">
+                <input asp-for="Country" class="w-50" placeholder="Nazionalità"/>
+                <span asp-validation-for="Country" class="text-valid mt-1 contShow"></span>
+            </div>
+
+            <div class="form-group d-none contShow mb-3">
+                <input asp-for="City" class="w-50" placeholder="Città"/>
+                <span asp-validation-for="City" class="text-valid mt-1 contShow"></span>
+            </div>
+
+            <div class="form-group d-none contShow mb-3">
+                <input asp-for="Address" class="w-50" placeholder="Indirizzo"/>
+                <span asp-validation-for="Address" class="text-valid mt-1 contShow"></span>
+            </div>
+
+            <div class="form-group d-none contShow mb-3">
+                <input asp-for="ZipCode" class="w-50" placeholder="CAP / Postal code"/>
+                <span asp-validation-for="ZipCode" class="text-valid mt-1 contShow"></span>
+            </div>
+
+            <div class="form-group d-none contShow mb-3">
+                <input asp-for="PhoneNumber" class="w-50" placeholder="Nr. telefono"/>
+                <span asp-validation-for="PhoneNumber" class="text-valid mt-1 contShow"></span>
+            </div>
+
+            <div class="form-group d-none contShow mb-3">
+                <select class="w-50" asp-items="Html.GetEnumSelectList<Gender>()"></select>
+                <span asp-validation-for="Gender" class="text-valid mt-1 contShow"></span>
+            </div>
 
 
+            <div class="form-group d-none text-center contShow">
+                <button type="button" id="continue-btn-step2" class="auth-btn">Continua</button>
+            </div>
+
+            <div class="form-group d-none text-center contShow3" id="back-btn-step3">
+                <button type="button" class="auth-btn">Indietro</button>
+            </div>
 
 
+            <div class="form-group d-none contShow2 mb-3">
+                <label class="text-white">Choose a Pre-set Profile Image:</label>
+                <button type="button" id="toggle-predefined-images" class="auth-btn2">Select Predefined Image</button>
 
-    <div class="form-group mt-3">
-        <label class="control-label mb-1">Inserisci categorie di videogiochi preferiti:</label>
-        <div id="categoriesCheckboxes">
-            @if (categories != null && categories.Any())
-            {
-                foreach (var c in categories)
-                {
-                    <div class="form-check">
-                        <input type="checkbox"
-                               class="form-check-input"
-                               id="category-@c.CategoryId"
-                               name="SelectedCategories"
-                               value="@c.CategoryId" />
-                        <label class="form-check-label" for="category-@c.CategoryId">
-                            @c.Name
-                        </label>
+                <!-- Hidden by default -->
+                <div id="predefined-images-container" style="display: none; margin-top: 10px;">
+                    <!-- Make the images act as radio buttons -->
+                    <div class="form-check predefined-image" data-image="image1.jpg">
+                        <img src="/images/predefined/image1.jpg" alt="Predefined Image 1" class="selectable-image" width="100" />
                     </div>
-                }
-            }
-            else
-            {
-                <p class="text-warning">Nessuna categoria disponibile.</p>
-            }
 
+                    <div class="form-check predefined-image" data-image="image2.jpg">
+                        <img src="/images/predefined/image2.jpg" alt="Predefined Image 2" class="selectable-image" width="100" />
+                    </div>
+
+                    <div class="form-check predefined-image" data-image="image3.jpg">
+                        <img src="/images/predefined/image3.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hidden field to capture the selected predefined image -->
+            <input type="hidden" id="SelectedPredefinedImage" name="SelectedPredefinedImage" />
+
+            <div class="form-group d-none contShow2" id="upload-image-section">
+                <label asp-for="Img" class="control-label text-white">Or Upload Your Own Image</label>
+                <input asp-for="Img" type="file" class="file" accept=".jpg,.jpeg,.png" />
+                <span asp-validation-for="Img" class="text-valid mt-1"></span>
+            </div>
+
+
+            <div class="form-group mt-3 d-none contShow2">
+                <label class="control-label mb-1 text-white">Inserisci categorie di videogiochi preferiti:</label>
+                <div id="categoriesCheckboxes">
+                    @if (categories != null && categories.Any())
+                    {
+                        foreach (var c in categories)
+                        {
+                            <div class="form-check">
+                                <input type="checkbox"
+                                       class="form-check-input"
+                                       id="category-@c.CategoryId"
+                                       name="SelectedCategories"
+                                       value="@c.CategoryId" />
+                                <label class="form-check-label text-white" for="category-@c.CategoryId">
+                                    @c.Name
+                                </label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-warning">Nessuna categoria disponibile.</p>
+                    }
+
+                </div>
+                <span asp-validation-for="SelectedCategories" class="text-valid mt-1"></span>
+            </div>
+
+
+
+            <div class="form-group text-center d-none contShow2">
+                <input class="auth-btn" type="submit" value="Register" class="btn btn-primary" />
+            </div>
+        </form>
+        <div class="mt-4 w-50 d-flex justify-content-center">
+            <a asp-action="Login">Hai già un'account?</a>
         </div>
-        <span asp-validation-for="SelectedCategories" class="text-danger"></span>
     </div>
-
-
-
-    <div class="form-group">
-        <input type="submit" value="Register" class="btn btn-primary" />
-    </div>
-</form>
-
-<div>
-    <a asp-action="Login">Already have an account? Login here.</a>
 </div>
 
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        $(document).ready(function() {
-            // Toggle pre-defined images visibility
-            $('#toggle-predefined-images').click(function() {
-                $('#predefined-images-container').toggle();
-
-                var isVisible = $('#predefined-images-container').is(':visible');
-                $(this).text(isVisible ? 'Hide Predefined Images' : 'Select Predefined Image');
-            });
-
-            // Handle image click
-            $('.selectable-image').click(function() {
-                var selectedImage = $(this).parent().data('image');
-                
-                // If the image is already selected, unselect it
-                if ($(this).hasClass('selected')) {
-                    // Unselect image
-                    $('#SelectedPredefinedImage').val(''); // Clear the hidden input
-                    $('.selectable-image').removeClass('selected'); // Remove the selected class
-
-                    // Show the file upload section again
-                    $('#upload-image-section').show();
-
-                    // Change button text to allow selection again
-                    $('#toggle-predefined-images').text('Select Predefined Image');
-                } else {
-                    // Set the selected image value to the hidden input
-                    $('#SelectedPredefinedImage').val(selectedImage);
-
-                    // Hide the pre-defined images section
-                    $('#predefined-images-container').hide();
-
-                    // Hide the file upload section
-                    $('#upload-image-section').hide();
-
-                    // Optionally, highlight the selected image
-                    $('.selectable-image').removeClass('selected'); // Remove any previous selected class
-                    $(this).addClass('selected'); // Add selected class to the clicked image
-                }
-            });
-        });
-    </script>
-    <style>
-        /* todo / temporary */
-        .selectable-image {
-            border: 5px solid transparent;
-            cursor: pointer;
-        }
-        .selectable-image.selected {
-            border-color: red
-        }
-    </style>
+        <script src="~/js/auth.js" asp-append-version="true"></script>       
     }
 }

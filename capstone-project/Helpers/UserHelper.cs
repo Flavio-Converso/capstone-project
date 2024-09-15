@@ -30,6 +30,7 @@ namespace capstone_project.Helpers
             }
             else
             {
+                _httpContextAccessor.HttpContext.Response.Redirect("/Auth/Login");
                 throw new InvalidOperationException("User ID is not available or invalid.");
             }
         }

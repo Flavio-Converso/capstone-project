@@ -35,14 +35,14 @@ namespace capstone_project.Services.Auth
 
                 if (existingUser == null)
                 {
-                    _logger.LogWarning("Tentativo di login fallito: username {Username} non trovato.", dto.Username);
-                    throw new Exception("Il nome utente non esiste.");
+                    _logger.LogWarning("Tentativo di accesso fallito: username {Username} non trovato.", dto.Username);
+                    throw new Exception("il nome utente non esiste.");
                 }
 
                 if (!_passwordHelper.VerifyPassword(dto.Password, existingUser.PasswordHash))
                 {
-                    _logger.LogWarning("Tentativo di login fallito: password errata per l'username {Username}.", dto.Username);
-                    throw new Exception("Password errata.");
+                    _logger.LogWarning("Tentativo di accesso fallito: password errata per l'username {Username}.", dto.Username);
+                    throw new Exception("password errata.");
                 }
 
                 _logger.LogInformation("Login riuscito per l'username: {Username}", dto.Username);

@@ -32,7 +32,8 @@ builder.Services.AddAuthorization(options =>
     // Master Policy
     options.AddPolicy("MasterPolicy", policy =>
     {
-        policy.RequireClaim(ClaimTypes.Role, "master"); // [Authorize(Policy = "MasterPolicy")]
+        policy.RequireClaim(ClaimTypes.Role, "master"); // [Authorize(Policy = "MasterPolicy")] // @if (User.IsInRole("master")){}
+
     });
 });
 
