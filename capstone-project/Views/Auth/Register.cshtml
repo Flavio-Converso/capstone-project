@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Register";
+    ViewBag.NavbarMarginTop = false;
     var categories = ViewBag.Categories as List<Category>;
 }
 <link rel="stylesheet" href="~/css/auth.css" />
@@ -110,7 +111,7 @@
 
             <div class="form-group d-none contShow2 mb-3 mt-4">
                 <label class="text-white">Scegli un'immagine profilo</label>
-                <button type="button" id="toggle-predefined-images" class="auth-btn2">Scegli un'immagine</button>
+                <button type="button" id="toggle-predefined-images" class="auth-btn2 mt-2">Scegli un'immagine</button>
 
                 <!-- Hidden by default -->
                 <div id="predefined-images-container" style="display: none; margin-top: 10px;">

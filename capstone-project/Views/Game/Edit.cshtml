@@ -28,9 +28,16 @@
     <!-- Game Platform -->
     <div class="form-group">
         <label asp-for="Platform" class="control-label"></label>
-        <input asp-for="Platform" class="form-control" />
+        <select asp-for="Platform" class="form-control">
+            <option value="Tutte" selected disabled>Select a platform</option>
+            <option value="PC">PC</option>
+            <option value="PlayStation">PlayStation</option>
+            <option value="Xbox">Xbox</option>
+            <option value="Nintendo">Nintendo</option>
+        </select>
         <span asp-validation-for="Platform" class="text-danger"></span>
     </div>
+
 
     <!-- Game Publisher -->
     <div class="form-group">

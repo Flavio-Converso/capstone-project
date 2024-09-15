@@ -29,7 +29,7 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div>
-                        <a asp-area="" asp-controller="Game" asp-action="List"><img class="img-fluid" src="https://placehold.co/150x80" alt="logo"> </a>
+                        <a class="navLink" asp-area="" asp-controller="Game" asp-action="List"><img class="img-fluid" src="https://placehold.co/150x80" alt="logo"> </a>
                     </div>
                 }
 
@@ -38,7 +38,7 @@
                         <i class=" bi bi-person-circle fs-3 px-1 opacity-0"></i>
                         <i class=" bi bi-person-circle fs-3 px-1 opacity-0"></i>                        
                     <div>
-                        <a asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="https://placehold.co/190x100" alt="logo"> </a>
+                            <a class="navLink" asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="https://placehold.co/190x100" alt="logo"> </a>
                     </div>
 
                 }
@@ -47,17 +47,17 @@
                     @if (User.IsInRole("master"))
                     {
                         <div class="d-none d-lg-flex justify-content-around px-5 mb-2 navbar-text">
-                            <a class="text-white fs-7" asp-area="" asp-controller="Category" asp-action="List">
+                            <a class="text-white fs-7 navLink" asp-area="" asp-controller="Category" asp-action="List">
                                 Categorie
                             </a>
-                            <a class="text-white fs-7" asp-area="" asp-controller="Pegi" asp-action="List">
+                                <a class="text-white fs-7 navLink" asp-area="" asp-controller="Pegi" asp-action="List">
                                 Pegi
                             </a>
-                            <a class="text-white fs-7" asp-area="" asp-controller="Restriction"
+                                <a class="text-white fs-7 navLink" asp-area="" asp-controller="Restriction"
                                asp-action="List">
                                 Restrizioni
                             </a>
-                            <a class="text-white fs-7" asp-area="" asp-controller="Master"
+                                <a class="text-white fs-7 navLink" asp-area="" asp-controller="Master"
                                asp-action="Dashboard">
                                 Roles
                             </a>
@@ -66,10 +66,10 @@
                     
                     @if (User.Identity.IsAuthenticated && !User.IsInRole("master")){
                         <div class="d-none d-lg-flex justify-content-around px-5 mb-2 navbar-text">
-                            <a class="text-white fs-7">RPG</a>
-                            <a class="text-white fs-7">Avventura</a>
-                            <a class="text-white fs-7">FPS</a>
-                            <a class="text-white fs-7">Picchiaduro</a>
+                            <a class="text-white fs-7 navLink">RPG</a>
+                            <a class="text-white fs-7 navLink">Avventura</a>
+                            <a class="text-white fs-7 navLink">FPS</a>
+                            <a class="text-white fs-7 navLink">Picchiaduro</a>
                         </div>
                     }
 
@@ -77,22 +77,22 @@
                     {
                     <div class="search-pill personal-round d-flex flex-sm-column-reverse flex-lg-row justify-content-center align-items-center ps-md-3">
                         <div id="category" class="d-none d-md-flex">
-                            <a href="#" class="d-flex align-items-center platform-link ps-2 pe-3 py-2">
+                                    <a href="#" class="d-flex align-items-center platform-link ps-2 pe-3 py-2 navLink">
                                 <i class="bi bi-pc-display-horizontal"></i> <span class="ps-2">PC</span>
                             </a>
-                            <a href="#" class="d-flex align-items-center platform-link px-3 py-2">
+                                    <a href="#" class="d-flex align-items-center platform-link px-3 py-2 navLink">
                                 <i class="bi bi-playstation"></i> <span class="ps-2">PlayStation</span>
                             </a>
-                            <a href="#" class="d-flex align-items-center platform-link px-3 py-2">
+                                    <a href="#" class="d-flex align-items-center platform-link px-3 py-2 navLink">
                                 <i class="bi bi-xbox"></i> <span class="ps-2">Xbox</span>
                             </a>
-                            <a href="#" class="d-flex align-items-center platform-link ps-3 pe-4 py-2">
+                                    <a href="#" class="d-flex align-items-center platform-link ps-3 pe-4 py-2 navLink">
                                 <i class="bi bi-nintendo-switch"></i> <span class="ps-2">Nintendo</span>
                             </a>
                         </div>
                         <div class="search-pill-content d-flex align-items-center justify-content-center">
                             <input type="text" class="search-input form-control" placeholder="Search..." />
-                            <a href="#" class="personal-round search-icon d-flex align-items-center py-3">
+                                    <a href="#" class="navLink personal-round search-icon d-flex align-items-center py-3">
                                 <i class="bi bi-search text-white"></i>
                             </a>
                         </div>
@@ -102,28 +102,28 @@
                 <div>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <a asp-area="" asp-controller="Wishlist"
+                            <a class="navLink" asp-controller="Wishlist"
                            asp-action="Wishlist">
                             <i class="sm-icon bi bi-bookmark-heart fs-3 px-2 text-white"></i>
                         </a>
-                        <a asp-area="" asp-controller="Cart" asp-action="Cart">
+                            <a class="navLink" asp-area="" asp-controller="Cart" asp-action="Cart">
                             <i class="sm-icon bi bi-cart2 fs-3 px-2 text-white"></i>
                         </a>
                     }                   
                     @if (!User.Identity.IsAuthenticated)
                     {
-                        <a asp-area="" asp-controller="Auth"
+                            <a class="navLink" asp-area="" asp-controller="Auth"
                            asp-action="Login">
                             <i class="sm-icon bi bi-person-circle fs-1 px-2 text-white"></i>
                         </a>
                     }
                     else
                     {
-                        <a asp-area="" asp-controller="User"
+                            <a class="navLink" asp-area="" asp-controller="User"
                            asp-action="Profile">
                             <i class="sm-icon bi bi-person-circle fs-3 px-2 text-white"></i>
                         </a>
-                        <a asp-area="" asp-controller="Auth"
+                            <a class="navLink" asp-area="" asp-controller="Auth"
                            asp-action="Logout">
                             <i class="sm-icon bi bi-box-arrow-right fs-3 px-2 text-white"></i>
                         </a>
@@ -135,11 +135,12 @@
         </header>
     }
 
-    <div class="container-fluid">
+    <div class="container-fluid @(ViewBag.NavbarMarginTop == true ? "mt-150" : "") @(ViewBag.Px0 == true ? "px-0" : "")">
         <main role="main">
             @RenderBody()
         </main>
     </div>
+
 
 <footer>
 

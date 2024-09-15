@@ -1,103 +1,84 @@
-﻿    @model IEnumerable<capstone_project.Models.Game>
+﻿@model IEnumerable<capstone_project.Models.Game>
 
 @{
     ViewBag.Title = "Lista Giochi";
+    ViewBag.NavbarMarginTop = false;
+    ViewBag.Px0 = true;
     var wishlistGameIds = ViewBag.WishlistGameIds as List<int> ?? new List<int>();
     var cartGameIds = ViewBag.CartGameIds as List<int> ?? new List<int>(); // List of games in the cart
+    var firstGame = Model.FirstOrDefault();
+    var remainingGames = Model.Skip(1);
 }
 
-<h2>Lista Giochi</h2>
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>Copertina</th>
-            <th>Nome</th>
-            <th>Piattaforma</th>
-            <th>Prezzo</th>
-            <th>Data di Rilascio</th>
-            <th>Quantità disp.</th>
-            <th>Azioni</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var game in Model)
+<div class="container-fluid px-0 position-relative">
+    <a asp-action="Details" asp-route-id="@firstGame.GameId" class="text-decoration-none">
+        @if (firstGame.GameImages != null && firstGame.GameImages.Any())
         {
-                <tr>
-                    <td>
-                    @if (game.GameImages != null && game.GameImages.Any())
-                    {
-                        var coverImage = game.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
-                        if (coverImage != null)
-                        {
-                            var base64Image = Convert.ToBase64String(coverImage.Img);
-                            var imgSrc = $"data:image/png;base64,{base64Image}";
-                                        <img src="@imgSrc" alt="@game.Name Cover" style="width:100px;height:auto;" />
-                        }
-                        else
-                        {
-                                        <span>No cover image</span>
-                        }
-                    }
-                    else
-                    {
-                                <span>No cover image</span>
-                    }
-                    </td>
-                    <td>@game.Name</td>
-                    <td>@game.Platform</td>
-                    <td>@game.Price.ToString("C")</td>
-                    <td>@game.ReleaseDate.ToShortDateString()</td>
-                    <td>
-                    @if (game.QuantityAvail > 0)
-                    {
-                        @game.QuantityAvail
-                    }
-                    else
-                    {
-                                <span class="text-danger">Esaurito</span>
-                    }
-                    </td>
-                    <td>
-                        <a asp-action="Details" asp-route-id="@game.GameId" class="btn btn-info">Dettagli</a>
-                        <a asp-action="Edit" asp-route-id="@game.GameId" class="btn btn-primary">Modifica</a>
-                        <a asp-action="Delete" asp-route-id="@game.GameId" class="btn btn-danger">Elimina</a>
-                    @if (wishlistGameIds.Contains(game.GameId))
-                    {
-                        <form asp-controller="Wishlist" asp-action="RemoveFromWishlist" method="post" style="display:inline;">
-                            @Html.AntiForgeryToken()
-                                    <input type="hidden" name="gameId" value="@game.GameId" />
-                                    <input type="hidden" name="source" value="List" />
-                                    <button type="submit" class="btn btn-danger">Rimuovi dalla Wishlist</button>
-                                </form>
-                    }
-                    else
-                    {
-                        <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display:inline;">
-                            @Html.AntiForgeryToken()
-                                    <input type="hidden" name="gameId" value="@game.GameId" />
-                                    <input type="hidden" name="source" value="List" />
-                                    <button type="submit" class="btn btn-warning">Aggiungi alla Wishlist</button>
-                                </form>
-                    }
+            var coverImage = firstGame.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
+            var base64Image = Convert.ToBase64String(coverImage!.Img);
+            var imgSrc = $"data:image/png;base64,{base64Image}";
+            <div class="position-relative">
+                <img src="@imgSrc" class="img-fluid w-100 firstImg" alt="@firstGame.Name Cover" style="max-height:690px;" />
 
-                    @if (cartGameIds.Contains(game.GameId))
-                    {
-                                <button class="btn btn-secondary" disabled>Nel Carrello</button>
-                    }
-                    else
-                    {
-                                <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline;">
-                            @Html.AntiForgeryToken()
-                                    <input type="hidden" name="gameId" value="@game.GameId" />
-                                    <input type="hidden" name="source" value="List" />
-                                    <button type="submit" class="btn btn-success" @(game.QuantityAvail == 0 ? "disabled" : "")>Aggiungi al Carrello</button>
-                                </form>
-                    }
-                    </td>
-                </tr>
+                <!-- Game Name -->
+                <span class="position-absolute text-white fs-2" style="top: 45%; left: 13%">
+                    @firstGame.Name
+                </span>
+
+                <!-- Badge and Price Container -->
+                <div class="d-flex align-items-center position-absolute" style="top: 55%; left: 20%;">
+                    <!-- Badge -->
+                    <span class="myBadge myOrangeBg ps-3 fs-3 me-2">@firstGame.Platform</span>
+
+                    <!-- Price -->  
+                    <span class="text-white ms-2 fw-bold fs-1">
+                        @firstGame.Price €
+                    </span>
+                </div>
+            </div>
         }
-    </tbody>
-</table>
+    </a>
+</div>
 
-<a asp-action="Create" class="btn btn-success">Aggiungi Nuovo Gioco</a>
+
+<div class="container">
+    @if (User.IsInRole("master"))
+    {
+        <a asp-action="Create" class="auth-btn text-white d-inline-block mt-5">Aggiungi Nuovo Gioco</a>
+    }
+    <div class="row">
+
+        <h1 class="text-white fs-3 mt-5">
+            In tendenza
+            <i class="bi bi-chevron-right fs-4 text-secondary"></i>
+        </h1>
+        @foreach (var game in remainingGames)
+        {
+            <div class="col-md-4 mb-4 mt-4">
+                <a asp-action="Details" asp-route-id="@game.GameId" class="text-decoration-none">
+                    <div class="game-card border-0 ">
+                        <div class="position-relative ">
+                            @if (game.GameImages != null && game.GameImages.Any())
+                            {
+                                var coverImage = game.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
+                                var base64Image = Convert.ToBase64String(coverImage!.Img);
+                                var imgSrc = $"data:image/png;base64,{base64Image}";
+                                <img src="@imgSrc" class="h-100 w-100 game-card-img" alt="@game.Name Cover" style="height: 200px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <img src="path/to/placeholder/image.jpg" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;" />
+                            }
+                            <!-- Badge for Platform -->
+                            <span class="myBadge myOrangeBg position-absolute px-1 py-1" style="bottom: -3.5px; left: 0px;">@game.Platform</span>
+                        </div>
+                    </div>
+                </a>
+                <div class="d-flex justify-content-between align-items-center mt-2">
+                    <h5 class="game-card-title text-white">@game.Name </h5>
+                    <span class="text-white fw-bold fs-6">@game.Price €</span>
+                </div>
+            </div>
+        }
+    </div>
+</div>

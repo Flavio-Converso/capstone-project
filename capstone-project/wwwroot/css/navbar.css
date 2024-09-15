@@ -1,6 +1,6 @@
 
 
-a:hover,
+.navLink:hover,
 .sm-icon:hover {
     color: #ff5722 !important;
     cursor: pointer;
