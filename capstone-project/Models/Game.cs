@@ -1,10 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace capstone_project.Models
 {
-    [Index(nameof(Name), IsUnique = true)]
     public class Game
     {
         [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
