@@ -81,11 +81,19 @@ select {
     }
 
 #predefined-images-container {
-    display: none ;
+    display: none;
     margin-top: 10px !important;
     width: 75% !important; /* Make the container take half the horizontal space */
     margin: 0 auto !important; /* Center the container */
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
 }
+    #predefined-images-container.show {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
 #categoriesCheckboxes {
     display: flex !important;
     flex-wrap: wrap !important;
@@ -117,3 +125,14 @@ select {
     opacity: 0 !important;
     cursor: pointer !important;
 }
+.custom-alert {
+    color: white;
+    text-align: center;
+    background-color: #ff5722
+}
+
+    /* Make it fade out smoothly */
+    .custom-alert.fade-out {
+        opacity: 0;
+        transform: translateY(-10px); /* Slight slide-up animation */
+    }

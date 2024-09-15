@@ -10,7 +10,13 @@
         <a asp-area="" asp-controller="Home" asp-action="Index"><img class="img-fluid" src="https://placehold.co/150x80" alt="logo"> </a>
     </span>
     <div class="col-12 col-lg-6 d-flex flex-column justify-content-center min-vh-100"> 
-        <h1 class="text-white text-center mb-5">Login</h1>
+        <h1 class="text-white text-center mb-3">Login</h1>
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div id="successMessage" class="text-center text-orange mb-4 fw-bold fs-4">
+                @TempData["SuccessMessage"]
+            </div>
+        }
         <form asp-action="Login" method="post">
             @Html.AntiForgeryToken()
             @if (ViewData.ModelState.ContainsKey("LoginError"))
@@ -49,4 +55,21 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        setTimeout(function () {
+            var successMessage = document.getElementById("successMessage");
+            var h1 = document.querySelector("h1");
+            if (successMessage) {
+                // Add the fade-out class
+                successMessage.classList.add("fade-outt");
+
+                // Wait for the transition to finish before fully hiding the element
+                setTimeout(function () {
+                    successMessage.classList.add("d-none");
+                    h1.classList.remove("mb-3");
+                    h1.classList.add("mb-5");
+                }, 1000); // The time matches the CSS transition (1 second)
+            }
+        }, 5000); // 5 seconds delay
+    </script>
 }

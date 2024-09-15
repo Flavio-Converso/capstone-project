@@ -83,16 +83,21 @@ namespace capstone_project.Controllers
             try
             {
                 await _authService.RegisterAsync(dto);
+
+                // Store a message in TempData
+                TempData["SuccessMessage"] = "Registrazione completata con successo! Effettua il login per continuare.";
+
                 return RedirectToAction("Login");
             }
             catch (Exception ex)
             {
                 var categories = await _categorySvc.GetAllCategoriesAsync();
                 ViewBag.Categories = categories;
-                ModelState.AddModelError("RegisterError", "Registrazione fallita: " + ex.Message); // Custom error key
+                ModelState.AddModelError("RegisterError", "Registrazione fallita: " + ex.Message);
                 return View(dto);
             }
         }
+
 
 
         public async Task<IActionResult> Logout()

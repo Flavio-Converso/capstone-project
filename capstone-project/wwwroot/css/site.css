@@ -79,7 +79,13 @@ input {
             -webkit-text-fill-color: #fff; /* White text */
         }
 
-
+.text-orange {
+    color:#F2701B;
+}
+.fade-outt {
+    opacity: 0;
+    transition: opacity 1s ease-out;
+}
 .auth-btn, .auth-btn2 {
     background: rgb(255,53,31);
     background: linear-gradient(225deg, rgba(255,53,31,1) 0%, rgba(255,124,1,1) 100%);

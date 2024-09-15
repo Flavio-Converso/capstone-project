@@ -71,13 +71,25 @@ document.getElementById("back-btn-step3").addEventListener("click", function () 
     document.getElementById("back-btn-step3").classList.add("d-none")
 })
 
-
 $(document).ready(function () {
     // Toggle pre-defined images visibility
     $('#toggle-predefined-images').click(function () {
-        $('#predefined-images-container').toggle();
+        var container = $('#predefined-images-container');
 
-        var isVisible = $('#predefined-images-container').is(':visible');
+        if (container.hasClass('show')) {
+            container.removeClass('show');
+            setTimeout(function () {
+                container.hide();  // Hide after the transition finishes
+            }, 500);  // Match the CSS transition duration (0.5s)
+        } else {
+            container.show();  // Make it visible instantly
+            setTimeout(function () {
+                container.addClass('show');  // Apply the transition effect
+            }, 10);  // Small delay to ensure CSS transition is triggered
+        }
+
+        // Change the button text based on visibility
+        var isVisible = container.hasClass('show');
         $(this).text(isVisible ? 'Nascondi' : 'Scegli un\'immagine');
     });
 
@@ -101,7 +113,10 @@ $(document).ready(function () {
             $('#SelectedPredefinedImage').val(selectedImage);
 
             // Hide the pre-defined images section
-            $('#predefined-images-container').hide();
+            $('#predefined-images-container').removeClass('show');
+            setTimeout(function () {
+                $('#predefined-images-container').hide(); // Hide after transition
+            }, 500);  // Match transition duration
 
             // Hide the file upload section
             $('#upload-image-section').addClass('d-none');
@@ -110,7 +125,7 @@ $(document).ready(function () {
             $('.selectable-image').removeClass('selected'); // Remove any previous selected class
             $(this).addClass('selected'); // Add selected class to the clicked image
 
-            // Change button text back to 'Select Predefined Image'
+            // Change button text back to 'Scegli un'immagine'
             $('#toggle-predefined-images').text('Scegli un\'immagine');
         }
     });
