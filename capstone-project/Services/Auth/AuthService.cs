@@ -126,7 +126,7 @@ namespace capstone_project.Services.Auth
 
                 userRegister.PasswordHash = _passwordHelper.HashPassword(dto.PasswordHash);
 
-                var userRole = await _ctx.Roles.Where(r => r.RoleId == 1).FirstOrDefaultAsync();
+                var userRole = await _ctx.Roles.Where(r => r.RoleId == 2).FirstOrDefaultAsync();
                 userRegister.Roles.Add(userRole!);
 
                 await _ctx.Users.AddAsync(userRegister);
