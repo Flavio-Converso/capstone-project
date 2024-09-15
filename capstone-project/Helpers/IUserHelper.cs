@@ -6,5 +6,6 @@ namespace capstone_project.Helpers
     {
         Task<User> GetUserIdAsync(int userId);
         int GetUserIdClaim();
+        Task<string?> GetProfileImageBase64Async();
     }
 }

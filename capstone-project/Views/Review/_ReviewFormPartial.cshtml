@@ -1,0 +1,27 @@
+﻿@model capstone_project.Models.ViewModels.ReviewViewModel
+<h3>Post a Review</h3>
+<form asp-controller="Review" asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" name="GameId" value="@Model.GameId" />
+
+    <div class="form-group">
+        <label for="Title">Review Title</label>
+        <input type="text" class="form-control" asp-for="Title" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Content">Review Content</label>
+        <textarea class="form-control" asp-for="Content"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label for="Rating">Rating (0 to 5)</label>
+        <input type="number" class="form-control" asp-for="Rating" step="0.1" min="0" max="5" />
+        <span asp-validation-for="Rating" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Review</button>
+</form>

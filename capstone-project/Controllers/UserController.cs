@@ -134,5 +134,19 @@ namespace capstone_project.Controllers
                 return View(viewModel);
             }
         }
+
+        public async Task<IActionResult> GetProfileImage()
+        {
+            var base64Image = await _userHelper.GetProfileImageBase64Async();
+
+            if (!string.IsNullOrEmpty(base64Image))
+            {
+                return Json(new { success = true, image = base64Image });
+            }
+
+            return Json(new { success = false, message = "No image found" });
+        }
+
+
     }
 }

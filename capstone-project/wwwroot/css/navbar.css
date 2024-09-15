@@ -171,3 +171,10 @@
     -webkit-box-shadow: none;
     -moz-box-shadow: none;
 }
+
+#profile-image-nav {
+    width: 40px;
+    height: 40px;
+    border-radius: 30px;
+    margin-bottom:9px;
+}

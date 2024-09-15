@@ -1,5 +1,6 @@
 ﻿using capstone_project.Data;
 using capstone_project.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
 namespace capstone_project.Helpers
@@ -34,5 +35,18 @@ namespace capstone_project.Helpers
                 throw new InvalidOperationException("User ID is not available or invalid.");
             }
         }
+        public async Task<string?> GetProfileImageBase64Async()
+        {
+            var userId = GetUserIdClaim();
+            var user = await _ctx.Users.FirstOrDefaultAsync(u => u.UserId == userId);
+
+            if (user?.ProfileImg != null)
+            {
+                return Convert.ToBase64String(user.ProfileImg);
+            }
+
+            return null;
+        }
+
     }
 }

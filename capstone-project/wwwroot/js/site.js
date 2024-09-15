@@ -1,4 +1,17 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
-
-// Write your JavaScript code.
+﻿$(document).ready(function () {
+    $.ajax({
+        url: '/User/GetProfileImage',
+        method: 'GET',
+        success: function (response) {
+            if (response.success && response.image) {
+                // Correctly set the Base64 image in the img tag
+                $('#profile-image-nav').attr('src', 'data:image/jpeg;base64,' + response.image);
+            } else {
+                console.log(response.message); // Log if there's no image
+            }
+        },
+        error: function () {
+            console.log('Error fetching profile image');
+        }
+    });
+});
