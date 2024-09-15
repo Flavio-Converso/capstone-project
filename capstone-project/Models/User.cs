@@ -6,9 +6,9 @@ namespace capstone_project.Models
 {
     public enum Gender
     {
-        Male,
-        Female,
-        Other
+        Maschio = 1,
+        Femmina = 2,
+        Altro = 3
     }
 
     [Index(nameof(Username), IsUnique = true)]

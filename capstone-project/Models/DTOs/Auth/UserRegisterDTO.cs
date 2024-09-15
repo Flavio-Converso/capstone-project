@@ -33,7 +33,8 @@ namespace capstone_project.Models.DTOs.Auth
 
         [Required(ErrorMessage = "La data di nascita è obbligatoria.")]
         [DataType(DataType.Date, ErrorMessage = "Il formato della data di nascita non è valido.")]
-        public required DateTime BirthDate { get; set; }
+        public DateTime? BirthDate { get; set; }
+
 
         [Required(ErrorMessage = "Il paese è obbligatorio.")]
         [MaxLength(50, ErrorMessage = "Il paese non può superare i 50 caratteri.")]
@@ -57,7 +58,8 @@ namespace capstone_project.Models.DTOs.Auth
         public required string PhoneNumber { get; set; }
 
         [Required(ErrorMessage = "Il genere è obbligatorio.")]
-        public required Gender Gender { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Seleziona un genere valido.")]
+        public Gender Gender { get; set; }
 
         public string? SelectedPredefinedImage { get; set; }
 

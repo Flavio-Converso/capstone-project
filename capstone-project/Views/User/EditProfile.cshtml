@@ -73,7 +73,7 @@
     <!-- Pre-set image selection -->
     <div class="form-group">
         <label>Choose a Pre-set Profile Image:</label>
-        <button type="button" id="toggle-predefined-images" class="btn btn-info">Select Predefined Image</button>
+        <button type="button" id="toggle-predefined-images" class="btn btn-info">Scegli un\'immagine</button>
 
         <!-- Hidden by default -->
         <div id="predefined-images-container" style="display: none; margin-top: 10px;">
@@ -111,7 +111,7 @@
             $('#toggle-predefined-images').click(function() {
                 $('#predefined-images-container').toggle();
                 var isVisible = $('#predefined-images-container').is(':visible');
-                $(this).text(isVisible ? 'Hide Predefined Images' : 'Select Predefined Image');
+                $(this).text(isVisible ? 'Nascondi' : 'Scegli un\'immagine');
             });
 
             // Handle image click

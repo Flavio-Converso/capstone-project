@@ -113,7 +113,7 @@ namespace capstone_project.Services.Auth
                     PasswordHash = string.Empty,
                     Name = dto.Name,
                     Surname = dto.Surname,
-                    BirthDate = dto.BirthDate,
+                    BirthDate = (DateTime)dto.BirthDate!,
                     Gender = dto.Gender,
                     Country = dto.Country,
                     City = dto.City,

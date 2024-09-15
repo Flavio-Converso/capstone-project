@@ -89,10 +89,11 @@ namespace capstone_project.Controllers
             {
                 var categories = await _categorySvc.GetAllCategoriesAsync();
                 ViewBag.Categories = categories;
-                ModelState.AddModelError(string.Empty, "Registrazione fallita: " + ex.Message);
+                ModelState.AddModelError("RegisterError", "Registrazione fallita: " + ex.Message); // Custom error key
                 return View(dto);
             }
         }
+
 
         public async Task<IActionResult> Logout()
         {

@@ -78,7 +78,7 @@ $(document).ready(function () {
         $('#predefined-images-container').toggle();
 
         var isVisible = $('#predefined-images-container').is(':visible');
-        $(this).text(isVisible ? 'Hide Predefined Images' : 'Select Predefined Image');
+        $(this).text(isVisible ? 'Nascondi' : 'Scegli un\'immagine');
     });
 
     // Handle image click
@@ -92,10 +92,10 @@ $(document).ready(function () {
             $('.selectable-image').removeClass('selected'); // Remove the selected class
 
             // Show the file upload section again
-            $('#upload-image-section').show();
+            $('#upload-image-section').removeClass('d-none');
 
             // Change button text to allow selection again
-            $('#toggle-predefined-images').text('Select Predefined Image');
+            $('#toggle-predefined-images').text('Scegli un\'immagine');
         } else {
             // Set the selected image value to the hidden input
             $('#SelectedPredefinedImage').val(selectedImage);
@@ -104,11 +104,14 @@ $(document).ready(function () {
             $('#predefined-images-container').hide();
 
             // Hide the file upload section
-            $('#upload-image-section').hide();
+            $('#upload-image-section').addClass('d-none');
 
             // Optionally, highlight the selected image
             $('.selectable-image').removeClass('selected'); // Remove any previous selected class
             $(this).addClass('selected'); // Add selected class to the clicked image
+
+            // Change button text back to 'Select Predefined Image'
+            $('#toggle-predefined-images').text('Scegli un\'immagine');
         }
     });
 });
