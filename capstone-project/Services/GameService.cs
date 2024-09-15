@@ -22,10 +22,7 @@ namespace capstone_project.Services
 
         public async Task<GameDTO> CreateGameAsync(GameDTO gameDto)
         {
-            if (await _ctx.Games.AnyAsync(g => g.Name == gameDto.Name))
-            {
-                throw new ArgumentException("Il nome specificato è già in uso.");
-            }
+
 
             var pegi = await _ctx.Pegis.FindAsync(gameDto.PegiId);
 
@@ -94,10 +91,7 @@ namespace capstone_project.Services
 
         public async Task<bool> UpdateGameAsync(GameDTO gameDto)
         {
-            if (await _ctx.Games.AnyAsync(g => g.Name == gameDto.Name && g.GameId != gameDto.GameId))
-            {
-                throw new ArgumentException("Il nome del gioco specificato è già in uso.");
-            }
+
 
             var game = await _ctx.Games
                 .Include(g => g.GameImages)

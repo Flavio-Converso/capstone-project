@@ -17,10 +17,7 @@ namespace capstone_project.Services
 
         public async Task<CategoryDTO> CreateCategoryAsync(CategoryDTO dto)
         {
-            if (await _ctx.Categories.AnyAsync(c => c.Name == dto.Name))
-            {
-                throw new ArgumentException("Il nome specificato è già in uso.");
-            }
+
 
             var category = new Category
             {
@@ -46,10 +43,7 @@ namespace capstone_project.Services
 
         public async Task<CategoryDTO> UpdateCategoryAsync(CategoryDTO dto)
         {
-            if (await _ctx.Categories.AnyAsync(c => c.Name == dto.Name && c.CategoryId != dto.CategoryId))
-            {
-                throw new ArgumentException("Il nome specificato è già in uso.");
-            }
+
 
             var category = await _ctx.Categories.FirstOrDefaultAsync(c => c.CategoryId == dto.CategoryId);
 
