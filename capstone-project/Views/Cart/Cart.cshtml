@@ -24,7 +24,7 @@
         <tbody>
             @foreach (var item in Model.CartItems)
             {
-                <tr>
+                <tr id="cart-item-row-@item.GameId">
                     <td>
                         @if (item.CoverImage != null)
                         {
@@ -41,34 +41,31 @@
                     <td>@item.Price</td>
                     <td>@item.QuantityAvail</td>
                     <td>
-                        <form asp-action="UpdateCartItemQuantity" method="post" style="display:inline;">
-                            @Html.AntiForgeryToken()
-                            <input type="hidden" name="gameId" value="@item.GameId" />
-
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="updateQuantity(this, -1)">-</button>
-
-                            <!-- Add data-max-quantity to hold the maximum allowed quantity -->
-                            <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control" style="width: 80px; text-align: center; display: inline;" data-max-quantity="@item.QuantityAvail" readonly />
-
-                            <button type="button" class="btn btn-secondary btn-sm" onclick="updateQuantity(this, 1)">+</button>
-                        </form>
+                        <div style="display:inline;">
+                            <button type="button" class="btn btn-secondary btn-sm btn-decrement" data-gameid="@item.GameId">-</button>
+                            <input type="number" id="quantity-@item.GameId" value="@item.Quantity" min="1" class="form-control" style="width: 80px; text-align: center; display: inline;" data-max-quantity="@item.QuantityAvail" readonly />
+                            <button type="button" class="btn btn-secondary btn-sm btn-increment" data-gameid="@item.GameId">+</button>
+                        </div>
                     </td>
 
-                    <td>@(item.Quantity * item.Price)</td>
+                    <td id="total-@item.GameId">@(item.Quantity * item.Price)</td>
                     <td>
-                        <form asp-action="RemoveFromCart" method="post" style="display:inline;">
+                        <form id="remove-from-cart-form-@item.GameId" class="remove-from-cart-form" style="display:inline;">
                             @Html.AntiForgeryToken()
                             <input type="hidden" name="gameId" value="@item.GameId" />
                             <input type="hidden" name="source" value="Cart" />
-                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                            <button type="button" class="btn btn-danger btn-sm remove-from-cart-btn" data-gameid="@item.GameId">
+                                Remove
+                            </button>
                         </form>
                     </td>
                 </tr>
             }
+
         </tbody>
     </table>
 
-    <h3>Total: @Model.TotalPrice</h3>
+    <h3>Total: <span id="total-price">@Model.TotalPrice</span></h3>
 
     <a asp-action="Checkout" class="btn btn-success">Proceed to Checkout</a>
 }
@@ -76,17 +73,3 @@ else
 {
     <p>Your cart is empty.</p>
 }
-<script>
-    function updateQuantity(button, change) {
-        const form = button.parentElement;
-        const quantityInput = form.querySelector('input[name="quantity"]');
-        const currentQuantity = parseInt(quantityInput.value, 10);
-        const maxQuantity = parseInt(quantityInput.getAttribute('data-max-quantity'), 10);
-        const newQuantity = currentQuantity + change;
-
-        if (newQuantity >= 1 && newQuantity <= maxQuantity) {
-            quantityInput.value = newQuantity;
-            form.submit();
-        }
-    }
-</script>

@@ -67,43 +67,52 @@
 
             <p class="text-center ms-4 fs-2 fw-bold mb-4"><i class="text-orange bi bi-tag pe-1"></i> @Model.Price €</p>
             <div class="d-flex justify-content-center">
-                @if (ViewBag.IsInWishlist)
-                {
-                    <form class="me-3" asp-controller="Wishlist" asp-action="RemoveFromWishlist" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="gameId" value="@Model.GameId" />
-                        <input type="hidden" name="source" value="Details" />
-                        <button type="submit" class="auth-btn fs-4 "><i class="bi bi-suit-heart-fill"></i></button>
-                    </form>
-                }
-                else
-                {
-                    <form class="me-3" asp-controller="Wishlist" asp-action="AddToWishlist" method="post">
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="gameId" value="@Model.GameId" />
-                        <input type="hidden" name="source" value="Details" />
-                        <button type="submit" class="auth-btn fs-4"><i class="bi bi-suit-heart"></i></button>
-                    </form>
-                } 
-                @if (cartGameIds.Contains(Model.GameId) || Model.QuantityAvail == 0)
-                {
-                    @if(Model.QuantityAvail == 0)
+                    @if (ViewBag.IsInWishlist)
                     {
-                        <span class=" d-none"></span>
+                        <form id="remove-from-wishlist-form" class="me-3">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="gameId" value="@Model.GameId" />
+                            <input type="hidden" name="source" value="Details" />
+                            <button type="button" id="remove-from-wishlist-btn" class="auth-btn fs-4">
+                                <i class="bi bi-suit-heart-fill"></i>
+                            </button>
+                        </form>
                     }
-                    else{
-                        <button class="cart-btn mx-2 fs-4 ms-2" disabled><i class="bi bi-cart-check-fill pe-2"></i> Nel carrello</button>
-                        }           
-                }
-                else
-                {
-                    <form class="ms-2" asp-controller="Cart" asp-action="AddToCart" method="post" >
-                        @Html.AntiForgeryToken()
-                        <input type="hidden" name="gameId" value="@Model.GameId" />
-                        <input type="hidden" name="source" value="Details" />
-                        <button type="submit" class="auth-btn fs-4"><i class=" bi bi-cart2 pe-2"></i> Aggiungi al carrello</button>
-                    </form>
-                }
+                    else
+                    {
+                        <form id="add-to-wishlist-form" class="me-3">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="gameId" value="@Model.GameId" />
+                            <input type="hidden" name="source" value="Details" />
+                            <button type="button" id="add-to-wishlist-btn" class="auth-btn fs-4">
+                                <i class="bi bi-suit-heart"></i>
+                            </button>
+                        </form>
+                    }
+
+                    @if (cartGameIds.Contains(Model.GameId) || Model.QuantityAvail == 0)
+                    {
+                        @if (Model.QuantityAvail == 0)
+                        {
+                            <span class="d-none"></span>
+                        }
+                        else
+                        {
+                            <button class="cart-btn mx-2 fs-4 ms-2" disabled><i class="bi bi-cart-check-fill pe-2"></i> Nel carrello</button>
+                        }
+                    }
+                    else
+                    {
+                        <form id="add-to-cart-form" class="ms-2">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="gameId" value="@Model.GameId" />
+                            <input type="hidden" name="source" value="Details" />
+                            <button type="button" id="add-to-cart-btn" class="auth-btn fs-4">
+                                <i class="bi bi-cart2 pe-2"></i> Aggiungi al carrello
+                            </button>
+                        </form>
+                    }
+
             </div>
 
        </div>

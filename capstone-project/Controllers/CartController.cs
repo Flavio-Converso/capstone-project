@@ -30,15 +30,8 @@ namespace capstone_project.Controllers
             var userId = _userHelper.GetUserIdClaim();
             await _cartSvc.AddGameToCartAsync(userId, gameId, 1);
 
-            switch (source)
-            {
-                case "List":
-                    return RedirectToAction("List", "Game");
-                case "Details":
-                    return RedirectToAction("Details", "Game", new { id = gameId });
-                default:
-                    return RedirectToAction("List", "Game");
-            }
+            // Return a JSON response instead of a redirect
+            return Json(new { success = true, message = "Game added to cart." });
         }
 
         // POST: /Game/RemoveFromCart
@@ -47,10 +40,26 @@ namespace capstone_project.Controllers
         public async Task<IActionResult> RemoveFromCart(int gameId, string source)
         {
             var userId = _userHelper.GetUserIdClaim();
-            await _cartSvc.RemoveGameFromCartAsync(userId, gameId);
-            return RedirectToAction("Cart");
+            var result = await _cartSvc.RemoveGameFromCartAsync(userId, gameId);
 
+            if (result)
+            {
+                // Get the updated cart details to return updated totals
+                var cart = await _cartSvc.GetCartByUserIdAsync(userId);
+                var cartTotal = cart.CartItems.Sum(ci => ci.Quantity * ci.Price);
+
+                return Json(new
+                {
+                    success = true,
+                    cartTotal = cartTotal // Return updated cart total
+                });
+            }
+
+            return Json(new { success = false, message = "Failed to remove the game from the cart." });
         }
+
+
+
 
         // POST: /Game/UpdateCartItemQuantity
         [HttpPost]
@@ -65,8 +74,22 @@ namespace capstone_project.Controllers
             }
 
             await _cartSvc.UpdateCartItemQuantityAsync(userId, gameId, quantity);
-            return RedirectToAction("Cart");
+
+            // Get the updated cart details to return updated totals
+            var cart = await _cartSvc.GetCartByUserIdAsync(userId);
+            var item = cart.CartItems.FirstOrDefault(ci => ci.GameId == gameId);
+            var itemTotal = item.Quantity * item.Price;
+            var cartTotal = cart.CartItems.Sum(ci => ci.Quantity * ci.Price);
+
+            // Return JSON response with updated item and cart totals
+            return Json(new
+            {
+                success = true,
+                itemTotal = itemTotal,
+                cartTotal = cartTotal
+            });
         }
+
 
         public async Task<IActionResult> Checkout()
         {

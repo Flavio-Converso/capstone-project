@@ -29,16 +29,10 @@ namespace capstone_project.Controllers
             var userId = _userHelper.GetUserIdClaim();
             await _wishlistSvc.AddGameToWishlistAsync(userId, gameId);
 
-            switch (source)
-            {
-                case "List":
-                    return RedirectToAction("List", "Game");
-                case "Details":
-                    return RedirectToAction("Details", "Game", new { id = gameId });
-                default:
-                    return RedirectToAction("List", "Game");
-            }
+            // Return a JSON response to indicate success
+            return Json(new { success = true, message = "Game added to wishlist." });
         }
+
 
         // POST: /Game/RemoveFromWishlist
         [HttpPost]
@@ -48,18 +42,10 @@ namespace capstone_project.Controllers
             var userId = _userHelper.GetUserIdClaim();
             await _wishlistSvc.RemoveGameFromWishlistAsync(userId, gameId);
 
-            switch (source)
-            {
-                case "List":
-                    return RedirectToAction("List", "Game");
-                case "Wishlist":
-                    return RedirectToAction("Wishlist");
-                case "Details":
-                    return RedirectToAction("Details", "Game", new { id = gameId });
-                default:
-                    return RedirectToAction("List", "Game");
-            }
+            // Return a JSON response to indicate success
+            return Json(new { success = true, message = "Game removed from wishlist." });
         }
+
 
         public async Task<IActionResult> GetWishlistItemCount()
         {
