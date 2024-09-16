@@ -14,11 +14,11 @@
     <a asp-action="Details" asp-route-id="@firstGame.GameId" class="text-decoration-none">
         @if (firstGame.GameImages != null && firstGame.GameImages.Any())
         {
-            var coverImage = firstGame.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
+            var coverImage = firstGame.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)5);
             var base64Image = Convert.ToBase64String(coverImage!.Img);
             var imgSrc = $"data:image/png;base64,{base64Image}";
             <div class="position-relative">
-                <img src="@imgSrc" class="img-fluid w-100 firstImg" alt="@firstGame.Name Cover" style="max-height:690px;" />
+                <img src="@imgSrc" class="img-fluid w-100 firstImg" alt="@firstGame.Name Banner" style="max-height:690px;" />
 
                 <!-- Game Name -->
                 <span class="position-absolute text-white fs-2" style="top: 45%; left: 13%">

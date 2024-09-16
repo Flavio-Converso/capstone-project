@@ -60,5 +60,20 @@ namespace capstone_project.Controllers
                     return RedirectToAction("List", "Game");
             }
         }
+
+        public async Task<IActionResult> GetWishlistItemCount()
+        {
+            var userId = _userHelper.GetUserIdClaim();
+
+            if (userId == null)
+            {
+                return Json(new { success = false, count = 0, message = "User not authenticated" });
+            }
+
+            var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
+            var itemCount = wishlistItems.Count();
+
+            return Json(new { success = true, count = itemCount });
+        }
     }
 }

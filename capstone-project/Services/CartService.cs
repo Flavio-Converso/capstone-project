@@ -230,5 +230,13 @@ namespace capstone_project.Services
             // Send email with keys (assuming you have an email service)
             await _emailService.SendEmailAsync(user.Email, "Le tue chiavi di gioco", emailBody);
         }
+        public async Task<int> GetCartItemCountAsync(int userId)
+        {
+            var cart = await _ctx.Carts
+                                 .Include(c => c.CartItems)
+                                 .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            return cart?.CartItems.Sum(ci => ci.Quantity) ?? 0;
+        }
     }
 }

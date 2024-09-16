@@ -82,11 +82,15 @@ input {
 .text-orange {
     color:#F2701B;
 }
+.text-grey {
+    color:#989898 !important;
+}
 .fade-outt {
     opacity: 0;
     transition: opacity 1s ease-out;
 }
-.auth-btn, .auth-btn2 {
+.auth-btn, .auth-btn2,.cart-btn {
+    cursor:pointer;
     background: rgb(255,53,31);
     background: linear-gradient(225deg, rgba(255,53,31,1) 0%, rgba(255,124,1,1) 100%);
     border: none; /* No border */
@@ -141,4 +145,64 @@ input {
     display: inline-block;
     clip-path: polygon(0 10%, 87% 10%, 100% 85%, 100% 90%, 0 90%);
     border-radius: 10px; 
+}
+
+.game-img-cover{
+    border-radius:30px !important;
+}
+
+.banner-container {
+    position: relative;
+    max-height: 690px;
+}
+
+.overlay-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px;
+    -webkit-backdrop-filter: blur(5px); /* Optional for Safari */
+    color: white; /* Text color */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.game-details-info {
+    background-color: rgba(255, 255, 255, 0.1); /* Slightly lighter background */
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px); /* For Safari support */
+    padding: 20px;
+    border-radius: 30px;
+    color: white;
+}
+
+.pill-container {
+    display: inline-flex;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.15); /* Lighter transparent background */
+    backdrop-filter: blur(10px); /* Apply the blur effect */
+    -webkit-backdrop-filter: blur(10px); /* Safari support */
+    padding: 5px 15px;
+    border-radius: 50px; /* Creates the pill shape */
+    color: white;
+}
+
+    .pill-container .divider {
+        margin: 0 10px;
+        color: white;
+    }
+.game-detail1-abs {
+    position: absolute;
+    top: 500px;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+#cart-item-count, #wishlist-item-count {
+    background-color: #ff5722;
 }

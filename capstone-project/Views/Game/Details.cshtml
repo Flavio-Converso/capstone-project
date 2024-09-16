@@ -1,236 +1,182 @@
-﻿@model capstone_project.Models.Game
+@model capstone_project.Models.Game
 
 
 @{
     ViewBag.Title = "Dettagli Gioco";
+    ViewBag.NavbarMarginTop = false;
+    ViewBag.Px0 = true;
     var cartGameIds = ViewBag.CartGameIds as List<int> ?? new List<int>(); // List of games in the cart
 }
+<style>
+    body {
+        color: white !important;
+        display:block !important;
+    }
+</style>
+<!-- banner -->
+<div class="container-fluid px-0 position-relative">
+    @if (Model.GameImages != null)
+    {
+        var coverImage = Model.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)5);
+        var base64Image = Convert.ToBase64String(coverImage!.Img);
+        var imgSrc = $"data:image/png;base64,{base64Image}";
+        <div class="position-relative">
+            <img src="@imgSrc" class="img-fluid w-100 firstImg" alt="@Model.Name Banner" style="max-height:690px;" />
+        </div>
+    }
 
-<h2>Dettagli Gioco</h2>
 
-<div>
-    <h4>@Model.Name</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Descrizione</dt>
-        <dd class="col-sm-10">@Model.Description</dd>
-
-        <dt class="col-sm-2">Piattaforma</dt>
-        <dd class="col-sm-10">@Model.Platform</dd>
-
-        <dt class="col-sm-2">Produttore</dt>
-        <dd class="col-sm-10">@Model.Publisher</dd>
-
-        <dt class="col-sm-2">Quantità disponibile</dt>
-        <dd class="col-sm-10">@Model.QuantityAvail</dd>
-
-        <dt class="col-sm-2">Prezzo</dt>
-        <dd class="col-sm-10">@Model.Price.ToString("C")</dd>
-
-        <dt class="col-sm-2">Data di Rilascio</dt>
-        <dd class="col-sm-10">@Model.ReleaseDate.ToShortDateString()</dd>
-
-        <dt class="col-sm-2">PEGI</dt>
-        <dd class="col-sm-10">@Model.Pegi.Name</dd>
-
-        <dt class="col-sm-2">Restrizioni</dt>
-        <dd class="col-sm-10">
-            @foreach (var restriction in Model.Restrictions)
+<div class="container position-absolute game-detail1-abs">
+   <div class="row">
+    <div class="col-6" >
+        @{
+            var coverImages = Model.GameImages!.Where(img => img.ImgType == ImageType.Cover).ToList();
+            foreach (var image in coverImages)
             {
-                <span>@restriction.Name</span>
+                var base64Image = Convert.ToBase64String(image.Img);
+                var imgSrc = $"data:image/png;base64,{base64Image}";
+                    <img class="img-fluid w-100 firstImg game-img-cover" src="@imgSrc" alt="Cover Image" style="max-width:616px;" />
             }
-        </dd>
 
-        <dt class="col-sm-2">Categorie</dt>
-        <dd class="col-sm-10">
-            @foreach (var category in Model.Categories)
+
+        }
+    </div>
+        <div class="col-6 game-details-info">
+<p class="text-center mt-3 fs-2 fw-bold mb-3">@Model.Name</p>
+            @if (Model.QuantityAvail != 0)
             {
-                <span>@category.Name</span>
-            }
-        </dd>
 
-        <!-- Images Section -->
-        <dt class="col-sm-2">Cover</dt>
-        <dd class="col-sm-10">
-            @{
-                var coverImages = Model.GameImages.Where(img => img.ImgType == ImageType.Cover).ToList();
-                if (coverImages.Any())
+                <p class="text-center mb-4">
+                    <span class="pill-container px-4">
+                        <span class="px-2 fs-3">@Model.Platform</span>
+                        <span class="divider fs-3">•</span>
+                        <i class="fs-3 pt-1 fas fa-check-circle text-success pe-2"></i><span class="fs-4">Disponibile</span>
+                    </span>
+                </p>
+            }
+            else
+            {
+                <div class="text-center mb-4">
+                    <div class="pill-container px-4">
+                        <span class="px-2 fs-3">@Model.Platform</span>
+                        <span class="divider fs-3">•</span>
+                        <i class="fs-3 pt-1 fas fa-times-circle text-danger pe-2"></i> <span class="fs-4">Non disponibile</span>
+                    </div>
+                </div>
+            }
+
+            <p class="text-center ms-4 fs-2 fw-bold mb-4"><i class="text-orange bi bi-tag pe-1"></i> @Model.Price €</p>
+            <div class="d-flex justify-content-center">
+                @if (ViewBag.IsInWishlist)
                 {
-                    foreach (var image in coverImages)
-                    {
-                        var base64Image = Convert.ToBase64String(image.Img);
-                        var imgSrc = $"data:image/png;base64,{base64Image}";
-                        <img src="@imgSrc" alt="Cover Image" style="width:100px;height:auto;" />
-                    }
+                    <form class="me-3" asp-controller="Wishlist" asp-action="RemoveFromWishlist" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="gameId" value="@Model.GameId" />
+                        <input type="hidden" name="source" value="Details" />
+                        <button type="submit" class="auth-btn fs-4 "><i class="bi bi-suit-heart-fill"></i></button>
+                    </form>
                 }
                 else
                 {
-                    <span>No cover image available</span>
-                }
-            }
-        </dd>
-
-        <dt class="col-sm-2">Screenshot</dt>
-        <dd class="col-sm-10">
-            @{
-                var screenshotImages = Model.GameImages.Where(img => img.ImgType == ImageType.Screenshot).ToList();
-                if (screenshotImages.Any())
+                    <form class="me-3" asp-controller="Wishlist" asp-action="AddToWishlist" method="post">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="gameId" value="@Model.GameId" />
+                        <input type="hidden" name="source" value="Details" />
+                        <button type="submit" class="auth-btn fs-4"><i class="bi bi-suit-heart"></i></button>
+                    </form>
+                } 
+                @if (cartGameIds.Contains(Model.GameId) || Model.QuantityAvail == 0)
                 {
-                    foreach (var image in screenshotImages)
+                    @if(Model.QuantityAvail == 0)
                     {
-                        var base64Image = Convert.ToBase64String(image.Img);
-                        var imgSrc = $"data:image/png;base64,{base64Image}";
-                        <img src="@imgSrc" alt="Screenshot" style="width:100px;height:auto;" />
+                        <span class=" d-none"></span>
                     }
+                    else{
+                        <button class="cart-btn mx-2 fs-4 ms-2" disabled><i class="bi bi-cart-check-fill pe-2"></i> Nel carrello</button>
+                        }           
                 }
                 else
                 {
-                    <span>No screenshots available</span>
+                    <form class="ms-2" asp-controller="Cart" asp-action="AddToCart" method="post" >
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="gameId" value="@Model.GameId" />
+                        <input type="hidden" name="source" value="Details" />
+                        <button type="submit" class="auth-btn fs-4"><i class=" bi bi-cart2 pe-2"></i> Aggiungi al carrello</button>
+                    </form>
                 }
-            }
-        </dd>
+            </div>
 
-        <dt class="col-sm-2">Artwork</dt>
-        <dd class="col-sm-10">
-            @{
-                var artworkImages = Model.GameImages.Where(img => img.ImgType == ImageType.Artwork).ToList();
-                if (artworkImages.Any())
-                {
-                    foreach (var image in artworkImages)
-                    {
-                        var base64Image = Convert.ToBase64String(image.Img);
-                        var imgSrc = $"data:image/png;base64,{base64Image}";
-                        <img src="@imgSrc" alt="Artwork" style="width:100px;height:auto;" />
+       </div>
+   </div>
+<div class="row mt-2">
+   <div class="col-6 mt-2">
+   <div>
+   <h3 class="text-start mb-3">Riguardo al prodotto</h3>
+                    <span class="text-grey text-start d-inline-block">@Model.Description</span>
+   </div>
+                <p class="text-start text-grey mt-4">
+                    Tags:
+@foreach (var category in Model.Categories)
+{
+ <span class="border border-secondary rounded px-2 pb-1 mx-1">@category.Name</span>
                     }
-                }
-                else
-                {
-                    <span>No artwork available</span>
-                }
-            }
-        </dd>
+                </p>
+   </div>
 
-        <dt class="col-sm-2">Icon</dt>
-        <dd class="col-sm-10">
-            @{
-                var iconImages = Model.GameImages.Where(img => img.ImgType == ImageType.Icon).ToList();
-                if (iconImages.Any())
-                {
-                    foreach (var image in iconImages)
-                    {
-                        var base64Image = Convert.ToBase64String(image.Img);
-                        var imgSrc = $"data:image/png;base64,{base64Image}";
-                        <img src="@imgSrc" alt="Icon" style="width:100px;height:auto;" />
-                    }
-                }
-                else
-                {
-                    <span>No icon available</span>
-                }
-            }
-        </dd>
 
-        <dt class="col-sm-2">Logo</dt>
-        <dd class="col-sm-10">
-            @{
-                var logoImages = Model.GameImages.Where(img => img.ImgType == ImageType.Logo).ToList();
-                if (logoImages.Any())
-                {
-                    foreach (var image in logoImages)
-                    {
-                        var base64Image = Convert.ToBase64String(image.Img);
-                        var imgSrc = $"data:image/png;base64,{base64Image}";
-                        <img src="@imgSrc" alt="Logo" style="width:100px;height:auto;" />
-                    }
-                }
-                else
-                {
-                    <span>No logo available</span>
-                }
-            }
-        </dd>
+            <div class="col-6 mt-5 text-center">
+                <div class="row mb-3">
 
-        <dt class="col-sm-2">Banner</dt>
-        <dd class="col-sm-10">
-            @{
-                var bannerImages = Model.GameImages.Where(img => img.ImgType == ImageType.Banner).ToList();
-                if (bannerImages.Any())
-                {
-                    foreach (var image in bannerImages)
-                    {
-                        var base64Image = Convert.ToBase64String(image.Img);
-                        var imgSrc = $"data:image/png;base64,{base64Image}";
-                        <img src="@imgSrc" alt="Banner" style="width:100px;height:auto;" />
-                    }
-                }
-                else
-                {
-                    <span>No banner available</span>
-                }
-            }
-        </dd>
+                    <div class="col-4">
+                        <span>Data di rilascio:</span>
+                    </div>
+                    <div class="col-8 ">
+                        <span>@Model.ReleaseDate.ToShortDateString()</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4 ">
+                        <span>Sviluppatore:</span>
+                    </div>
+                    <div class="col-8">
+                        <span>@Model.Publisher</span>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-4">
+                        <span>PEGI:</span>
+                    </div>
+                    <div class="col-8">
+                        <span>@Model.Pegi.Name</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4">
+                        <span>Restrizioni:</span>
+                    </div>
+                    <div class="col-8">
+                        @foreach (var restriction in Model.Restrictions)
+                        {
+                            <span class="border border-secondary rounded text-grey px-2 pb-1 mx-1">@restriction.Name</span>
+                        }
+                    </div>
+                </div>
+            </div>
 
-        <dt class="col-sm-2">Other</dt>
-        <dd class="col-sm-10">
-            @{
-                var otherImages = Model.GameImages.Where(img => img.ImgType == ImageType.Other).ToList();
-                if (otherImages.Any())
-                {
-                    foreach (var image in otherImages)
-                    {
-                        var base64Image = Convert.ToBase64String(image.Img);
-                        var imgSrc = $"data:image/png;base64,{base64Image}";
-                        <img src="@imgSrc" alt="Other Image" style="width:100px;height:auto;" />
-                    }
-                }
-                else
-                {
-                    <span>No other images available</span>
-                }
-            }
-        </dd>
-    </dl>
 </div>
 
-<a asp-action="List" class="btn btn-secondary">Indietro alla Lista</a>
-<a asp-action="Edit" asp-route-id="@Model.GameId" class="btn btn-primary">Modifica</a>
-<a asp-action="Delete" asp-route-id="@Model.GameId" class="btn btn-danger">Elimina</a>
 
-@if (ViewBag.IsInWishlist)
-{
-    <form asp-controller="Wishlist" asp-action="RemoveFromWishlist" method="post" style="display:inline;">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="gameId" value="@Model.GameId" />
-        <input type="hidden" name="source" value="Details" />
-        <button type="submit" class="btn btn-danger">Rimuovi dalla Wishlist</button>
-    </form>
-}
-else
-{
-    <form asp-controller="Wishlist" asp-action="AddToWishlist" method="post" style="display:inline;">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="gameId" value="@Model.GameId" />
-        <input type="hidden" name="source" value="Details" />
-        <button type="submit" class="btn btn-warning">Aggiungi alla Wishlist</button>
-    </form>
-}
-@if (cartGameIds.Contains(Model.GameId) || Model.QuantityAvail == 0)
-{
-    <button class="btn btn-secondary" disabled>
-        @(Model.QuantityAvail == 0 ? "Esaurito" : "Nel Carrello")
-    </button>
-}
-else
-{
-    <form asp-controller="Cart" asp-action="AddToCart" method="post" style="display:inline;">
-        @Html.AntiForgeryToken()
-        <input type="hidden" name="gameId" value="@Model.GameId" />
-        <input type="hidden" name="source" value="Details" />
-        <button type="submit" class="btn btn-success">Aggiungi al carrello</button>
-    </form>
-}
 
-<!-- Reviews section -->
+
+
+
+
+
+
+
+
+<div class="row">
+
 <h3>Reviews</h3>
 @if (Model.Reviews != null && Model.Reviews.Any())
 {
@@ -261,7 +207,6 @@ else
     <p>No reviews yet. Be the first to review this game!</p>
 }
 
-
 <!-- Partial View for Review Form -->
 @if (ViewBag.HasReviewed)
 {
@@ -274,49 +219,17 @@ else
     GameId = Model.GameId
 })
 }
-@section Scripts {
+
+<div>
+<a asp-action="List" class="btn btn-secondary">Indietro alla Lista</a>
+<a asp-action="Edit" asp-route-id="@Model.GameId" class="btn btn-primary">Modifica</a>
+<a asp-action="Delete" asp-route-id="@Model.GameId" class="btn btn-danger">Elimina</a>
+</div>
+ </div>
+    </div></div>
+@section Scripts {  
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-    <script>
-        $(document).on('click', '.like-button', function (e) {
-            e.preventDefault();
-
-            var button = $(this);
-            var reviewId = button.data('review-id');
-            var liked = button.data('liked') === 'true';
-
-            $.ajax({
-                url: '@Url.Action("LikeReview", "Review")',
-                type: 'POST',
-                data: {
-                    reviewId: reviewId,
-                    __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
-                },
-                success: function (response) {
-                    if (response.success) {
-                        // Update like count
-                        $('#like-count-' + reviewId).text(response.likeCount);
-
-                        // Hide the placeholder text for this specific review
-                        $('#plchld-' + reviewId).addClass('display-none');
-
-                        // Toggle button text and color
-                        if (response.liked) {
-                            button.text('Unlike');
-                            button.removeClass('btn-success').addClass('btn-danger');
-                            button.data('liked', 'true');
-                        } else {
-                            button.text('Like');
-                            button.removeClass('btn-danger').addClass('btn-success');
-                            button.data('liked', 'false');
-                        }
-                    }
-                },
-                error: function () {
-                    alert('An error occurred while processing your request. Please try again.');
-                }
-            });
-        });
-    </script>
+    <script src="~/js/game_details.js" asp-append-version="true"></script>
 }

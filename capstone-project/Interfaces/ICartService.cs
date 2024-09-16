@@ -10,5 +10,6 @@ namespace capstone_project.Interfaces
         Task<bool> UpdateCartItemQuantityAsync(int userId, int gameId, int newQuantity);
         Task<string> CreateCheckoutSessionAsync(CartDTO cart, string successUrl);
         Task CompleteCheckoutAsync(int userId);
+        Task<int> GetCartItemCountAsync(int userId);
     }
 }

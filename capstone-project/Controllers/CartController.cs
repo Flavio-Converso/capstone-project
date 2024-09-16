@@ -93,5 +93,19 @@ namespace capstone_project.Controllers
 
             return View();
         }
+
+        public async Task<IActionResult> GetCartItemCount()
+        {
+            var userId = _userHelper.GetUserIdClaim();
+
+            if (userId == null)
+            {
+                return Json(new { success = false, count = 0, message = "User not authenticated" });
+            }
+
+            var cartItemCount = await _cartSvc.GetCartItemCountAsync(userId);
+
+            return Json(new { success = true, count = cartItemCount });
+        }
     }
 }
