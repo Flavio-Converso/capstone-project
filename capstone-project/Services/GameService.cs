@@ -188,7 +188,14 @@ namespace capstone_project.Services
                 .Where(g => g.Name.Contains(query) || g.Platform.Contains(query))
                 .ToListAsync();
         }
-
+        public async Task<IEnumerable<Game>> GetGamesByCategoriesAsync(List<int> categoryIds, int currentGameId)
+        {
+            return await _ctx.Games
+                .Include(g => g.Categories)
+                .Include(g => g.GameImages)
+                .Where(g => g.Categories.Any(c => categoryIds.Contains(c.CategoryId)) && g.GameId != currentGameId)
+                .ToListAsync();
+        }
 
 
     }

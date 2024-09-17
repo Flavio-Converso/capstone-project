@@ -6,6 +6,7 @@
     ViewBag.NavbarMarginTop = false;
     ViewBag.Px0 = true;
     var cartGameIds = ViewBag.CartGameIds as List<int> ?? new List<int>(); // List of games in the cart
+    var relatedGames = ViewBag.RelatedGames as IEnumerable<capstone_project.Models.Game>;
 }
 <style>
     body {
@@ -173,6 +174,44 @@
 
 
 </div>
+
+        <div class="related-games-section mt-5">
+            <h3 class="text-white mb-3">Altri giochi che potrebbero interessarti</h3>
+
+            <div class="row">
+                @foreach (var relatedGame in relatedGames)
+                {
+                    <div class="col-md-4 mb-4 mt-4">
+                        <a asp-action="Details" asp-route-id="@relatedGame.GameId" class="text-decoration-none">
+                            <div class="game-card border-0">
+                                <div class="position-relative">
+                                    @if (relatedGame.GameImages != null && relatedGame.GameImages.Any())
+                                    {
+                                        var coverImage = relatedGame.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
+                                        if (coverImage != null)
+                                        {
+                                            var base64Image = Convert.ToBase64String(coverImage.Img);
+                                            var imgSrc = $"data:image/png;base64,{base64Image}";
+                                            <img src="@imgSrc" class="h-100 w-100 game-card-img" alt="@relatedGame.Name Cover" style="height: 200px; object-fit: cover;" />
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <img src="~/images/predefined/default-profile.jpg" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;" />
+                                    }
+                                    <!-- Badge for Platform -->
+                                    <span class="myBadge myOrangeBg position-absolute px-1 py-1" style="bottom: -3.5px; left: 0px;">@relatedGame.Platform</span>
+                                </div>
+                            </div>
+                        </a>
+                        <div class="d-flex justify-content-between align-items-center mt-2">
+                            <h5 class="game-card-title text-white">@relatedGame.Name </h5>
+                            <span class="text-white fw-bold fs-6">@relatedGame.Price €</span>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
 
 
 

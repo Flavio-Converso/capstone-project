@@ -16,5 +16,6 @@ namespace capstone_project.Interfaces
 
         Task<List<string>> GenerateGameKeysAsync(int gameId, int userId, int quantity);
         Task<IEnumerable<Game>> SearchGamesAsync(string query);
+        Task<IEnumerable<Game>> GetGamesByCategoriesAsync(List<int> categoryIds, int currentGameId);
     }
 }

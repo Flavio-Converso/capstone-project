@@ -162,8 +162,18 @@ namespace capstone_project.Controllers
             }
             ViewBag.LikeCounts = likeCounts;
 
+            // Fetch games in the same categories as the current game, excluding the current game
+            var relatedGames = (await _gameSvc.GetGamesByCategoriesAsync(game.Categories.Select(c => c.CategoryId).ToList(), id))
+                       .Where(g => g.Platform == game.Platform) // Filter by same platform
+                       .Take(6) // Limit to 6 games
+                       .ToList();
+
+            // Pass related games to the view
+            ViewBag.RelatedGames = relatedGames;
+
             return View(game);
         }
+
 
 
 
