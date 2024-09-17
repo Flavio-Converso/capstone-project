@@ -66,40 +66,41 @@
                     }
                     
                     @if (User.Identity.IsAuthenticated && !User.IsInRole("master")){
-                        <div class="d-none d-lg-flex justify-content-around px-5 mb-2 navbar-text">
-                            <a class="text-white fs-7 navLink">RPG</a>
-                            <a class="text-white fs-7 navLink">Avventura</a>
-                            <a class="text-white fs-7 navLink">FPS</a>
-                            <a class="text-white fs-7 navLink">Picchiaduro</a>
-                        </div>
+                            <div class="d-none d-lg-flex justify-content-around px-5 mb-2 navbar-text">
+                                <a href="#" class="text-white fs-7 navLink" onclick="navigateToCategory('RPG')">RPG</a>
+                                <a href="#" class="text-white fs-7 navLink" onclick="navigateToCategory('Avventura')">Avventura</a>
+                                <a href="#" class="text-white fs-7 navLink" onclick="navigateToCategory('FPS')">FPS</a>
+                                <a href="#" class="text-white fs-7 navLink" onclick="navigateToCategory('Picchiaduro')">Picchiaduro</a>
+                            </div>
                     }
 
                     @if (User.Identity.IsAuthenticated)
                     {
                     <div class="search-pill personal-round d-flex flex-sm-column-reverse flex-lg-row justify-content-center align-items-center ps-md-3">
-                        <div id="category" class="d-none d-md-flex">
-                                    <a href="#" class="d-flex align-items-center platform-link ps-2 pe-3 py-2 navLink">
-                                <i class="bi bi-pc-display-horizontal"></i> <span class="ps-2">PC</span>
-                            </a>
-                                    <a href="#" class="d-flex align-items-center platform-link px-3 py-2 navLink">
-                                <i class="bi bi-playstation"></i> <span class="ps-2">PlayStation</span>
-                            </a>
-                                    <a href="#" class="d-flex align-items-center platform-link px-3 py-2 navLink">
-                                <i class="bi bi-xbox"></i> <span class="ps-2">Xbox</span>
-                            </a>
-                                    <a href="#" class="d-flex align-items-center platform-link ps-3 pe-4 py-2 navLink">
-                                <i class="bi bi-nintendo-switch"></i> <span class="ps-2">Nintendo</span>
-                            </a>
-                        </div>
-                        <div class="search-pill-content d-flex align-items-center justify-content-center">
-                            <input type="text" class="search-input form-control" placeholder="Search..." />
-                                    <a href="#" class="navLink personal-round search-icon d-flex align-items-center py-3">
-                                <i class="bi bi-search text-white"></i>
-                            </a>
-                        </div>
+                                <div id="category" class="d-none d-md-flex">
+                                    <a href="#" class="d-flex align-items-center platform-link ps-2 pe-3 py-2 navLink" onclick="navigateToPlatform('PC')">
+                                        <i class="bi bi-pc-display-horizontal"></i> <span class="ps-2">PC</span>
+                                    </a>
+                                    <a href="#" class="d-flex align-items-center platform-link px-3 py-2 navLink" onclick="navigateToPlatform('PlayStation')">
+                                        <i class="bi bi-playstation"></i> <span class="ps-2">PlayStation</span>
+                                    </a>
+                                    <a href="#" class="d-flex align-items-center platform-link px-3 py-2 navLink" onclick="navigateToPlatform('Xbox')">
+                                        <i class="bi bi-xbox"></i> <span class="ps-2">Xbox</span>
+                                    </a>
+                                    <a href="#" class="d-flex align-items-center platform-link ps-3 pe-4 py-2 navLink" onclick="navigateToPlatform('Nintendo')">
+                                        <i class="bi bi-nintendo-switch"></i> <span class="ps-2">Nintendo</span>
+                                    </a>
+                                </div>
+                                <div class="search-pill-content d-flex align-items-center justify-content-center">
+                                    <input type="text" id="searchbarInput" class="search-input form-control" placeholder="Cerca..." />
+                                    <a href="#" id="search-icon" class="navLink personal-round search-icon d-flex align-items-center py-3">
+                                        <i class="bi bi-search text-white"></i>
+                                    </a>
+                                </div>
+                        
                     </div>
                     }
-                </div>
+                </div>                  
                 <div>
                     @if (User.Identity.IsAuthenticated)
                     {
@@ -139,6 +140,23 @@
         </nav>
         </header>
     }
+    <!-- Modal -->
+    <div class="modal fade" id="searchResultsModal" tabindex="-1" aria-labelledby="searchResultsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="searchResultsModalLabel">Risultati della ricerca</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="searchbarResults" class="search-results">
+                        <!-- Results will go here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
 
     <div class="container-fluid @(ViewBag.NavbarMarginTop == true ? "mt-150" : "") @(ViewBag.Px0 == true ? "px-0" : "")">
         <main role="main">
@@ -157,3 +175,14 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+<script>
+    function navigateToCategory(category) {
+        window.location.href = `/Game/List?category=${encodeURIComponent(category)}`;
+    }
+    
+</script>
+<script>
+    function navigateToPlatform(platform) {
+        window.location.href = `/Game/List?platform=${encodeURIComponent(platform)}`;
+    }
+</script>

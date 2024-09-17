@@ -93,12 +93,23 @@ namespace capstone_project.Controllers
         }
 
         // GET: /Game
-        public async Task<IActionResult> List()
+        public async Task<IActionResult> List(string category, string platform)
         {
             var games = await _gameSvc.GetAllGamesAsync();
 
-            var userId = _userHelper.GetUserIdClaim();
+            // Filter by category if provided
+            if (!string.IsNullOrEmpty(category))
+            {
+                games = games.Where(g => g.Categories.Any(c => c.Name == category)).ToList();
+            }
 
+            // Filter by platform if provided
+            if (!string.IsNullOrEmpty(platform))
+            {
+                games = games.Where(g => g.Platform == platform).ToList();
+            }
+
+            var userId = _userHelper.GetUserIdClaim();
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             var wishlistGameIds = wishlistItems.Select(w => w.GameId).ToList();
 
@@ -108,8 +119,15 @@ namespace capstone_project.Controllers
             ViewBag.WishlistGameIds = wishlistGameIds;
             ViewBag.CartGameIds = cartGameIds;
 
+            // Pass the platform and category to the view
+            ViewBag.SelectedCategory = category;
+            ViewBag.SelectedPlatform = platform;
+
             return View(games);
         }
+
+
+
 
 
         // GET: /Game/Details/5
@@ -256,5 +274,34 @@ namespace capstone_project.Controllers
 
             return RedirectToAction("List");
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Search(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return Json(new { success = false, message = "Query cannot be empty." });
+            }
+
+            // Call the search method in the service
+            var games = await _gameSvc.SearchGamesAsync(name);
+
+            // Ensure each property is being returned correctly, including handling for null values
+            var gameResults = games.Select(game => new
+            {
+                GameId = game.GameId,
+                GameName = game.Name ?? "No name available",
+                Platform = game.Platform ?? "No platform available",
+                Price = game.Price, // Default price to 0 if null
+                CoverImage = game.GameImages.FirstOrDefault(img => img.ImgType == ImageType.Cover)?.Img != null
+                                ? Convert.ToBase64String(game.GameImages.FirstOrDefault(img => img.ImgType == ImageType.Cover).Img)
+                                : null
+            });
+
+            return Json(new { success = true, games = gameResults });
+        }
+
+
+
     }
 }

@@ -181,5 +181,15 @@ namespace capstone_project.Services
 
             return generatedKeys; // Return the list of generated keys
         }
+        public async Task<IEnumerable<Game>> SearchGamesAsync(string query)
+        {
+            return await _ctx.Games
+                .Include(g => g.GameImages)
+                .Where(g => g.Name.Contains(query) || g.Platform.Contains(query))
+                .ToListAsync();
+        }
+
+
+
     }
 }

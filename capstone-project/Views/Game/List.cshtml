@@ -47,11 +47,25 @@
         <a asp-action="Create" class="auth-btn text-white d-inline-block mt-5">Aggiungi Nuovo Gioco</a>
     }
     <div class="row">
+        @if (!string.IsNullOrEmpty(ViewBag.SelectedCategory))
+        {
+            <h1 class="text-white fs-3 mt-5">Categoria: @ViewBag.SelectedCategory</h1>
+        }
 
-        <h1 class="text-white fs-3 mt-5">
-            In tendenza
-            <i class="bi bi-chevron-right fs-4 text-secondary"></i>
-        </h1>
+        @if (!string.IsNullOrEmpty(ViewBag.SelectedPlatform))
+        {
+            <h1 class="text-white fs-3 mt-5">Piattaforma: @ViewBag.SelectedPlatform</h1>
+        }
+
+        @if (string.IsNullOrEmpty(ViewBag.SelectedCategory) && string.IsNullOrEmpty(ViewBag.SelectedPlatform)) // Only show "In tendenza" when no category or platform is selected
+        {
+            <h1 class="text-white fs-3 mt-5">
+                In tendenza
+                <i class="bi bi-chevron-right fs-4 text-secondary"></i>
+            </h1>
+        }
+
+
         @foreach (var game in remainingGames)
         {
             <div class="col-md-4 mb-4 mt-4">
@@ -67,7 +81,7 @@
                             }
                             else
                             {
-                                <img src="path/to/placeholder/image.jpg" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;" />
+                                <img src="~/images/predefined/default-profile.jpg" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;" />
                             }
                             <!-- Badge for Platform -->
                             <span class="myBadge myOrangeBg position-absolute px-1 py-1" style="bottom: -3.5px; left: 0px;">@game.Platform</span>

@@ -68,20 +68,33 @@ input {
     }
 
     /* Styling for autofill (Chrome and Safari) */
-    input:-webkit-autofill {
-        -webkit-box-shadow: 0 0 0px 1000px #1D1D1D inset; /* Keeps the background dark */
-        -webkit-text-fill-color: #fff; /* Ensures white text */
-        transition: background-color 5000s ease-in-out 0s; /* Prevent background color change */
+#searchbarInput:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #ff5722 inset !important; /* Keeps the background to #FF4916 */
+    -webkit-text-fill-color: #fff !important; /* Ensures white text */
+}
+
+    #searchbarInput:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px #ff5722 inset !important; /* Same background for focus */
+        -webkit-text-fill-color: #fff !important; /* White text */
+    }
+#searchbarInput::placeholder {
+    color: #fff; /* White color for placeholder */
+    opacity: 1; /* Ensures full opacity */
+}
+input:-webkit-autofill {
+    -webkit-box-shadow: 0 0 0px 1000px #1D1D1D inset; /* Keeps the background dark */
+    -webkit-text-fill-color: #fff; /* Ensures white text */
+    transition: background-color 5000s ease-in-out 0s; /* Prevent background color change */
+}
+
+    input:-webkit-autofill:focus {
+        -webkit-box-shadow: 0 0 0px 1000px #1D1D1D inset; /* Same background for focus */
+        -webkit-text-fill-color: #fff; /* White text */
     }
 
-        input:-webkit-autofill:focus {
-            -webkit-box-shadow: 0 0 0px 1000px #1D1D1D inset; /* Same background for focus */
-            -webkit-text-fill-color: #fff; /* White text */
-        }
-
-.text-orange {
-    color:#F2701B;
-}
+    .text-orange {
+        color: #F2701B;
+    }
 .text-grey {
     color:#989898 !important;
 }
@@ -205,4 +218,60 @@ input {
 
 #cart-item-count, #wishlist-item-count {
     background-color: #ff5722;
+}
+/* Blurred background for the modal */
+.modal-content {
+    background-color: rgba(50, 50, 50, 0.85); /* Slight grey with opacity */
+    backdrop-filter: blur(8px); /* Adds blur to the modal content background */
+    border-radius: 10px; /* Optional: Rounded corners for a smooth look */
+    color: white; /* Ensures that the text is readable on the grey background */
+}
+
+/* Styling for search result items inside the modal */
+#searchbarResults .result-item {
+    display: flex;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* Optional: Light border between items */
+    transition: background-color 0.3s ease;
+}
+
+    #searchbarResults .result-item:hover {
+        background-color: rgba(255, 255, 255, 0.1); /* Optional: Hover effect */
+    }
+.search-results .d-flex {
+    width: 100%; /* Ensure full width for flexbox */
+}
+
+.result-imagegame {
+    border-radius: 5px; /* Optional: Slight rounded corners for the images */
+    margin-right: 15px; /* Space between image and details */
+}
+
+/* Adjusts the modal backdrop for a subtle grey overlay effect */
+.modal-backdrop.show {
+    background-color: rgba(0, 0, 0, 0.7); /* Grey background with opacity */
+}
+/* Make the close button orange */
+.btn-close {
+    background-color: #FF4916; /* Orange background */
+    opacity: 1; /* Make sure the background color is fully opaque */
+}
+
+    /* Change the hover effect for the close button */
+    .btn-close:hover {
+        background-color: #FF4916; /* Keep the orange color on hover */
+        opacity: 0.8; /* Slight transparency on hover */
+    }
+
+    /* Remove the blue outline when focused or clicked */
+    .btn-close:focus {
+        box-shadow: none; /* Remove the default blue outline */
+        outline: none; /* Remove the default outline */
+    }
+
+/* Optionally, you can increase the size of the close button */
+.btn-close {
+    width: 1.2rem;
+    height: 1.2rem;
 }

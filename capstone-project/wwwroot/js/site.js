@@ -369,3 +369,143 @@ $(document).ready(function () {
         });
     }
 });
+
+$(document).ready(function () {
+    $('#search-btn').click(function (e) {
+        e.preventDefault();
+
+        var query = $('#search-query').val();
+        if (query.trim() === '') {
+            $('#search-results').html('<p>Please enter a search term.</p>');
+            return;
+        }
+
+        $.ajax({
+            url: '/Game/Search', // The Search action in your GameController
+            type: 'GET',
+            data: { query: query },
+            success: function (response) {
+                if (response.success) {
+                    var resultHtml = '';
+                    response.games.forEach(function (game) {
+                        var coverImage = game.CoverImage ?
+                            `<img src="data:image/png;base64,${game.CoverImage}" alt="${game.GameName} Cover" style="width:100px;height:auto;" />` :
+                            '<span>No cover image</span>';
+
+                        resultHtml += `
+                                    <div class="game-result">
+                                        ${coverImage}
+                                        <h4>${game.GameName}</h4>
+                                        <p>Platform: ${game.Platform}</p>
+                                        <p>Price: €${game.Price}</p>
+                                    </div>
+                                    <hr>
+                                `;
+                    });
+
+                    $('#search-results').html(resultHtml);
+                } else {
+                    $('#search-results').html('<p>No games found.</p>');
+                }
+            },
+            error: function () {
+                $('#search-results').html('<p>Error occurred while searching for games.</p>');
+            }
+        });
+    });
+});
+// Search functionality
+// Search functionality
+function performSearch() {
+    var query = document.getElementById('searchbarInput').value;
+    var resultsContainer = document.getElementById('searchbarResults');
+
+    if (query.trim().length > 0) { // Only search if the input is not empty
+        fetch(window.location.origin + '/Game/Search?name=' + encodeURIComponent(query))
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);  // Log the response to inspect what is being returned
+
+                resultsContainer.innerHTML = ''; // Clear any previous results
+
+                if (data.success && Array.isArray(data.games)) {
+                    if (data.games.length > 0) {
+                        data.games.forEach(game => {
+                            var listItem = document.createElement('a');
+                            listItem.href = '/Game/Details/' + game.gameId;
+                            listItem.className = 'result-item p-3 rounded-1 my-2 text-decoration-none';
+
+                            var image = document.createElement('img');
+                            if (game.coverImage) {
+                                image.src = 'data:image/png;base64,' + game.coverImage;
+                                image.alt = game.gameName;
+                                image.className = 'result-imagegame w-25';
+                            }
+
+                            var details = document.createElement('div');
+                            details.className = 'd-flex justify-content-between w-100'; // Flex container
+
+                            // Left part: Game name and platform
+                            var leftDetails = document.createElement('div');
+                            leftDetails.className = "d-flex align-items-center";
+                            var title = document.createElement('span');
+                            title.textContent = game.gameName;
+                            title.className = 'text-light mb-1 ';
+
+                            var platform = document.createElement('span');
+                            platform.textContent = 'Piattaforma: ' + game.platform;
+                            platform.className = 'text-white small mb-1 ps-4 fs-6';
+
+                            leftDetails.appendChild(title);
+                            leftDetails.appendChild(platform);
+
+                            // Right part: Price
+                            var price = document.createElement('span');
+                            price.textContent = game.price.toFixed(2) + '€';
+                            price.className = 'text-orange small mb-1 ms-auto fs-5';
+
+                            details.appendChild(leftDetails);
+                            details.appendChild(price);
+
+                            listItem.appendChild(image);
+                            listItem.appendChild(details);
+
+                            resultsContainer.appendChild(listItem);
+                        });
+
+                        // Open the modal once results are ready
+                        var modal = new bootstrap.Modal(document.getElementById('searchResultsModal'), {});
+                        modal.show();
+
+                        // Clear the search input
+                        document.getElementById('searchbarInput').value = ''; // This clears the input field
+                    } else {
+                        resultsContainer.innerHTML = '<p>No games found.</p>';
+                    }
+                } else {
+                    resultsContainer.innerHTML = '<p>Error occurred while searching for games.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                resultsContainer.innerHTML = '<p>Something went wrong, please try again.</p>';
+            });
+    } else {
+        resultsContainer.innerHTML = '<p>Please enter a search term.</p>';
+    }
+}
+
+
+// When the search button is clicked, perform the search
+document.getElementById('search-icon').addEventListener('click', function (e) {
+    e.preventDefault(); // Prevent default anchor behavior
+    performSearch();
+});
+
+// Add search on Enter key press
+document.getElementById('searchbarInput').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault(); // Prevent form submission or default action
+        performSearch(); // Call the same search function
+    }
+});

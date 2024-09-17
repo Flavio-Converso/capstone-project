@@ -134,36 +134,35 @@
 
 
             <div class="col-6 mt-5 text-center">
-                <div class="row mb-3">
-
-                    <div class="col-4">
+                <div class="row mb-3 d-flex align-items-start">
+                    <div class="col-4 text-start ps-4">
                         <span>Data di rilascio:</span>
                     </div>
-                    <div class="col-8 ">
+                    <div class="col-8 text-start">
                         <span>@Model.ReleaseDate.ToShortDateString()</span>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-4 ">
+                <div class="row mb-3 d-flex align-items-start">
+                    <div class="col-4 text-start ps-4">
                         <span>Sviluppatore:</span>
                     </div>
-                    <div class="col-8">
+                    <div class="col-8 text-start">
                         <span>@Model.Publisher</span>
                     </div>
                 </div>
-                <div class="row mb-3">
-                    <div class="col-4">
+                <div class="row mb-3 d-flex align-items-start">
+                    <div class="col-4 text-start ps-4">
                         <span>PEGI:</span>
                     </div>
-                    <div class="col-8">
+                    <div class="col-8 text-start">
                         <span>@Model.Pegi.Name</span>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-4">
+                <div class="row d-flex align-items-start">
+                    <div class="col-4 text-start ps-4">
                         <span>Restrizioni:</span>
                     </div>
-                    <div class="col-8">
+                    <div class="col-8 text-start">
                         @foreach (var restriction in Model.Restrictions)
                         {
                             <span class="border border-secondary rounded text-grey px-2 pb-1 mx-1">@restriction.Name</span>
@@ -171,6 +170,7 @@
                     </div>
                 </div>
             </div>
+
 
 </div>
 

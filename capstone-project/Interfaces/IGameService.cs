@@ -15,5 +15,6 @@ namespace capstone_project.Interfaces
         Task<bool> DeleteGameAsync(int gameId);
 
         Task<List<string>> GenerateGameKeysAsync(int gameId, int userId, int quantity);
+        Task<IEnumerable<Game>> SearchGamesAsync(string query);
     }
 }
