@@ -70,29 +70,40 @@
         {
             <div class="col-md-4 mb-4 mt-4">
                 <a asp-action="Details" asp-route-id="@game.GameId" class="text-decoration-none">
-                    <div class="game-card border-0 ">
-                        <div class="position-relative ">
-                            @if (game.GameImages != null && game.GameImages.Any())
-                            {
-                                var coverImage = game.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
-                                var base64Image = Convert.ToBase64String(coverImage!.Img);
-                                var imgSrc = $"data:image/png;base64,{base64Image}";
-                                <img src="@imgSrc" class="h-100 w-100 game-card-img" alt="@game.Name Cover" style="height: 200px; object-fit: cover;" />
-                            }
-                            else
-                            {
-                                <img src="~/images/predefined/default-profile.jpg" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;" />
-                            }
-                            <!-- Badge for Platform -->
-                            <span class="myBadge myOrangeBg position-absolute px-1 py-1" style="bottom: -3.5px; left: 0px;">@game.Platform</span>
-                        </div>
+                    <div class="game-card border-0 position-relative game-card-container">
+                        <!-- Display the cover image -->
+                        @if (game.GameImages != null && game.GameImages.Any())
+                        {
+                            var coverImage = game.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)0);
+                            var base64Image = Convert.ToBase64String(coverImage!.Img);
+                            var imgSrc = $"data:image/png;base64,{base64Image}";
+                            <img src="@imgSrc" class="h-100 w-100 game-card-img" alt="@game.Name Cover" style="height: 200px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/images/predefined/default-profile.jpg" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;" />
+                        }
+
+                        <!-- Show the video on hover -->
+                        @if (!string.IsNullOrEmpty(game.VideoPath))
+                        {
+                            <video class="game-card-video position-absolute" width="100%" height="200" muted autoplay playsinline loop>
+                                <source src="@game.VideoPath" type="video/mp4" />
+                                Your browser does not support the video tag.
+                            </video>
+                        }
+
+                        <!-- Badge for Platform -->
+                        <span class="myBadge myOrangeBg position-absolute px-1 py-1" style="bottom: -3.5px; left: 0px;">@game.Platform</span>
                     </div>
                 </a>
+
                 <div class="d-flex justify-content-between align-items-center mt-2">
-                    <h5 class="game-card-title text-white">@game.Name </h5>
+                    <h5 class="game-card-title text-white">@game.Name</h5>
                     <span class="text-white fw-bold fs-6">@game.Price €</span>
                 </div>
             </div>
+
         }
     </div>
 </div>

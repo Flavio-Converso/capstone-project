@@ -34,6 +34,8 @@ namespace capstone_project.Models.DTOs.Game
         [Range(0, int.MaxValue, ErrorMessage = "La quantità disponibile deve essere un numero positivo.")]
         public int QuantityAvail { get; set; }
 
+        [MaxLength(500, ErrorMessage = "Il link del video di YouTube non può superare i 500 caratteri.")]
+        public string? VideoPath { get; set; }
         [Required(ErrorMessage = "La classificazione PEGI è obbligatoria.")]
         public int PegiId { get; set; }
 

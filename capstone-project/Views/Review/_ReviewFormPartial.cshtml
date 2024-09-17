@@ -25,7 +25,8 @@
             <i class="fa-solid fa-star" data-value="5"></i>
         </div>
         <input type="hidden" asp-for="Rating" id="Rating" value="0" />
-        <span id="ratingError" class="text-valid" style="display:none;">Per favore inserisci una valutazione.</span>
+        <span asp-validation-for="Rating" class="text-valid"></span>
+        <span id="ratingError" class="text-valid d-none">Per favore inserisci una valutazione.</span>
     </div>
 
     <button type="submit" class="auth-btn">Invia</button>
@@ -43,7 +44,7 @@
             star.addEventListener("mouseover", () => {
                 stars.forEach((star, index2) => {
                     index1 >= index2
-                        ? (star.style.transform = "scale(1.2)", star.style.color = "#ED4510")
+                        ? (star.style.transform = "scale(1.2)", star.style.color = "#F2701B")
                         : (star.style.transform = "scale(1)", star.style.color = "#fff");
                 });
             });
@@ -54,7 +55,7 @@
                 stars.forEach((star, index2) => {
                     if (index2 < ratingValue) {
                         star.style.transform = "scale(1.2)";
-                        star.style.color = "#ED4510";
+                        star.style.color = "#F2701B";
                     } else {
                         star.style.transform = "scale(1)";
                         star.style.color = "#fff";
@@ -88,7 +89,7 @@
         reviewForm.addEventListener("submit", function (event) {
             if (ratingInput.value === "0") {
                 event.preventDefault(); // Stop form submission
-                ratingError.style.display = "block"; // Show error message
+                ratingError.classList.remove('d-none')
             }
         });
     });

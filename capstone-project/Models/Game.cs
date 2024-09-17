@@ -29,6 +29,9 @@ namespace capstone_project.Models
         [Required, Range(0, int.MaxValue)]
         public required int QuantityAvail { get; set; }
 
+
+
+        public string? VideoPath { get; set; } // Add a new field for video path
         // EF REFERENCES
         public List<GameImage> GameImages { get; set; } = [];
         public int PegiId { get; set; }

@@ -45,7 +45,8 @@ namespace capstone_project.Services
                 QuantityAvail = gameDto.QuantityAvail,
                 Pegi = pegi!,
                 Restrictions = restrictions,
-                Categories = categories
+                Categories = categories,
+                VideoPath = gameDto.VideoPath
             };
 
             game.GameImages = gameDto.GameImages.Select(imgDto => new GameImage
@@ -106,6 +107,7 @@ namespace capstone_project.Services
             game.Price = gameDto.Price;
             game.ReleaseDate = gameDto.ReleaseDate;
             game.QuantityAvail = gameDto.QuantityAvail;
+            game.VideoPath = gameDto.VideoPath;
 
             game.Pegi = await _ctx.Pegis.FindAsync(gameDto.PegiId) ?? throw new ArgumentException("Invalid PEGI ID.");
 

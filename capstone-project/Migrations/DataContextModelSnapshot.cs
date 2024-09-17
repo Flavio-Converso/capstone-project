@@ -191,6 +191,9 @@ namespace capstone_project.Migrations
                     b.Property<DateTime>("ReleaseDate")
                         .HasColumnType("datetime2");
 
+                    b.Property<string>("VideoPath")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("GameId");
 
                     b.HasIndex("PegiId");

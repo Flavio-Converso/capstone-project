@@ -49,8 +49,32 @@ namespace capstone_project.Controllers
         // POST: /Game/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(GameDTO gameDto, List<ImageUpload> images)
+        public async Task<IActionResult> Create(GameDTO gameDto, List<ImageUpload> images, IFormFile VideoFile)
         {
+            if (VideoFile != null && VideoFile.Length > 0)
+            {
+                // Ensure that the folder exists
+                var videoFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "videos");
+                if (!Directory.Exists(videoFolder))
+                {
+                    Directory.CreateDirectory(videoFolder);
+                }
+
+                // Create a unique filename for the video
+                var videoFileName = Path.GetFileNameWithoutExtension(VideoFile.FileName)
+                                    + "_" + Guid.NewGuid().ToString()
+                                    + Path.GetExtension(VideoFile.FileName);
+                var videoFilePath = Path.Combine(videoFolder, videoFileName);
+
+                // Save the video file to the server
+                using (var stream = new FileStream(videoFilePath, FileMode.Create))
+                {
+                    await VideoFile.CopyToAsync(stream);
+                }
+
+                // Save the video file path in the database
+                gameDto.VideoPath = "/videos/" + videoFileName; // Save relative path
+            }
             foreach (var imageUpload in images)
             {
                 if (!_imgValidateHelper.IsValidImage(imageUpload.ImageFile!, out string errorMessage))
@@ -199,6 +223,7 @@ namespace capstone_project.Controllers
                 Price = game.Price,
                 ReleaseDate = game.ReleaseDate,
                 QuantityAvail = game.QuantityAvail,
+                VideoPath = game.VideoPath,
                 PegiId = game.Pegi.PegiId,
                 RestrictionIds = game.Restrictions.Select(r => r.RestrictionId).ToList(),
                 CategoryIds = game.Categories.Select(c => c.CategoryId).ToList(),
@@ -216,7 +241,7 @@ namespace capstone_project.Controllers
         // POST: /Game/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(GameDTO gameDto, List<ImageUpload> images)
+        public async Task<IActionResult> Edit(GameDTO gameDto, List<ImageUpload> images, IFormFile VideoFile)
         {
             // Validate image extensions
             foreach (var imageUpload in images)
@@ -255,6 +280,43 @@ namespace capstone_project.Controllers
                 }
             }
 
+            // Handle video upload if a new video is provided
+            if (VideoFile != null && VideoFile.Length > 0)
+            {
+                // Ensure that the video folder exists
+                var videoFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "videos");
+                if (!Directory.Exists(videoFolder))
+                {
+                    Directory.CreateDirectory(videoFolder);
+                }
+
+                // Generate a unique filename for the new video
+                var videoFileName = Path.GetFileNameWithoutExtension(VideoFile.FileName)
+                                    + "_" + Guid.NewGuid().ToString()
+                                    + Path.GetExtension(VideoFile.FileName);
+                var videoFilePath = Path.Combine(videoFolder, videoFileName);
+
+                // Save the new video file to the server
+                using (var stream = new FileStream(videoFilePath, FileMode.Create))
+                {
+                    await VideoFile.CopyToAsync(stream);
+                }
+
+                // Optional: Remove the old video file if it exists
+                if (!string.IsNullOrEmpty(gameDto.VideoPath))
+                {
+                    var oldVideoPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", gameDto.VideoPath.TrimStart('/'));
+                    if (System.IO.File.Exists(oldVideoPath))
+                    {
+                        System.IO.File.Delete(oldVideoPath); // Delete the old video file
+                    }
+                }
+
+                // Update the video path in the GameDTO
+                gameDto.VideoPath = "/videos/" + videoFileName; // Save the relative path
+            }
+
+            // Ensure the ModelState is valid before continuing
             if (!ModelState.IsValid)
             {
                 PopulateViewBags();
@@ -263,6 +325,7 @@ namespace capstone_project.Controllers
 
             try
             {
+                // Call the service to update the game with the new images and video
                 await _gameSvc.UpdateGameAsync(gameDto);
                 return RedirectToAction("List");
             }
@@ -273,6 +336,7 @@ namespace capstone_project.Controllers
                 return View(gameDto);
             }
         }
+
 
         // GET: /Game/Delete/5
         public async Task<IActionResult> Delete(int id)

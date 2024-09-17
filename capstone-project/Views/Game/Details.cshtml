@@ -181,8 +181,20 @@
 
 
 </div>
+       
+        <div class="video-container text-center my-4 mt-10">
+            <h2 class="mt-10 mb-3">Trailer</h2>
+            <video  width="1300" height="731" autoplay muted loop controls>
+                <source src="@Model.VideoPath" type="video/mp4" />
+                Your browser does not support the video tag.
+            </video>
+        </div>
+        
+       
 
-<div class="row mt-10">
+
+
+<div class="row mt-8">
 
 <h2 class="mb-4">Cosa ne pensano i nostri utenti</h2>
             @if (Model.Reviews != null && Model.Reviews.Any())

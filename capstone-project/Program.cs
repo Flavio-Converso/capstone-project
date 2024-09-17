@@ -5,6 +5,7 @@ using capstone_project.Interfaces.Auth;
 using capstone_project.Services;
 using capstone_project.Services.Auth;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 
@@ -14,7 +15,10 @@ var builder = WebApplication.CreateBuilder(args);
 var conn = builder.Configuration.GetConnectionString("DB");
 builder.Services.AddDbContext<DataContext>(opt => opt.UseSqlServer(conn));
 
-
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 134217728;
+});
 ////AUTH
 builder.Services
     .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
