@@ -3,56 +3,53 @@ using capstone_project.Interfaces;
 using capstone_project.Models;
 using Microsoft.EntityFrameworkCore;
 
-public class ReviewLikeService : IReviewLikeService
+namespace capstone_project.Services
 {
-    private readonly DataContext _dataContext;
-
-    public ReviewLikeService(DataContext dataContext)
+    public class ReviewLikeService : IReviewLikeService
     {
-        _dataContext = dataContext;
-    }
+        private readonly DataContext _ctx;
 
-    public async Task<bool> LikeReviewAsync(int reviewId, int userId)
-    {
-        try
+        public ReviewLikeService(DataContext context)
         {
-            var review = await _dataContext.Reviews
-                .Include(r => r.ReviewLikes)
-                .FirstOrDefaultAsync(r => r.ReviewId == reviewId);
-
-            if (review == null)
-            {
-                return false;
-            }
-
-            var existingLike = review.ReviewLikes
-                .FirstOrDefault(rl => rl.UserId == userId);
-
-            if (existingLike != null)
-            {
-                _dataContext.ReviewLikes.Remove(existingLike);
-            }
-            else
-            {
-                var user = _dataContext.Users.FirstOrDefault(u => u.UserId == userId);
-                review.ReviewLikes.Add(new ReviewLike { Review = review, User = user });
-            }
-
-            await _dataContext.SaveChangesAsync();
-            return true;
+            _ctx = context;
         }
-        catch (Exception ex)
+
+        public async Task LikeReviewAsync(int userId, int reviewId)
         {
-            Console.WriteLine($"Error in LikeReviewAsync: {ex.Message}");
-            return false;
-        }
-    }
-    public async Task<int> GetLikeCountAsync(int reviewId)
-    {
-        var review = await _dataContext.Reviews
-            .Include(r => r.ReviewLikes)
-            .FirstOrDefaultAsync(r => r.ReviewId == reviewId);
+            if (!await HasUserLikedReviewAsync(userId, reviewId))
+            {
+                var reviewLike = new ReviewLike
+                {
+                    UserId = userId,
+                    ReviewId = reviewId
+                };
 
-        return review?.ReviewLikes.Count ?? 0;
+                _ctx.ReviewLikes.Add(reviewLike);
+                await _ctx.SaveChangesAsync();
+            }
+        }
+
+        public async Task UnlikeReviewAsync(int userId, int reviewId)
+        {
+            var reviewLike = await _ctx.ReviewLikes
+                .FirstOrDefaultAsync(rl => rl.UserId == userId && rl.ReviewId == reviewId);
+
+            if (reviewLike != null)
+            {
+                _ctx.ReviewLikes.Remove(reviewLike);
+                await _ctx.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> HasUserLikedReviewAsync(int userId, int reviewId)
+        {
+            return await _ctx.ReviewLikes
+                .AnyAsync(rl => rl.UserId == userId && rl.ReviewId == reviewId);
+        }
+
+        public async Task<int> GetReviewLikeCountAsync(int reviewId)
+        {
+            return await _ctx.ReviewLikes.CountAsync(rl => rl.ReviewId == reviewId);
+        }
     }
 }

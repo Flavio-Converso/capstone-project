@@ -45,7 +45,7 @@ ul{
     font-weight: bold;
 }
 /* Basic input styling */
-input {
+input,textarea {
     background-color: #1D1D1D; /* Dark background */
     color: #fff; /* White text */
     border: 2px solid transparent;
@@ -275,3 +275,104 @@ input:-webkit-autofill {
     width: 1.2rem;
     height: 1.2rem;
 }
+
+.review {
+    background-color: #272727;
+    border-radius: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 15px;
+    height: 240px; /* Fixed height */
+    box-sizing: border-box;
+    position: relative; /* Enable absolute positioning for child elements */
+}
+
+
+
+.btn-delete {
+    background-color: transparent;
+    border: none;
+    color: red;
+    cursor: pointer;
+}
+
+
+.review-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.review-stars {
+    display: flex; /* Keeps the stars grouped together */
+}
+
+.review-content {
+    color: #b3b3b3;
+    margin: 15px 0;
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3; /* Truncate after 3 lines */
+    line-clamp: 3;
+    text-overflow: ellipsis;
+}
+
+.mt-auto {
+    margin-top: auto;
+}
+
+.review small {
+    display: block;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.like-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.like-group {
+    display: flex;
+    align-items: center; /* Keep the number and thumbs-up icon together */
+}
+/* Make the button invisible but keep the icon clickable */
+.icon-btn {
+    background: none;
+    border: none;
+    padding: 0;
+    margin-left: 5px; /* Add space between the number and the icon */
+    cursor: pointer;
+}
+
+    .icon-btn:focus {
+        outline: none; /* Remove focus outline */
+    }
+
+.stars {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 6px; /* Add spacing between stars */
+}
+
+    .stars i {
+        color: #fff;
+        font-size: 25px;
+        align-items: center;
+        justify-content: space-evenly;
+        text-shadow: 1px 1px 0.2px black;
+        cursor: pointer;
+        transition: transform 0.2s, color 0.2s;
+    }
+
+        .stars i.active,
+        .stars i:hover {
+            color: #ED4510 !important; /* Update the star color to #ED4510 */
+        }
+
+        .stars i:hover {
+            transform: scale(1.2); /* Keep the scaling effect on hover */
+        }

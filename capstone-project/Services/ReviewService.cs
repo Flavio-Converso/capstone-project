@@ -2,6 +2,7 @@
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.ViewModels;
+using Microsoft.EntityFrameworkCore;
 
 namespace capstone_project.Services
 {
@@ -34,38 +35,16 @@ namespace capstone_project.Services
         {
             return await Task.FromResult(_ctx.Reviews.Any(r => r.UserId == userId && r.GameId == gameId));
         }
-        public async Task LikeReviewAsync(int reviewId, int userId)
+        public async Task DeleteReviewAsync(int reviewId, int userId)
         {
-            if (!await HasUserLikedReviewAsync(reviewId, userId))
+            var review = await _ctx.Reviews.FirstOrDefaultAsync(r => r.ReviewId == reviewId && r.UserId == userId);
+
+            if (review != null)
             {
-                var reviewLike = new ReviewLike
-                {
-                    ReviewId = reviewId,
-                    UserId = userId
-                };
-                _ctx.ReviewLikes.Add(reviewLike);
+                _ctx.Reviews.Remove(review);
                 await _ctx.SaveChangesAsync();
             }
         }
 
-        public async Task UnlikeReviewAsync(int reviewId, int userId)
-        {
-            var reviewLike = _ctx.ReviewLikes.FirstOrDefault(rl => rl.ReviewId == reviewId && rl.UserId == userId);
-            if (reviewLike != null)
-            {
-                _ctx.ReviewLikes.Remove(reviewLike);
-                await _ctx.SaveChangesAsync();
-            }
-        }
-
-        public async Task<bool> HasUserLikedReviewAsync(int reviewId, int userId)
-        {
-            return await Task.FromResult(_ctx.ReviewLikes.Any(rl => rl.ReviewId == reviewId && rl.UserId == userId));
-        }
-
-        public async Task<int> GetReviewLikeCountAsync(int reviewId)
-        {
-            return await Task.FromResult(_ctx.ReviewLikes.Count(rl => rl.ReviewId == reviewId));
-        }
     }
 }

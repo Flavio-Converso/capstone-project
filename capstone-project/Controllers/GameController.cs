@@ -16,11 +16,12 @@ namespace capstone_project.Controllers
         private readonly IWishlistService _wishlistSvc;
         private readonly ICartService _cartSvc;
         private readonly IReviewService _reviewSvc;
+        private readonly IReviewLikeService _reviewLikeSvc;
         private readonly IImgValidateHelper _imgValidateHelper;
         private readonly IUserHelper _userHelper;
 
         public GameController(IGameService gameService, IWishlistService wishlistService, ICartService cartService,
-            DataContext context, IImgValidateHelper imgValidateHelper, IUserHelper userHelper, IReviewService reviewSvc)
+            DataContext context, IImgValidateHelper imgValidateHelper, IUserHelper userHelper, IReviewService reviewSvc, IReviewLikeService reviewLikeSvc)
         {
             _gameSvc = gameService;
             _wishlistSvc = wishlistService;
@@ -29,6 +30,7 @@ namespace capstone_project.Controllers
             _imgValidateHelper = imgValidateHelper;
             _userHelper = userHelper;
             _reviewSvc = reviewSvc;
+            _reviewLikeSvc = reviewLikeSvc;
         }
         private void PopulateViewBags()
         {
@@ -133,9 +135,17 @@ namespace capstone_project.Controllers
         // GET: /Game/Details/5
         public async Task<IActionResult> Details(int id)
         {
+            // Ensure that Reviews and associated entities are fully loaded
             var game = await _gameSvc.GetGameByIdAsync(id);
 
+            if (game == null)
+            {
+                return NotFound();
+            }
+
             var userId = _userHelper.GetUserIdClaim();
+            ViewBag.CurrentUserId = userId;
+
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
             var isInWishlist = wishlistItems.Any(w => w.GameId == id);
 
@@ -148,31 +158,28 @@ namespace capstone_project.Controllers
             bool hasReviewed = await _reviewSvc.HasUserReviewedGameAsync(userId, id);
             ViewBag.HasReviewed = hasReviewed;
 
-            // Get reviews the user has liked
-            var likedReviewIds = _ctx.ReviewLikes
-                .Where(rl => rl.UserId == userId)
-                .Select(rl => rl.ReviewId)
-                .ToList();
-            ViewBag.LikedReviews = likedReviewIds;
+            var reviewLikeCounts = new Dictionary<int, int>();
+            var hasLikedReviews = new Dictionary<int, bool>();
 
-            var likeCounts = new Dictionary<int, int>();
             foreach (var review in game.Reviews)
             {
-                likeCounts[review.ReviewId] = await _reviewSvc.GetReviewLikeCountAsync(review.ReviewId);
+                reviewLikeCounts[review.ReviewId] = await _reviewLikeSvc.GetReviewLikeCountAsync(review.ReviewId);
+                hasLikedReviews[review.ReviewId] = await _reviewLikeSvc.HasUserLikedReviewAsync(userId, review.ReviewId);
             }
-            ViewBag.LikeCounts = likeCounts;
 
-            // Fetch games in the same categories as the current game, excluding the current game
+            ViewBag.LikeCounts = reviewLikeCounts;
+            ViewBag.HasLiked = hasLikedReviews;
+            // Fetch related games
             var relatedGames = (await _gameSvc.GetGamesByCategoriesAsync(game.Categories.Select(c => c.CategoryId).ToList(), id))
-                       .Where(g => g.Platform == game.Platform) // Filter by same platform
-                       .Take(6) // Limit to 6 games
-                       .ToList();
+                    .Where(g => g.Platform == game.Platform) // Filter by same platform
+                    .Take(6) // Limit to 6 games
+                    .ToList();
 
-            // Pass related games to the view
             ViewBag.RelatedGames = relatedGames;
 
             return View(game);
         }
+
 
 
 

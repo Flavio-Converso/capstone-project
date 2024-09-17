@@ -1,27 +1,95 @@
 ﻿@model capstone_project.Models.ViewModels.ReviewViewModel
-<h3>Post a Review</h3>
-<form asp-controller="Review" asp-action="Create" method="post">
+
+<h3 class="mt-4">Fai una recensione</h3>
+<form asp-controller="Review" asp-action="Create" method="post" id="reviewForm">
     @Html.AntiForgeryToken()
 
     <input type="hidden" name="GameId" value="@Model.GameId" />
 
-    <div class="form-group">
-        <label for="Title">Review Title</label>
-        <input type="text" class="form-control" asp-for="Title" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+    <div class="form-group d-flex flex-column align-items-center mb-3">
+        <input type="text" class="w-75" asp-for="Title" placeholder="Titolo..." />
+        <span asp-validation-for="Title" class="text-valid"></span>
     </div>
 
-    <div class="form-group">
-        <label for="Content">Review Content</label>
-        <textarea class="form-control" asp-for="Content"></textarea>
-        <span asp-validation-for="Content" class="text-danger"></span>
+    <div class="form-group d-flex flex-column align-items-center mb-3">
+        <textarea class="w-75" asp-for="Content" placeholder="Recensione..."></textarea>
+        <span asp-validation-for="Content" class="text-valid"></span>
     </div>
 
-    <div class="form-group">
-        <label for="Rating">Rating (0 to 5)</label>
-        <input type="number" class="form-control" asp-for="Rating" step="0.1" min="0" max="5" />
-        <span asp-validation-for="Rating" class="text-danger"></span>
+    <div class="form-group d-flex flex-column align-items-center mb-3">
+        <div class="stars">
+            <i class="fa-solid fa-star" data-value="1"></i>
+            <i class="fa-solid fa-star" data-value="2"></i>
+            <i class="fa-solid fa-star" data-value="3"></i>
+            <i class="fa-solid fa-star" data-value="4"></i>
+            <i class="fa-solid fa-star" data-value="5"></i>
+        </div>
+        <input type="hidden" asp-for="Rating" id="Rating" value="0" />
+        <span id="ratingError" class="text-valid" style="display:none;">Per favore inserisci una valutazione.</span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit Review</button>
+    <button type="submit" class="auth-btn">Invia</button>
 </form>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll(".stars i");
+        const ratingInput = document.getElementById("Rating");
+        const reviewForm = document.getElementById("reviewForm");
+        const ratingError = document.getElementById("ratingError");
+
+        stars.forEach((star, index1) => {
+            // Hover effect
+            star.addEventListener("mouseover", () => {
+                stars.forEach((star, index2) => {
+                    index1 >= index2
+                        ? (star.style.transform = "scale(1.2)", star.style.color = "#ED4510")
+                        : (star.style.transform = "scale(1)", star.style.color = "#fff");
+                });
+            });
+
+            // Reset on mouse out
+            star.addEventListener("mouseout", () => {
+                const ratingValue = ratingInput.value;
+                stars.forEach((star, index2) => {
+                    if (index2 < ratingValue) {
+                        star.style.transform = "scale(1.2)";
+                        star.style.color = "#ED4510";
+                    } else {
+                        star.style.transform = "scale(1)";
+                        star.style.color = "#fff";
+                    }
+                });
+            });
+
+            // Click to set rating
+            star.addEventListener("click", () => {
+                ratingInput.value = index1 + 1; // Update the hidden input value
+                stars.forEach((star, index2) => {
+                    index1 >= index2
+                        ? star.classList.add("active")
+                        : star.classList.remove("active");
+                });
+                ratingError.style.display = "none"; // Hide error on selection
+            });
+        });
+
+        // Initialize stars based on initial rating value (for page reloads)
+        const initialRating = ratingInput.value;
+        if (initialRating > 0) {
+            stars.forEach((star, index2) => {
+                if (index2 < initialRating) {
+                    star.classList.add("active");
+                }
+            });
+        }
+
+        // Prevent form submission if no stars are selected
+        reviewForm.addEventListener("submit", function (event) {
+            if (ratingInput.value === "0") {
+                event.preventDefault(); // Stop form submission
+                ratingError.style.display = "block"; // Show error message
+            }
+        });
+    });
+</script>

@@ -9,11 +9,12 @@ namespace capstone_project.Controllers
     {
         private readonly IReviewService _reviewSvc;
         private readonly IUserHelper _userHelper;
-
-        public ReviewController(IReviewService reviewService, IUserHelper userHelper)
+        private readonly IReviewLikeService _reviewLikeSvc;
+        public ReviewController(IReviewService reviewService, IReviewLikeService reviewLikeService, IUserHelper userHelper)
         {
             _reviewSvc = reviewService;
             _userHelper = userHelper;
+            _reviewLikeSvc = reviewLikeService;
         }
 
         [HttpPost]
@@ -34,25 +35,42 @@ namespace capstone_project.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Delete(int reviewId, int gameId)
+        {
+            var userId = _userHelper.GetUserIdClaim();
+            await _reviewSvc.DeleteReviewAsync(reviewId, userId);
+
+            return RedirectToAction("Details", "Game", new { id = gameId });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> LikeReview(int reviewId)
         {
             var userId = _userHelper.GetUserIdClaim();
-            bool hasLiked = await _reviewSvc.HasUserLikedReviewAsync(reviewId, userId);
+            await _reviewLikeSvc.LikeReviewAsync(userId, reviewId);
 
-            if (hasLiked)
-            {
-                await _reviewSvc.UnlikeReviewAsync(reviewId, userId);
-            }
-            else
-            {
-                await _reviewSvc.LikeReviewAsync(reviewId, userId);
-            }
-
-            // Get the updated like count
-            var likeCount = await _reviewSvc.GetReviewLikeCountAsync(reviewId);
-
-            // Return JSON response
-            return Json(new { success = true, liked = !hasLiked, likeCount = likeCount });
+            var likeCount = await _reviewLikeSvc.GetReviewLikeCountAsync(reviewId);
+            return Json(new { success = true, likeCount });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UnlikeReview(int reviewId)
+        {
+            var userId = _userHelper.GetUserIdClaim();
+            await _reviewLikeSvc.UnlikeReviewAsync(userId, reviewId);
+
+            var likeCount = await _reviewLikeSvc.GetReviewLikeCountAsync(reviewId);
+            return Json(new { success = true, likeCount });
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetReviewLikeCount(int reviewId)
+        {
+            var likeCount = await _reviewLikeSvc.GetReviewLikeCountAsync(reviewId);
+            return Json(new { likeCount });
+        }
+
     }
 }

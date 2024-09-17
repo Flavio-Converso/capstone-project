@@ -1,40 +1,49 @@
-﻿$(document).on('click', '.like-button', function (e) {
-    e.preventDefault();
+﻿var token = $('input[name="__RequestVerificationToken"]').val();
 
-    var button = $(this);
-    var reviewId = button.data('review-id');
-    var liked = button.data('liked') === 'true';
-
+// Like button handler
+$(document).on('click', '.like-btn', function () {
+    var reviewId = $(this).data('review-id');
     $.ajax({
-        url: '@Url.Action("LikeReview", "Review")',
+        url: '/Review/LikeReview',
         type: 'POST',
         data: {
             reviewId: reviewId,
-            __RequestVerificationToken: $('input[name="__RequestVerificationToken"]').val()
+            __RequestVerificationToken: token
         },
-        success: function (response) {
-            if (response.success) {
-                // Update like count
-                $('#like-count-' + reviewId).text(response.likeCount);
+        success: function (result) {
+            if (result.success) {
+                // Update the like count
+                $('#like-count-' + reviewId).html('<span class="text-orange">' + result.likeCount + '</span> ');
 
-                // Hide the placeholder text for this specific review
-                $('#plchld-' + reviewId).addClass('display-none');
-
-                // Toggle button text and color
-                if (response.liked) {
-                    button.text('Unlike');
-                    button.removeClass('btn-success').addClass('btn-danger');
-                    button.data('liked', 'true');
-                } else {
-                    button.text('Like');
-                    button.removeClass('btn-danger').addClass('btn-success');
-                    button.data('liked', 'false');
-                }
+                // Change the button class and icon
+                var button = $('[data-review-id="' + reviewId + '"]');
+                button.removeClass('like-btn').addClass('unlike-btn');
+                button.find('i').removeClass('bi-hand-thumbs-up').addClass('bi-hand-thumbs-up-fill fs-4');
             }
-        },
-        error: function () {
-            alert('An error occurred while processing your request. Please try again.');
         }
     });
 });
 
+// Unlike button handler
+$(document).on('click', '.unlike-btn', function () {
+    var reviewId = $(this).data('review-id');
+    $.ajax({
+        url: '/Review/UnlikeReview',
+        type: 'POST',
+        data: {
+            reviewId: reviewId,
+            __RequestVerificationToken: token
+        },
+        success: function (result) {
+            if (result.success) {
+                // Update the like count
+                $('#like-count-' + reviewId).html('<span class="text-orange">' + result.likeCount + '</span> ');
+
+                // Change the button class and icon
+                var button = $('[data-review-id="' + reviewId + '"]');
+                button.removeClass('unlike-btn').addClass('like-btn');
+                button.find('i').removeClass('bi-hand-thumbs-up-fill').addClass('bi-hand-thumbs-up fs-4');
+            }
+        }
+    });
+});

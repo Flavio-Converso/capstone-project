@@ -15,7 +15,8 @@
     }
 </style>
 <!-- banner -->
-<div class="container-fluid px-0 position-relative">
+<div class="container-fluid px-0 position-relative mb-5">
+
     @if (Model.GameImages != null)
     {
         var coverImage = Model.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)5);
@@ -29,7 +30,13 @@
 
 <div class="container position-absolute game-detail1-abs">
    <div class="row">
-    <div class="col-6" >
+    <div class="col-6 position-relative" >
+                @if (User.IsInRole("master"))
+                {
+                <a asp-action="Edit" asp-route-id="@Model.GameId" class="auth-btn position-absolute" style="top:-15%; left:8%">Modifica</a>
+                <a asp-action="Delete" asp-route-id="@Model.GameId" class="auth-btn position-absolute" style="top:-15%; left:73%">Elimina</a>
+                }
+                    
         @{
             var coverImages = Model.GameImages!.Where(img => img.ImgType == ImageType.Cover).ToList();
             foreach (var image in coverImages)
@@ -175,6 +182,83 @@
 
 </div>
 
+<div class="row mt-10">
+
+<h2 class="mb-4">Cosa ne pensano i nostri utenti</h2>
+            @if (Model.Reviews != null && Model.Reviews.Any())
+            {
+                foreach (var review in Model.Reviews)
+                {
+                    <div class="review col-3 mx-2 py-3 d-flex flex-column" id="review-@review.ReviewId">
+                       
+
+                        <div class="review-header d-flex align-items-center">
+                            <h5 class="d-inline-block pe-3">@review.Title</h5>
+                            <div class="review-stars">
+                                @for (int i = 0; i < review.Rating; i++)
+                                {
+                                    <i class="fa fa-star text-orange fs-5"></i>
+                                }
+                            </div>
+                        </div>
+
+                        <p class="review-content mb-0 mt-3">@review.Content</p>
+
+                        <div class="mt-auto">
+                            <small>Recensito da @review.User.Username il @review.Date.ToShortDateString()</small>
+
+                            <div class="like-section">
+                                <div class="like-group d-flex align-items-center">
+                                    <span class="text-orange fs-4" id="like-count-@review.ReviewId">@ViewBag.LikeCounts[@review.ReviewId]</span>
+                                    <button class="icon-btn @(ViewBag.HasLiked[@review.ReviewId] ? "unlike-btn" : "like-btn")" data-review-id="@review.ReviewId">
+                                        <i class="@(ViewBag.HasLiked[@review.ReviewId] ? "bi bi-hand-thumbs-up-fill" : "bi bi-hand-thumbs-up") text-orange fs-4"></i>
+                                    </button>
+                                </div>
+
+                                @if (review.UserId == (int)ViewBag.CurrentUserId)
+                                {
+                                    <form asp-action="Delete" asp-controller="Review" method="post" class="delete-form">
+                                        <input type="hidden" name="reviewId" value="@review.ReviewId" />
+                                        <input type="hidden" name="gameId" value="@Model.GameId" />
+                                        @Html.AntiForgeryToken()
+                                        <button type="submit" class="btn-delete">
+                                            <i class="bi bi-trash3-fill fs-4"></i>
+                                        </button>
+                                    </form>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+
+                   
+                }
+            }
+            else
+            {
+                <p>Non ci sono ancora recensioni. Vuoi essere il primo?</p>
+            }
+
+
+<!-- Partial View for Review Form -->
+@if (ViewBag.HasReviewed)
+{
+    <p class="fw-bold text-orange mt-3">Hai già recensito questo gioco.</p>
+}
+else
+{
+    @await Html.PartialAsync("~/Views/Review/_ReviewFormPartial.cshtml", new capstone_project.Models.ViewModels.ReviewViewModel
+{
+    GameId = Model.GameId
+})
+}
+ </div>
+
+
+
+
+
+
         <div class="related-games-section mt-5">
             <h3 class="text-white mb-3">Altri giochi che potrebbero interessarti</h3>
 
@@ -217,63 +301,11 @@
 
 
 
+        <div class="mb-3 mt-5">
+<a asp-action="List" class="auth-btn fs-3">Torna alla lista</a>
 
-
-
-
-
-
-<div class="row">
-
-<h3>Reviews</h3>
-@if (Model.Reviews != null && Model.Reviews.Any())
-{
-    foreach (var review in Model.Reviews)
-    {
-        <div class="review" id="review-@review.ReviewId">
-            <h5>@review.Title (@review.Rating/5)</h5>
-            <p>@review.Content</p>
-            <small>Posted by @review.User.Username on @review.Date.ToShortDateString()</small>
-
-            <!-- Display the number of likes -->
-            <p>
-                <strong id="like-count-@review.ReviewId">@ViewBag.LikeCounts[review.ReviewId]</strong>
-                <span id="plchld-@review.ReviewId"> likes</span>
-            </p>
-
-            <button class="btn btn-@(ViewBag.LikedReviews != null && ViewBag.LikedReviews.Contains(review.ReviewId) ? "danger" : "success") like-button"
-                    data-review-id="@review.ReviewId"
-                    data-liked="@((ViewBag.LikedReviews != null && ViewBag.LikedReviews.Contains(review.ReviewId)).ToString().ToLower())">
-                @(ViewBag.LikedReviews != null && ViewBag.LikedReviews.Contains(review.ReviewId) ? "Unlike" : "Like")
-            </button>
-        </div>
-        <hr />
-    }
-}
-else
-{
-    <p>No reviews yet. Be the first to review this game!</p>
-}
-
-<!-- Partial View for Review Form -->
-@if (ViewBag.HasReviewed)
-{
-    <p class="fw-bold text-success">You have already reviewed this game.</p>
-}
-else
-{
-    @await Html.PartialAsync("~/Views/Review/_ReviewFormPartial.cshtml", new capstone_project.Models.ViewModels.ReviewViewModel
-{
-    GameId = Model.GameId
-})
-}
-
-<div>
-<a asp-action="List" class="btn btn-secondary">Indietro alla Lista</a>
-<a asp-action="Edit" asp-route-id="@Model.GameId" class="btn btn-primary">Modifica</a>
-<a asp-action="Delete" asp-route-id="@Model.GameId" class="btn btn-danger">Elimina</a>
 </div>
- </div>
+<div class="mt-5"></div>
     </div></div>
 @section Scripts {  
     @{

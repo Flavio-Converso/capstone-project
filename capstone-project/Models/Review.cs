@@ -17,7 +17,7 @@ namespace capstone_project.Models
         [Required]
         public required DateTime Date { get; set; } = DateTime.Now;
 
-        [Required, Range(0.0, 5.0)]
+        [Required, Range(0, 5)]
         public required decimal Rating { get; set; }
 
         // EF REFERENCES
