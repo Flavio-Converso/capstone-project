@@ -269,9 +269,10 @@ $(document).ready(function () {
                     // Check if the cart is now empty and update the UI accordingly
                     if ($('.col-8 .mb-3').length === 0) {
                         $('h3').hide();
-                        $('.btn-success').hide();
-                        $('.recap').hide();
-                        $('.empty').removeClass('d-none');
+                        $('#showEmpty').hide();
+                        $('#showEmpty2').removeClass('d-flex');
+                        $('#showEmpty2').hide(); // Hides the second section
+                        $('.empty').removeClass('d-none'); // Show "empty cart" message
                     }
                 } else {
                     console.log("Failed to remove the game from the cart.");
