@@ -37,6 +37,13 @@ ul{
 .myGreyBg {
     background-color: #323232;
 }
+.myGreyBg2 {
+    background-color:#272727
+}
+.myBlackBg {
+    background-color: #101010;
+    border-radius:30px;
+}
 .myOrangeBg {
     background-color: #ff5722;
 }
@@ -118,6 +125,7 @@ input:-webkit-autofill {
 }
 
     .auth-btn:hover, .auth-btn2:hover {
+        color:white;
         background: linear-gradient(52deg, rgba(244,134,32,1) 9%, rgba(237,69,16,1) 49%);
         transform: scale(1.05) !important; /* Slight scaling effect on hover */
     }
@@ -133,7 +141,9 @@ input:-webkit-autofill {
     border-radius: 4px !important;
 }
 
-
+.contShopp:hover{
+    color:white !important;
+}
 
 .game-card {
     transition: transform 0.3s ease-in-out;
@@ -404,3 +414,19 @@ input:-webkit-autofill {
         .stars i:hover {
             transform: scale(1.2); /* Keep the scaling effect on hover */
         }
+.cart-left{
+    border-radius:30px;
+}
+.btn-cart {
+    background-color: transparent;
+    border: none;
+    color: #F16A19; /* Original icon color */
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.3s ease; /* Smooth transition for color and scale */
+}
+
+    /* Hover effect */
+    .btn-cart:hover {
+        color:  #C25112; /* Change the icon color on hover */
+        transform: scale(1.1); /* Slightly enlarge the button on hover */
+    }

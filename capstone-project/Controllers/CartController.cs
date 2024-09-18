@@ -1,5 +1,6 @@
 ﻿using capstone_project.Helpers;
 using capstone_project.Interfaces;
+using capstone_project.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace capstone_project.Controllers
@@ -19,8 +20,29 @@ namespace capstone_project.Controllers
         {
             var userId = _userHelper.GetUserIdClaim();
             var cart = await _cartSvc.GetCartByUserIdAsync(userId);
-            return View(cart);
+
+            if (cart == null || !cart.CartItems.Any())
+            {
+                ViewBag.RelatedGames = new List<Game>(); // No related games if cart is empty
+                return View(cart); // Pass empty cart
+            }
+
+            // Get the list of game names in the cart
+            var cartGameNames = cart.CartItems.Select(ci => ci.GameName).Distinct().ToList();
+
+            // Fetch related games based on the user's cart contents, excluding games with the same name as those in the cart
+            var relatedGames = await _cartSvc.GetRelatedGamesFromCartAsync(userId);
+
+            // Exclude games that are already in the cart by name
+            relatedGames = relatedGames.Where(g => !cartGameNames.Contains(g.Name)).ToList();
+
+            ViewBag.RelatedGames = relatedGames; // Pass the filtered related games to the view
+
+            return View(cart); // Pass the cart model to the view
         }
+
+
+
 
         // POST: /Game/AddToCart
         [HttpPost]
@@ -86,7 +108,8 @@ namespace capstone_project.Controllers
             {
                 success = true,
                 itemTotal = itemTotal,
-                cartTotal = cartTotal
+                cartTotal = cartTotal,
+                gameName = item.GameName
             });
         }
 
@@ -130,5 +153,30 @@ namespace capstone_project.Controllers
 
             return Json(new { success = true, count = cartItemCount });
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> AddRelatedGameToCart(int gameId)
+        {
+            var userId = _userHelper.GetUserIdClaim();
+
+            // Add the game to the cart (assuming this returns CartDTO)
+            var result = await _cartSvc.AddGameToCartAsync(userId, gameId, 1);
+
+            // Check if the result is not null (indicating success)
+            if (result != null)
+            {
+                // Optionally: Get updated cart details (like item count)
+                var cartItemCount = await _cartSvc.GetCartItemCountAsync(userId);
+
+                // Return JSON response indicating success
+                return Json(new { success = true, cartItemCount = cartItemCount });
+            }
+
+            // Return JSON response indicating failure
+            return Json(new { success = false });
+        }
+
+
     }
 }

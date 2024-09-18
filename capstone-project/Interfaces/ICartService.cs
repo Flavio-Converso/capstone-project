@@ -1,4 +1,5 @@
-﻿using capstone_project.Models.DTOs.Cart;
+﻿using capstone_project.Models;
+using capstone_project.Models.DTOs.Cart;
 
 namespace capstone_project.Interfaces
 {
@@ -11,5 +12,6 @@ namespace capstone_project.Interfaces
         Task<string> CreateCheckoutSessionAsync(CartDTO cart, string successUrl);
         Task CompleteCheckoutAsync(int userId);
         Task<int> GetCartItemCountAsync(int userId);
+        Task<List<Game>> GetRelatedGamesFromCartAsync(int userId);
     }
 }

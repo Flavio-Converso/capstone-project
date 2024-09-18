@@ -189,6 +189,7 @@ $(document).ready(function () {
         });
     }
 });
+
 //cart
 $(document).ready(function () {
     updateCartItemCount();
@@ -255,21 +256,22 @@ $(document).ready(function () {
                 if (response.success) {
                     // Remove the item row from the cart UI
                     $('#cart-item-row-' + gameId).remove();
-
+                    $('#recap-' + gameId).remove();
                     // Update the cart item count badge
                     updateCartItemCount();
 
                     // Update the total price in the UI
-                    $('#total-price').text(response.cartTotal);
+                    var formattedCartTotal = parseFloat(response.cartTotal).toFixed(2).replace('.', ',');
+                    $('#total-price').text(formattedCartTotal + ' €');
 
                     console.log("Game removed from the cart successfully!");
 
                     // Check if the cart is now empty and update the UI accordingly
-                    if ($('tbody').children().length === 0) {
-                        $('table').hide();
+                    if ($('.col-8 .mb-3').length === 0) {
                         $('h3').hide();
                         $('.btn-success').hide();
-                        $('p').show().text("Your cart is empty.");
+                        $('.recap').hide();
+                        $('.empty').removeClass('d-none');
                     }
                 } else {
                     console.log("Failed to remove the game from the cart.");
@@ -302,11 +304,24 @@ $(document).ready(function () {
                 },
                 success: function (response) {
                     if (response.success) {
-                        // Update the total price for this item
-                        $('#total-' + gameId).text(response.itemTotal);
+                        var gameName = response.gameName;
+
+                        // Truncate the game name if it's longer than 16 characters
+                        if (gameName.length > 16) {
+                            gameName = gameName.substring(0, 16) + '...';
+                        }
+
+                        var formattedItemTotal = parseFloat(response.itemTotal).toFixed(2).replace('.', ',');
+                        var formattedCartTotal = parseFloat(response.cartTotal).toFixed(2).replace('.', ',');
+
+                        // Update the game name and total price using the same span structure
+                        $('#recap-' + gameId).html(`
+            <span class="py-1 text-white">${gameName}</span>
+            <span class="text-white" id="total-${gameId}">${formattedItemTotal} €</span>
+        `);
 
                         // Update the total price of the cart
-                        $('#total-price').text(response.cartTotal);
+                        $('#total-price').text(formattedCartTotal + ' €');
 
                         // Update the cart item count badge
                         updateCartItemCount();
@@ -314,6 +329,7 @@ $(document).ready(function () {
                         alert("Failed to update the cart.");
                     }
                 },
+
                 error: function () {
                     alert("Error occurred while updating the cart item.");
                 }
@@ -370,6 +386,40 @@ $(document).ready(function () {
     }
 });
 
+//relatedcart
+$(document).ready(function () {
+    // New Add to Cart functionality for related games
+    $('.related-add-to-cart-btn').click(function (e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        var button = $(this); // Store the clicked button
+        var gameId = button.data('gameid'); // Get the Game ID
+        var token = $('input[name="__RequestVerificationToken"]').val(); // Get the Anti-Forgery Token
+
+        // Perform AJAX request to add the game to the cart
+        $.ajax({
+            url: '/Cart/AddRelatedGameToCart', // New Action for adding related games to the cart
+            type: 'POST',
+            data: {
+                __RequestVerificationToken: token,
+                gameId: gameId
+            },
+            success: function (response) {
+                if (response.success) {
+                    // Reload the page to update the cart and related games
+                    window.location.reload();
+                } else {
+                    console.log("Failed to add the game to the cart.");
+                }
+            },
+            error: function (xhr, status, error) {
+                console.log("Error occurred while adding the related game to the cart.");
+            }
+        });
+    });
+});
+
+
 $(document).ready(function () {
     $('#search-btn').click(function (e) {
         e.preventDefault();
@@ -414,7 +464,7 @@ $(document).ready(function () {
         });
     });
 });
-// Search functionality
+
 // Search functionality
 function performSearch() {
     var query = document.getElementById('searchbarInput').value;

@@ -46,6 +46,7 @@ namespace capstone_project.Services
                     CartItemId = ci.CartItemId,
                     GameId = ci.GameId,
                     GameName = ci.Game.Name,
+                    GamePlatform = ci.Game.Platform,
                     Quantity = ci.Quantity,
                     QuantityAvail = ci.Game.QuantityAvail,
                     Price = ci.Game.Price,
@@ -238,5 +239,45 @@ namespace capstone_project.Services
 
             return cart?.CartItems.Sum(ci => ci.Quantity) ?? 0;
         }
+
+        public async Task<List<Game>> GetRelatedGamesFromCartAsync(int userId)
+        {
+            // Get the user's cart including games and their categories
+            var cart = await _ctx.Carts
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Game)
+                .ThenInclude(g => g.Categories)
+                .Include(c => c.CartItems)
+                .ThenInclude(ci => ci.Game)
+                .ThenInclude(g => g.GameImages) // Ensure GameImages are included
+                .FirstOrDefaultAsync(c => c.UserId == userId);
+
+            if (cart == null || !cart.CartItems.Any())
+            {
+                return new List<Game>(); // Return an empty list if the cart is empty
+            }
+
+            // Get all category IDs and platform names from games in the cart
+            var gameCategories = cart.CartItems.SelectMany(ci => ci.Game.Categories.Select(c => c.CategoryId)).Distinct().ToList();
+            var platforms = cart.CartItems.Select(ci => ci.Game.Platform).Distinct().ToList();
+
+            // Query for related games based on category, platform, and availability
+            var relatedGames = await _ctx.Games
+                .Include(g => g.Categories)
+                .Include(g => g.GameImages) // Include GameImages for each related game
+                .Where(g => g.Categories.Any(c => gameCategories.Contains(c.CategoryId)) &&
+                            platforms.Contains(g.Platform) &&
+                            g.QuantityAvail > 0 && // Ensure the game has available quantity
+                            !cart.CartItems.Select(ci => ci.GameId).Contains(g.GameId)) // Exclude games already in the cart
+                .GroupBy(g => g.Name) // Group games by name to ensure uniqueness
+                .Select(g => g.First()) // Select the first game for each unique name
+                .Take(6) // Limit to 6 related games
+                .ToListAsync();
+
+            return relatedGames;
+        }
+
+
+
     }
 }
