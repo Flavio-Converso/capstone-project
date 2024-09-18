@@ -177,7 +177,8 @@ $(document).ready(function () {
             method: 'GET',
             success: function (response) {
                 if (response.success && response.count > 0) {
-                    $('#wishlist-item-count').text(response.count);
+                    $('#wishlist-item-count').html('<i class="bi bi-heart"></i> '+ response.count);
+
                     $('#wishlist-item-count').show();
                 } else {
                     $('#wishlist-item-count').hide();
@@ -269,6 +270,8 @@ $(document).ready(function () {
                     // Check if the cart is now empty and update the UI accordingly
                     if ($('.col-8 .mb-3').length === 0) {
                         $('h3').hide();
+                        $('h1').hide();
+                        $('.relatedHide').hide();
                         $('#showEmpty').hide();
                         $('#showEmpty2').removeClass('d-flex');
                         $('#showEmpty2').hide(); // Hides the second section

@@ -95,6 +95,10 @@
 
                         <!-- Badge for Platform -->
                         <span class="myBadge myOrangeBg position-absolute px-1 py-1" style="bottom: -3.5px; left: 0px;">@game.Platform</span>
+                        @if (User.IsInRole("master"))
+                        {
+                            <span class="myBadge myOrangeBg position-absolute px-1 py-1" style="top: -3.5px; left: 0px;">@game.QuantityAvail</span>
+                        }
                     </div>
                 </a>
 

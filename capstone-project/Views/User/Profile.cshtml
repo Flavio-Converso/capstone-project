@@ -1,5 +1,8 @@
-﻿@model capstone_project.Models.ViewModels.UserProfileViewModel
-
+﻿@using capstone_project.Models.DTOs.Wishlist
+@model capstone_project.Models.ViewModels.UserProfileViewModel
+@{
+    ViewBag.NavbarMarginTop = true;
+}
 <h1>@Model.Username's Profile</h1>
 
 <div class="profile-container">
@@ -65,3 +68,4 @@ else
 {
     <p>No games owned yet.</p>
 }
+@Html.Partial("_WishlistPartial", ViewBag.WishlistItems as IEnumerable<WishlistItemDTO>)

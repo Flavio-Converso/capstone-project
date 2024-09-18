@@ -13,11 +13,13 @@ namespace capstone_project.Controllers
         private readonly IUserService _userSvc;
         private readonly IUserHelper _userHelper;
         private readonly DataContext _ctx;
-        public UserController(IUserService userService, IUserHelper userHelper, DataContext ctx)
+        private readonly IWishlistService _wishlistSvc;
+        public UserController(IUserService userService, IUserHelper userHelper, DataContext ctx, IWishlistService wishlistSvc)
         {
             _userSvc = userService;
             _userHelper = userHelper;
             _ctx = ctx;
+            _wishlistSvc = wishlistSvc;
         }
 
         [Authorize]
@@ -29,7 +31,6 @@ namespace capstone_project.Controllers
             // Get the user by their ID
             var user = await _userHelper.GetUserIdAsync(userId);
 
-
             // Get the games owned by the user via GameKey
             var ownedGames = await _ctx.GameKeys
                              .Where(gk => gk.UserId == userId)
@@ -37,6 +38,10 @@ namespace capstone_project.Controllers
                              .ThenInclude(g => g.GameImages)
                              .ToListAsync();
 
+            // Fetch the wishlist items
+            var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
+
+            // Populate the UserProfileViewModel
             var viewModel = new UserProfileViewModel
             {
                 Username = user.Username,
@@ -54,8 +59,12 @@ namespace capstone_project.Controllers
                 OwnedGames = ownedGames
             };
 
+            // Pass the wishlist items to the ViewBag
+            ViewBag.WishlistItems = wishlistItems;
+
             return View(viewModel);
         }
+
 
 
         // GET: Load the current user's profile for editing

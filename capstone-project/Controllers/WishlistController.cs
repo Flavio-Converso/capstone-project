@@ -13,13 +13,6 @@ namespace capstone_project.Controllers
             _wishlistSvc = wishlistService;
             _userHelper = userHelper;
         }
-        // GET: /Game/Wishlist
-        public async Task<IActionResult> Wishlist()
-        {
-            var userId = _userHelper.GetUserIdClaim();
-            var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
-            return View(wishlistItems);
-        }
 
         // POST: /Game/AddToWishlist
         [HttpPost]

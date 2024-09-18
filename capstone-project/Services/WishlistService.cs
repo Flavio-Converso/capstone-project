@@ -58,7 +58,9 @@ namespace capstone_project.Services
                 {
                     WishlistItemId = wi.WishlistItemId,
                     GameId = wi.GameId,
-                    GameName = wi.Game.Name
+                    GameName = wi.Game.Name,
+                    GamePlatform = wi.Game.Platform,
+                    Price = wi.Game.Price,
                 }).ToList()
             };
         }
@@ -90,6 +92,8 @@ namespace capstone_project.Services
                 WishlistItemId = wi.WishlistItemId,
                 GameId = wi.GameId,
                 GameName = wi.Game.Name,
+                GamePlatform = wi.Game.Platform,
+                Price = wi.Game.Price,
                 CoverImage = wi.Game.GameImages.FirstOrDefault(img => img.ImgType == ImageType.Cover)?.Img
             }).ToList();
         }

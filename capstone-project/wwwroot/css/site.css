@@ -133,6 +133,13 @@ input:-webkit-autofill {
     .auth-btn:active, .auth-btn2:active {
         transform: scale(1); /* Reset the button to its original size when clicked */
     }
+    .auth-btn:disabled {
+        cursor: inherit !important;
+        opacity:0.3;
+        box-shadow: none; /* Remove the shadow for a flatter appearance */
+        transform: none !important; /* No hover or active effects */
+    }
+
 
 .auth-btn2 {
     font-size: 16px; /* Font size */
@@ -186,7 +193,9 @@ input:-webkit-autofill {
     opacity: 0; /* Fade the image and badge out */
 }
 
-
+.badge{
+    border-radius:50px !important;
+}
 .myBadge {
     background-color: #ff6600; /* Your orange color */
     color: white;

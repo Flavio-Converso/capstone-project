@@ -1,2 +1,20 @@
-﻿<h2>Checkout Successful</h2>
-<p>Thank you for your purchase!</p>
+﻿@{
+    ViewBag.Title = "Pagamento Riuscito";
+    var redirectUrl = Url.Action("List", "Game");
+}
+
+<div class="container text-center mt-5">
+    <div class="myGreyBg2 p-5 rounded shadow-lg">
+        <i class="bi bi-check-circle-fill text-success" style="font-size: 4em;"></i>
+        <h2 class="text-white mt-4">Pagamento Riuscito!</h2>
+        <p class="text-secondary fs-5">Grazie per il tuo acquisto!</p>
+        <p class="text-orange fs-4">Controlla la tua email per vedere le chiavi dei tuoi giochi.</p>
+        <p class="text-secondary fs-6">Verrai reindirizzato alla lista dei giochi tra pochi secondi...</p>
+    </div>
+</div>
+
+<script>
+    setTimeout(function () {
+        window.location.href = '@redirectUrl';
+    }, 7000); // Redirect after 5 seconds
+</script>

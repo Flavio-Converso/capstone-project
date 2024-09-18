@@ -104,11 +104,6 @@
                 <div>
                     @if (User.Identity.IsAuthenticated)
                     {
-                            <a class="navLink position-relative" asp-controller="Wishlist" asp-action="Wishlist">
-                                <i class="sm-icon bi bi-bookmark-heart fs-3 px-2 text-white"></i>
-                                <span id="wishlist-item-count" class="position-absolute badge rounded-pill " style="display: none; left:25px; top:8px">
-                                </span>
-                            </a>
                             <a class="navLink position-relative" asp-area="" asp-controller="Cart" asp-action="Cart">
                                 <i class="sm-icon bi bi-cart2 fs-3 px-2 text-white"></i>
                                 <span id="cart-item-count" class="position-absolute badge rounded-pill" style="display: none; left:25px; top:8px">     
@@ -126,8 +121,10 @@
                     }
                     else
                     {
-                        <a class="navLink" asp-area="" asp-controller="User" asp-action="Profile">
-                          <img class="mx-2" id="profile-image-nav" src="/images/predefined/default-profile.jpg" alt="Profile Image"/>        
+                            <a class="navLink position-relative" asp-area="" asp-controller="User" asp-action="Profile">
+                          <img class="mx-2" id="profile-image-nav" src="/images/predefined/default-profile.jpg" alt="Profile Image"/>
+                         <span id="wishlist-item-count" class="position-absolute badge rounded-pill " style="display: none; left:32px; top:16px">
+                         </span>
                         </a>
                             <a class="navLink" asp-area="" asp-controller="Auth"
                            asp-action="Logout">
