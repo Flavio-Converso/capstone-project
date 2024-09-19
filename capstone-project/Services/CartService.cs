@@ -199,7 +199,9 @@ namespace capstone_project.Services
             _ctx.OrderSummaries.Add(orderSummary);
 
             // Prepare email body with game details and keys
-            string emailBody = "<h1>Grazie per il tuo acquisto!</h1><ul>";
+            string emailBody =
+              $"<h3 style='color: #333;'>Dettagli del tuo ordine (ID ordine: {orderNumber}):</h3> " +  // Include order number here
+               "<ul style='list-style-type: none; padding-left: 0;'>";
 
             // Process each item in the cart
             foreach (var cartItem in cart.CartItems)
@@ -208,7 +210,12 @@ namespace capstone_project.Services
                 var generatedKeys = await _gameSvc.GenerateGameKeysAsync(cartItem.GameId, userId, cartItem.Quantity);
 
                 // Add game name and keys to email body
-                emailBody += $"<li>Dettaglio per {cartItem.Game.Name}, Chiavi gioco: {string.Join(", ", generatedKeys)}</li>";
+                emailBody += $@"
+                        <li style='margin-bottom: 10px;'>
+                            <strong>Gioco:</strong> {cartItem.Game.Name}
+                            <br />
+                            <strong>Chiave:</strong> {string.Join(", ", generatedKeys)}
+                        </li>";
 
                 // Decrease the quantity available for the game
                 var game = cartItem.Game;
@@ -220,7 +227,8 @@ namespace capstone_project.Services
                 }
             }
 
-            emailBody += "</ul>";
+            emailBody += "</ul>" +
+                "<p style='font-size: 14px; color: #555;'>Grazie per il tuo acquisto!</p>";
 
             // Clear the cart
             _ctx.CartItems.RemoveRange(cart.CartItems);
