@@ -15,6 +15,11 @@ a,a:hover{
     color:inherit;
     text-decoration:none;
 }
+.navLink:hover,
+.sm-icon:hover {
+    color: #ff5722 !important;
+    cursor: pointer;
+}
 .mt-150 {
     margin-top: 150px;
 }
@@ -50,6 +55,9 @@ ul{
 .text-valid {
     color: #ff5722;
     font-weight: bold;
+}
+.border-orange:hover{
+    border:solid 3px;
 }
 /* Basic input styling */
 input,textarea {
@@ -99,9 +107,9 @@ input:-webkit-autofill {
         -webkit-text-fill-color: #fff; /* White text */
     }
 
-    .text-orange {
-        color: #F2701B;
-    }
+.text-orange {
+    color: #ff5722;
+}
 .text-grey {
     color:#989898 !important;
 }
@@ -192,6 +200,45 @@ input:-webkit-autofill {
 .game-card-container:hover .myBadge {
     opacity: 0; /* Fade the image and badge out */
 }
+/* Style for game card when not hovered */
+/* Initially hide the game key */
+.game-key {
+    display: none;
+}
+
+/* Show the game key when hovering over the game card */
+.game-card2:hover .game-key {
+    display: block !important; /* Use !important to override inline display:none */
+    color: white;
+    font-weight: bold;
+    text-align: center;
+}
+
+/* Style for game card when not hovered */
+.game-card2 {
+    transition: background-color 0.3s ease;
+    position: relative;
+    border-radius: 30px;
+}
+
+    /* Hover effect: change background to black */
+    .game-card2:hover {
+        background-color: black;
+        border-radius: 30px;
+    }
+
+        /* Hover effect: fade out the image */
+        .game-card2:hover img {
+            opacity: 0;
+        }
+
+    /* Ensure smooth transition of opacity for the image */
+    .game-card2 img {
+        transition: opacity 0.3s ease;
+        opacity: 1;
+    }
+
+
 
 .badge{
     border-radius:50px !important;
@@ -262,7 +309,12 @@ input:-webkit-autofill {
     right: 0;
     text-align: center;
 }
-
+.rounded{
+    border-radius:30px !important;
+}
+.rounded2{
+    border-radius:50%!important ;
+}
 #cart-item-count, #wishlist-item-count {
     background-color: #ff5722;
 }

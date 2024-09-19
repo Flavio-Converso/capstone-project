@@ -2,70 +2,181 @@
 @model capstone_project.Models.ViewModels.UserProfileViewModel
 @{
     ViewBag.NavbarMarginTop = true;
-}
-<h1>@Model.Username's Profile</h1>
+    int ownedGamesCount = Model.OwnedGames.Count();
+    var wishlistItems = ViewBag.WishlistItems as IEnumerable<WishlistItemDTO>;
+    int wishlistCount = wishlistItems?.Count() ?? 0;
 
-<div class="profile-container">
-    <div class="profile-img">
+}
+<div class="container mt-5 mb-10">
+<div class="row">
+
+    <div class="text-center col-12">
         @if (Model.ProfileImg != null)
         {
-            <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ProfileImg)" alt="Profile Image" class="profile-image" />
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ProfileImg)" alt="Profile Image" class="rounded2" />
         }
         else
         {
             <img src="/images/predefined/default-profile.jpg" alt="Default Profile Image" class="profile-image" />
         }
-    </div>
-
-    <div class="profile-details">
-        <p><strong>Name:</strong> @Model.Name</p>
-        <p><strong>Surname:</strong> @Model.Surname</p>
-        <p><strong>Email:</strong> @Model.Email</p>
-        <p><strong>Birth Date:</strong> @Model.BirthDate.ToString("d")</p>
-        <p><strong>Country:</strong> @Model.Country</p>
-        <p><strong>City:</strong> @Model.City</p>
-        <p><strong>Address:</strong> @Model.Address</p>
-        <p><strong>ZIP Code:</strong> @Model.ZipCode</p>
-        <p><strong>Phone Number:</strong> @Model.PhoneNumber</p>
-        <p><strong>Gender:</strong> @Model.Gender</p>
+            <h1 class="text-white">@Model.Username</h1>
     </div>
 </div>
+<div class="row mt-5">
+    <div class=" d-flex align-items-center fs-5">
+           <span class="text-orange pe-2">
+                <i class="bi bi-gear"></i>   Impostazioni
+           </span>
+            <i class="bi bi-chevron-right text-white fs-6"></i>          
+            <a class="text-white ps-3 navLink" asp-action="ChangePassword">Cambio Password</a>
+    </div>
+    <hr class="text-white mt-2"/>
+</div>
+<div class="row mt-4 d-flex justify-content-around ">
+        <div class="myBlackBg col-5 pt-4 pb-5 d-flex flex-column justify-content-center">
+            <div class="row justify-content-center mt-3">
+                <span class="text-white text-center fs-3">Panoramica</span>
+                <span class="text-center">
+                    <i class="bi bi-speedometer2 text-orange fs-1"></i>
+                </span>
+                    <hr class=" text-orange w-75"/>
+            </div>
+            <div class="row justify-content-around">
+                <div class="col-auto d-flex flex-column align-items-center">
+                    <span class="text-white fs-3">@Model.UserCategoriesCount</span>
+                    <span class="text-grey fs-4">Categorie pref.</span>
+                </div>
+                <div class="col-auto d-flex flex-column align-items-center">
+                    <span class="text-white fs-3">@ownedGamesCount</span>
+                    <span class="text-grey fs-4">Acquisti</span>
+                </div>
+                <div class="col-auto d-flex flex-column align-items-center">
+                    <span class="text-white fs-3">@wishlistCount</span>
+                    <span class="text-grey fs-4">Preferiti</span>
+                </div>                
+                <div class="col-auto d-flex flex-column align-items-center">
+                    <span class="text-white fs-3">@Model.UserReviewsCount</span>
+                    <span class="text-grey fs-4">Recensioni</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-6 myGreyBg2 rounded py-5 ps-5 pe-3 pt-4 shadow text-white fs-5 position-relative">
+            <a class="ps-2 text-secondary navLink position-absolute" asp-action="EditProfile" style="bottom:7px;right:18px;">
+                <i class="bi bi-pencil-square fs-4"></i>
+            </a>
+            <div class="row justify-content-center mb-4">
+                <i class="bi bi-person-circle text-orange fs-1 text-center"></i> 
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <p class="mb-2"><strong class="text-orange">Nome:</strong> @Model.Name</p>
+                    <p class="mb-2"><strong class="text-orange">Cognome:</strong> @Model.Surname</p>
+                    <p class="mb-2"><strong class="text-orange">Email:</strong> @Model.Email</p>
+                    <p class="mb-2"><strong class="text-orange">Data di Nascita:</strong> @Model.BirthDate.ToString("d")</p>
+                    <p class="mb-2"><strong class="text-orange">Paese:</strong> @Model.Country</p>
+                </div>
+                <div class="col-md-6">
+                    <p class="mb-2"><strong class="text-orange">Città:</strong> @Model.City</p>
+                    <p class="mb-2"><strong class="text-orange">Indirizzo:</strong> @Model.Address</p>
+                    <p class="mb-2"><strong class="text-orange">CAP:</strong> @Model.ZipCode</p>
+                    <p class="mb-2"><strong class="text-orange">Numero di Telefono:</strong> @Model.PhoneNumber</p>
+                    <p class="mb-2"><strong class="text-orange">Genere:</strong> @Model.Gender</p>
+                </div>
+            </div>
+
+        </div>
+
+</div>
+        
 <div>
-<a asp-action="EditProfile">Edit Profile</a><br />
-<a asp-action="ChangePassword">Change Password</a>
+
 </div>
+    @if (Model.OwnedGames.Any())
+    {
+<hr class="mt-10 text-white"/>
+    <h3 class="text-white mt-5">Chiavi di gioco</h3>
+        <div class="row">
+            @foreach (var gameKey in Model.OwnedGames)
+            {
+                <div class="col-md-4 mb-4 mt-4">
+                    <div class="game-card2 border-0 position-relative gameKey d-flex flex-column justify-content-center align-items-center">
+                        <!-- Display the cover image -->
+                        @if (gameKey.Game.GameImages.Any())
+                        {
+                            var coverImage = gameKey.Game.GameImages.First().Img;
+                            var base64Image = Convert.ToBase64String(coverImage!);
+                            var imgSrc = $"data:image/png;base64,{base64Image}";
+                            <img src="@imgSrc" class="h-100 w-100 game-card-img" alt="@gameKey.Game.Name Cover" style="height: 200px; object-fit: cover;" />
+                        }
+                        else
+                        {
+                            <img src="~/images/default-game.png" class="card-img-top" alt="Placeholder" style="height: 200px; object-fit: cover;" />
+                        }
 
-<!-- Display the games owned by the user -->
-<h3>Owned Games</h3>
-@if (Model.OwnedGames.Any())
-{
-    <ul>
-        @foreach (var gameKey in Model.OwnedGames)
-        {
-            <li>
-                <div class="game-info">
-                    <!-- Game Image -->
-                    @if (gameKey.Game.GameImages.Any())
-                    {
-                        <img src="data:image/jpeg;base64,@Convert.ToBase64String(gameKey.Game.GameImages.First().Img)" alt="@gameKey.Game.Name" class="game-image" />
-                    }
-                    else
-                    {
-                        <img src="/images/default-game.png" alt="Default Game Image" class="game-image" />
-                    }
+                        <!-- Game Key (Initially hidden) -->
+                        <span class="game-key text-white fs-5 position-absolute" style="display: none;cursor:pointer;" onclick="copyToClipboard('@gameKey.KeyNum')">
+                            @gameKey.KeyNum <i class="bi bi-clipboard2"></i>
+                        </span>
 
-                    <!-- Game Title and Key -->
-                    <div class="game-details">
-                        <p><strong>Game Title:</strong> @gameKey.Game.Name</p>
-                        <p><strong>Game Key:</strong> @gameKey.KeyNum</p>
+                        <!-- Badge for Platform -->
+                        <span class="myBadge myOrangeBg position-absolute px-1 py-1" style="bottom: -3.5px; left: 0px;">@gameKey.Game.Platform</span>
+                    </div>
+
+                    <div class="d-flex justify-content-center align-items-center mt-2">
+                        <h5 class="game-card-title text-white">@gameKey.Game.Name</h5>
                     </div>
                 </div>
-            </li>
-        }
-    </ul>
-}
-else
+            }
+        </div>
+    }
+    
+</div>
+<!-- Bootstrap Modal -->
+<div class="modal fade" id="copyModal" tabindex="-1" aria-labelledby="copyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <!-- Added modal-dialog-centered -->
+        <div class="modal-content">
+            <div class="modal-body text-center fs-3">
+                Game key copied to clipboard!
+            </div>
+        </div>
+    </div>
+</div>
+
+@if (wishlistCount > 0)
 {
-    <p>No games owned yet.</p>
-}
 @Html.Partial("_WishlistPartial", ViewBag.WishlistItems as IEnumerable<WishlistItemDTO>)
+}
+<script>
+    function copyToClipboard(gameKey) {
+        // Create a temporary textarea element
+        var tempInput = document.createElement('textarea');
+        tempInput.value = gameKey;
+        document.body.appendChild(tempInput);
+
+        // Select the text in the textarea
+        tempInput.select();
+        tempInput.setSelectionRange(0, 99999); // For mobile devices
+
+        // Copy the selected text to clipboard
+        document.execCommand('copy');
+
+        // Remove the temporary textarea element
+        document.body.removeChild(tempInput);
+
+        // Show the Bootstrap modal after copying
+        var myModal = new bootstrap.Modal(document.getElementById('copyModal'));
+        myModal.show();
+
+        // Optional: Update modal content to include the game key
+        document.querySelector('#copyModal .modal-body').innerText = `Chiave copiata!`;
+
+        // Automatically hide the modal after 3 seconds
+        setTimeout(function () {
+            myModal.hide();
+        }, 1300); // 3 seconds
+    }
+</script>
+

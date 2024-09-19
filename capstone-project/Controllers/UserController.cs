@@ -38,8 +38,13 @@ namespace capstone_project.Controllers
                              .ThenInclude(g => g.GameImages)
                              .ToListAsync();
 
-            // Fetch the wishlist items
+            var userCategoriesCount = user.Categories.Count;
+
             var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
+
+            var userReviewsCount = await _ctx.Reviews
+                             .Where(r => r.UserId == userId)
+                             .CountAsync();
 
             // Populate the UserProfileViewModel
             var viewModel = new UserProfileViewModel
@@ -56,7 +61,9 @@ namespace capstone_project.Controllers
                 PhoneNumber = user.PhoneNumber,
                 Gender = user.Gender.ToString(),
                 ProfileImg = user.ProfileImg,
-                OwnedGames = ownedGames
+                OwnedGames = ownedGames,
+                UserCategoriesCount = userCategoriesCount,
+                UserReviewsCount = userReviewsCount
             };
 
             // Pass the wishlist items to the ViewBag

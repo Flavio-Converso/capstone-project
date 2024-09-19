@@ -15,5 +15,7 @@
         public string Gender { get; set; }
         public byte[]? ProfileImg { get; set; }
         public List<GameKey> OwnedGames { get; set; } = [];
+        public int UserCategoriesCount { get; set; }
+        public int UserReviewsCount { get; set; }
     }
 }
