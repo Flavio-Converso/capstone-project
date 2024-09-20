@@ -1,6 +1,7 @@
 ﻿using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace capstone_project.Controllers
@@ -15,7 +16,7 @@ namespace capstone_project.Controllers
             _pegiSvc = pegiService;
             _imgValidateHelper = imgValidateHelper;
         }
-
+        [Authorize(Policy = "MasterPolicy")]
         public IActionResult Create()
         {
             return View();
@@ -24,6 +25,7 @@ namespace capstone_project.Controllers
         // GET: /Pegi/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Create(PegiDTO dto)
         {
             if (!_imgValidateHelper.IsValidImage(dto.Img!, out string errorMessage))
@@ -55,14 +57,10 @@ namespace capstone_project.Controllers
             return View(pegiList);
         }
 
-        // GET: /Pegi/Details/5
-        public async Task<IActionResult> Details(int id)
-        {
-            var pegi = await _pegiSvc.GetPegiById(id);
-            return View(pegi);
-        }
+
 
         // GET: /Pegi/Edit/5
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -79,6 +77,7 @@ namespace capstone_project.Controllers
         // POST: /Pegi/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Edit(PegiDTO dto)
         {
             if (dto.Img != null && !_imgValidateHelper.IsValidImage(dto.Img, out string errorMessage))
@@ -107,6 +106,7 @@ namespace capstone_project.Controllers
         }
 
         // GET: /Pegi/Delete/5
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Delete(int id)
         {
             var pegi = await _pegiSvc.GetPegiById(id);
@@ -116,6 +116,7 @@ namespace capstone_project.Controllers
         // POST: /Pegi/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _pegiSvc.DeletePegiAsync(id);

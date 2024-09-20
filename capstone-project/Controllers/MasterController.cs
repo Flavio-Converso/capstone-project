@@ -1,10 +1,12 @@
 ﻿using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace capstone_project.Controllers
 {
+    [Authorize(Policy = "MasterPolicy")]
     public class MasterController : Controller
     {
         private readonly IMasterService _masterSvc;

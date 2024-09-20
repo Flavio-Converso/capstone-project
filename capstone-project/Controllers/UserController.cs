@@ -77,6 +77,7 @@ namespace capstone_project.Controllers
 
 
         // GET: Load the current user's profile for editing
+        [Authorize]
         public async Task<IActionResult> EditProfile()
         {
 
@@ -93,6 +94,7 @@ namespace capstone_project.Controllers
         // POST: Save the edited profile data
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> EditProfile(UserEditProfileViewModel viewModel)
         {
             if (!ModelState.IsValid)
@@ -118,7 +120,7 @@ namespace capstone_project.Controllers
                 return View(viewModel);
             }
         }
-
+        [Authorize]
         public IActionResult ChangePassword()
         {
             return View();
@@ -127,6 +129,7 @@ namespace capstone_project.Controllers
         // POST: Handle password change
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
         {
             // Get the current user ID

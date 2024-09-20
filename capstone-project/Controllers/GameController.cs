@@ -41,6 +41,7 @@ namespace capstone_project.Controllers
         }
 
         // GET: /Game/Create
+        [Authorize(Policy = "MasterPolicy")]
         public IActionResult Create()
         {
             PopulateViewBags();
@@ -50,6 +51,7 @@ namespace capstone_project.Controllers
         // POST: /Game/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Create(GameDTO gameDto, List<ImageUpload> images, IFormFile VideoFile)
         {
             if (VideoFile != null && VideoFile.Length > 0)
@@ -211,6 +213,7 @@ namespace capstone_project.Controllers
 
 
         // GET: /Game/Edit/5
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Edit(int id)
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
@@ -243,6 +246,7 @@ namespace capstone_project.Controllers
         // POST: /Game/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Edit(GameDTO gameDto, List<ImageUpload> images, IFormFile VideoFile)
         {
             // Validate image extensions
@@ -341,6 +345,7 @@ namespace capstone_project.Controllers
 
 
         // GET: /Game/Delete/5
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Delete(int id)
         {
             var game = await _gameSvc.GetGameByIdAsync(id);
@@ -351,6 +356,7 @@ namespace capstone_project.Controllers
         // POST: /Game/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _gameSvc.DeleteGameAsync(id);

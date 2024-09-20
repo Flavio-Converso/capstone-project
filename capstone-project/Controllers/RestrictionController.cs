@@ -1,6 +1,7 @@
 ﻿using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace capstone_project.Controllers
@@ -15,7 +16,7 @@ namespace capstone_project.Controllers
             _restrictionSvc = restrictionService;
             _imgValidateHelper = imgValidateHelper;
         }
-
+        [Authorize(Policy = "MasterPolicy")]
         public IActionResult Create()
         {
             return View();
@@ -54,13 +55,8 @@ namespace capstone_project.Controllers
             return View(restrictionList);
         }
 
-        // GET: /Restriction/Details/5
-        public async Task<IActionResult> Details(int id)
-        {
-            var restriction = await _restrictionSvc.GetRestrictionById(id);
-            return View(restriction);
-        }
 
+        [Authorize(Policy = "MasterPolicy")]
         // GET: /Restriction/Edit/5
         public async Task<IActionResult> Edit(int id)
         {
@@ -77,6 +73,7 @@ namespace capstone_project.Controllers
         // POST: /Restriction/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Edit(RestrictionDTO dto)
         {
             if (dto.Img != null && !_imgValidateHelper.IsValidImage(dto.Img, out string errorMessage))
@@ -105,6 +102,7 @@ namespace capstone_project.Controllers
         }
 
         // GET: /Restriction/Delete/5
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Delete(int id)
         {
             var restriction = await _restrictionSvc.GetRestrictionById(id);
@@ -114,6 +112,7 @@ namespace capstone_project.Controllers
         // POST: /Restriction/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _restrictionSvc.DeleteRestrictionAsync(id);
