@@ -112,14 +112,22 @@ namespace capstone_project.Controllers
 
                 return RedirectToAction("Profile");
             }
-
             catch (Exception ex)
             {
-                // Add the error message to the model state
-                ModelState.AddModelError(string.Empty, ex.Message);
+                // Check if the exception message is related to the phone number being used
+                if (ex.Message.Contains("in uso"))
+                {
+                    ModelState.AddModelError("PhoneNumber", ex.Message);  // Add the specific error to PhoneNumber
+                }
+                else
+                {
+                    ModelState.AddModelError(string.Empty, "Si è verificato un errore durante l'aggiornamento del profilo."); // General error
+                }
+
                 return View(viewModel);
             }
         }
+
         [Authorize]
         public IActionResult ChangePassword()
         {

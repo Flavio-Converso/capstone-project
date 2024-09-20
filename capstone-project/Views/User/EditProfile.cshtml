@@ -1,149 +1,248 @@
 ﻿@model capstone_project.Models.ViewModels.UserEditProfileViewModel
 @{
     ViewData["Title"] = "Modifica Dati Profilo";
+    ViewBag.NavbarMarginTop = true;
+    ViewBag.HideNavbarMiddle = true;
 }
-<h1>Edit Your Profile</h1>
 
+<div class="container myGreyBg2 rounded w-75 mb-4 pb-4">
+    <h1 class="text-white text-center pt-4">Modifica i tuoi dati</h1>
 <form asp-action="EditProfile" method="post" enctype="multipart/form-data">
     @Html.AntiForgeryToken()
-    <div asp-validation-summary="All" class="text-danger"></div> <!-- This shows the validation errors -->
+      
 
-    <div>
+    <div class="mb-3">
         @if (Model.ProfileImg != null)
         {
-            <div>
-                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ProfileImg)" alt="Current Profile Image" class="profile-image" />
+            <div class="text-center">
+                <img src="data:image/jpeg;base64,@Convert.ToBase64String(Model.ProfileImg)" alt="Current Profile Image" class="profile-image rounded2" />
             </div>
         }
     </div>
-    <div class="form-group">
-        <label asp-for="Username" class="control-label">Username</label>
-        <input asp-for="Username" class="form-control" readonly />
-    </div>
+        <div class="row">
+            <!-- Left Column -->
+            <div class="col-md-12">
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="Username" class="control-label text-white mb-1 fs-4">Nome utente</label>
+                    <input asp-for="Username" class="w-50" readonly />
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Email" class="control-label">Email</label>
-        <input asp-for="Email" class="form-control" readonly />
-    </div>
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="Email" class="control-label text-white mb-1 fs-4">Email</label>
+                    <input asp-for="Email" class="w-50" readonly  />
+                </div>
 
-    <div class="form-group">
-        <label asp-for="BirthDate" class="control-label">Birth Date</label>
-        <input asp-for="BirthDate" class="form-control" readonly />
-    </div>
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="BirthDate" class="control-label text-white mb-1 fs-4">Data di nascita</label>
+                    <input asp-for="BirthDate" class="w-50" readonly />
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Gender" class="control-label">Gender</label>
-        <input asp-for="Gender" class="form-control" readonly />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Surname" class="control-label">Surname</label>
-        <input asp-for="Surname" class="form-control" />
-        <span asp-validation-for="Surname" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Country" class="control-label">Country</label>
-        <input asp-for="Country" class="form-control" />
-        <span asp-validation-for="Country" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="City" class="control-label">City</label>
-        <input asp-for="City" class="form-control" />
-        <span asp-validation-for="City" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Address" class="control-label">Address</label>
-        <input asp-for="Address" class="form-control" />
-        <span asp-validation-for="Address" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="ZipCode" class="control-label">ZIP Code</label>
-        <input asp-for="ZipCode" class="form-control" />
-        <span asp-validation-for="ZipCode" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="PhoneNumber" class="control-label">Phone Number</label>
-        <input asp-for="PhoneNumber" class="form-control" />
-        <span asp-validation-for="PhoneNumber" class="text-danger"></span>
-    </div>
-
-    <!-- Pre-set image selection -->
-    <div class="form-group">
-        <label>Choose a Pre-set Profile Image:</label>
-        <button type="button" id="toggle-predefined-images" class="btn btn-info">Scegli un\'immagine</button>
-
-        <!-- Hidden by default -->
-        <div id="predefined-images-container" style="display: none; margin-top: 10px;">
-            <div class="form-check predefined-image" data-image="image1.jpg">
-                <img src="/images/predefined/image1.jpg" alt="Predefined Image 1" class="selectable-image" width="100" />
-            </div>
-            <div class="form-check predefined-image" data-image="image2.jpg">
-                <img src="/images/predefined/image2.jpg" alt="Predefined Image 2" class="selectable-image" width="100" />
-            </div>
-            <div class="form-check predefined-image" data-image="image3.jpg">
-                <img src="/images/predefined/image3.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="Gender" class="control-label text-white mb-1 fs-4">Genere</label>
+                    <input asp-for="Gender" class="w-50" readonly />
+                </div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <!-- Right Column -->
+            <div class="col-md-6">
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="Name" class="control-label text-white mb-1 fs-4">Nome</label>
+                    <input asp-for="Name" class="w-75" />
+                    <span asp-validation-for="Name" class="text-valid mt-1"></span>
+                </div>
 
-    <!-- Hidden field to capture the selected predefined image -->
-    <input type="hidden" id="SelectedPredefinedImage" name="SelectedPredefinedImage" value="@Model.SelectedPredefinedImage" />
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="Country" class="control-label text-white mb-1 fs-4">Paese</label>
+                    <input asp-for="Country" class="w-75" />
+                    <span asp-validation-for="Country" class="text-valid mt-1"></span>
+                </div>         
 
-    <!-- File upload for custom image -->
-    <div class="form-group" id="upload-image-section">
-        <label asp-for="NewProfileImg" class="control-label">Or Upload Your Own Image</label>
-        <input asp-for="NewProfileImg" type="file" class="form-control-file" accept=".jpg,.jpeg,.png" />
-        <span asp-validation-for="NewProfileImg" class="text-danger"></span>
-    </div>
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="Address" class="control-label text-white mb-1 fs-4">Indirizzo</label>
+                    <input asp-for="Address" class="w-75" />
+                    <span asp-validation-for="Address" class="text-valid mt-1"></span>
+                </div>
+                            
+            </div>
+            <div class="col-md-6">
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="Surname" class="control-label text-white mb-1 fs-4">Cognome</label>
+                    <input asp-for="Surname" class="w-75" />
+                    <span asp-validation-for="Surname" class="text-valid mt-1"></span>
+                </div>
 
-    <div class="form-group">
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-    </div>
-</form>
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="City" class="control-label text-white mb-1 fs-4">Città</label>
+                    <input asp-for="City" class="w-75" />
+                    <span asp-validation-for="City" class="text-valid mt-1"></span>
+                </div>
+
+                <div class="form-group d-flex flex-column align-items-center mb-3">
+                    <label asp-for="ZipCode" class="control-label text-white mb-1 fs-4">Codice postale</label>
+                    <input asp-for="ZipCode" class="w-75" />
+                    <span asp-validation-for="ZipCode" class="text-valid mt-1"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-3"></div>
+                <div class="col-md-6">
+                    <div class="form-group d-flex flex-column align-items-center mb-3">
+                        <label asp-for="PhoneNumber" class="control-label text-white mb-1 fs-4">Numero di telefono</label>
+                        <input asp-for="PhoneNumber" class="w-75" />
+                        <span asp-validation-for="PhoneNumber" class="text-valid mt-1"></span>
+                    </div>
+                </div>
+                <div class="col-md-3"></div>
+            </div>
+        </div>
+
+        <!-- Pre-set image selection -->
+        <div class="d-flex justify-content-center">
+   
+        <div class="form-group mb-3 mt-4 text-center w-50">
+            <button type="button" id="toggle-predefined-images" class="auth-btn2 mt-2 fs-4">Scegli un'immagine</button>
+
+            <!-- Hidden by default -->
+            <div id="predefined-images-container" style="display: none; margin-top: 10px;">
+                <div class="predefined-images-grid">
+                    <!-- Make the images act as radio buttons -->
+                    <div class="form-check predefined-image" data-image="image1.jpg">
+                        <img src="/images/predefined/image1.jpg" alt="Predefined Image 1" class="selectable-image" width="100" />
+                    </div>
+
+                    <div class="form-check predefined-image" data-image="image2.jpg">
+                        <img src="/images/predefined/image2.jpg" alt="Predefined Image 2" class="selectable-image" width="100" />
+                    </div>
+
+                    <div class="form-check predefined-image" data-image="image3.jpg">
+                        <img src="/images/predefined/image3.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+                    </div>
+                    <div class="form-check predefined-image" data-image="image4.jpg">
+                        <img src="/images/predefined/image4.jpg" alt="Predefined Image 1" class="selectable-image" width="100" />
+                    </div>
+
+                    <div class="form-check predefined-image" data-image="image5.jpg">
+                        <img src="/images/predefined/image5.jpg" alt="Predefined Image 2" class="selectable-image" width="100" />
+                    </div>
+
+                    <div class="form-check predefined-image" data-image="image6.jpg">
+                        <img src="/images/predefined/image6.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+                    </div>
+                    <div class="form-check predefined-image" data-image="image7.jpg">
+                        <img src="/images/predefined/image7.jpg" alt="Predefined Image 1" class="selectable-image" width="100" />
+                    </div>
+
+                    <div class="form-check predefined-image" data-image="image8.jpg">
+                        <img src="/images/predefined/image8.jpg" alt="Predefined Image 2" class="selectable-image" width="100" />
+                    </div>
+
+                    <div class="form-check predefined-image" data-image="image9.jpg">
+                        <img src="/images/predefined/image9.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+                    </div>
+                    <div class="form-check predefined-image" data-image="image10.jpg">
+                        <img src="/images/predefined/image10.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+                    </div>
+                    <div class="form-check predefined-image" data-image="image11.jpg">
+                        <img src="/images/predefined/image11.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+                    </div>
+                    <div class="form-check predefined-image" data-image="image12.jpg">
+                        <img src="/images/predefined/image12.jpg" alt="Predefined Image 3" class="selectable-image" width="100" />
+                    </div>
+
+                    <!-- You can add more images here -->
+                </div>
+            </div>
+        </div>
+        </div>
+        <!-- Hidden field to capture the selected predefined image -->
+        <input type="hidden" id="SelectedPredefinedImage" name="SelectedPredefinedImage" value="@Model.SelectedPredefinedImage" />
+
+        <div id="oSpacer" class="text-center d-flex justify-content-center">
+            <div class="d-flex align-items-center text-white w-50 mt-3">
+                <hr class="flex-grow-1 me-2">
+                <span class="fs-6">o</span>
+                <hr class="flex-grow-1 ms-2">
+            </div>
+        </div>
+
+        <!-- File upload for custom image -->
+        <div class="form-group mt-4 text-center" id="upload-image-section">
+            <label class="d-block text-white mb-1 fs-4">Sostituisci immagine</label>
+            <input asp-for="NewProfileImg" class="file w-50" type="file" accept=".jpg,.jpeg,.png" />
+            <span asp-validation-for="NewProfileImg" class="text-valid mt-1 d-block"></span>
+        </div>
+
+        <div class="form-group text-center mt-5">
+            <button type="submit" class="auth-btn">Salva</button>
+        </div>
+    </form>
+</div>
+
 @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // Toggle pre-defined images visibility
-            $('#toggle-predefined-images').click(function() {
-                $('#predefined-images-container').toggle();
-                var isVisible = $('#predefined-images-container').is(':visible');
-                $(this).text(isVisible ? 'Nascondi' : 'Scegli un\'immagine');
+            $('#toggle-predefined-images').click(function () {
+                var container = $('#predefined-images-container');
+
+                if (container.hasClass('show')) {
+                    container.removeClass('show');
+                    setTimeout(function () {
+                        container.hide();  // Hide after the transition finishes
+                        // Change the button text after the container is hidden
+                        $('#toggle-predefined-images').text("Scegli un'immagine");
+                    }, 500);  // Match the CSS transition duration (0.5s)
+                } else {
+                    container.show();  // Make it visible instantly
+                    setTimeout(function () {
+                        container.addClass('show');  // Apply the transition effect
+                        // Change the button text after the container is shown
+                        $('#toggle-predefined-images').text('Nascondi');
+                    }, 10);  // Small delay to ensure CSS transition is triggered
+                }
             });
 
             // Handle image click
-            $('.selectable-image').click(function() {
+            $('.selectable-image').click(function () {
                 var selectedImage = $(this).parent().data('image');
 
                 // If the image is already selected, unselect it
                 if ($(this).hasClass('selected')) {
+                    // Unselect image
                     $('#SelectedPredefinedImage').val(''); // Clear the hidden input
                     $('.selectable-image').removeClass('selected'); // Remove the selected class
-                    $('#upload-image-section').show(); // Show the file upload section again
+
+                    // Show the file upload section and oSpacer again
+                    $('#upload-image-section').removeClass('d-none');
+                    $('#oSpacer').removeClass('d-none');
+
+                    // Change button text to allow selection again
+                    $('#toggle-predefined-images').text("Scegli un'immagine");
                 } else {
-                    $('#SelectedPredefinedImage').val(selectedImage); // Set the selected image
-                    $('#predefined-images-container').hide(); // Hide predefined images container
-                    $('#upload-image-section').hide(); // Hide file upload section
-                    $('.selectable-image').removeClass('selected'); // Remove selected class from other images
-                    $(this).addClass('selected'); // Add selected class to clicked image
+                    // Set the selected image value to the hidden input
+                    $('#SelectedPredefinedImage').val(selectedImage);
+
+                    // Hide the pre-defined images section
+                    $('#predefined-images-container').removeClass('show');
+                    setTimeout(function () {
+                        $('#predefined-images-container').hide(); // Hide after transition
+                    }, 500);  // Match transition duration
+
+                    // Hide the file upload section and oSpacer
+                    $('#upload-image-section').addClass('d-none');
+                    $('#oSpacer').addClass('d-none');
+
+                    // Optionally, highlight the selected image
+                    $('.selectable-image').removeClass('selected'); // Remove any previous selected class
+                    $(this).addClass('selected'); // Add selected class to the clicked image
+
+                    // Change button text back to 'Scegli un\'immagine'
+                    $('#toggle-predefined-images').text('Scegli un\'immagine');
                 }
             });
         });
+
+
     </script>
-
-    <style>
-        .selectable-image {
-            border: 5px solid transparent;
-            cursor: pointer;
-        }
-
-            .selectable-image.selected {
-                border-color: red;
-            }
-    </style>
 }

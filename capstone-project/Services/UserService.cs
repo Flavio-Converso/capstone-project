@@ -47,6 +47,7 @@ namespace capstone_project.Services
                 Email = user.Email,
                 BirthDate = user.BirthDate,
                 Gender = user.Gender.ToString(),
+                Name = user.Name,
                 Surname = user.Surname,
                 Country = user.Country,
                 City = user.City,
@@ -67,9 +68,10 @@ namespace capstone_project.Services
 
             if (existingUserWithPhoneNumber != null)
             {
-                throw new Exception("The phone number is already in use.");
+                throw new Exception("Il numero di telefono è già in uso.");
             }
 
+            user.Name = viewModel.Name;
             user.Surname = viewModel.Surname;
             user.Country = viewModel.Country;
             user.City = viewModel.City;

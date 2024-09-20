@@ -12,23 +12,28 @@ namespace capstone_project.Models.ViewModels
         public string Gender { get; set; }
 
         // Editable fields
-        [Required(ErrorMessage = "The surname is required.")]
+        [Required(ErrorMessage = "Il nome è obbligatorio.")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Il cognome è obbligatorio.")]
         public string Surname { get; set; }
 
-        [Required(ErrorMessage = "The country is required.")]
+        [Required(ErrorMessage = "Il paese è obbligatorio.")]
         public string Country { get; set; }
 
-        [Required(ErrorMessage = "The city is required.")]
+        [Required(ErrorMessage = "La città è obbligatoria.")]
         public string City { get; set; }
 
-        [Required(ErrorMessage = "The address is required.")]
+        [Required(ErrorMessage = "L'indirizzo è obbligatorio.")]
         public string Address { get; set; }
 
-        [Required(ErrorMessage = "The ZIP code is required.")]
+        [Required(ErrorMessage = "Il codice postale è obbligatorio.")]
         public string ZipCode { get; set; }
 
-        [Phone(ErrorMessage = "Invalid phone number.")]
+        [Required(ErrorMessage = "Il numero di telefono è obbligatorio.")]
+        [Phone(ErrorMessage = "Numero di telefono non valido.")]
         public string PhoneNumber { get; set; }
+
 
         public byte[]? ProfileImg { get; set; }
         public IFormFile? NewProfileImg { get; set; }  // For uploading a new profile image

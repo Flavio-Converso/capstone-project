@@ -110,7 +110,6 @@
 
 
             <div class="form-group d-none contShow2 mb-3 mt-4">
-                <label class="text-white">Scegli un'immagine profilo</label>
                 <button type="button" id="toggle-predefined-images" class="auth-btn2 mt-2">Scegli un'immagine</button>
 
                 <!-- Hidden by default -->
@@ -168,9 +167,14 @@
             <!-- Hidden field to capture the selected predefined image -->
             <input type="hidden" id="SelectedPredefinedImage" name="SelectedPredefinedImage" />
 
-
-            <div class="form-group d-none contShow2" id="upload-image-section">
-                <label asp-for="Img" class="control-label text-white mb-1">O caricane una</label>
+            <div id="oSpacer" class="text-center d-flex justify-content-center  d-none contShow2">
+                <div class="d-flex align-items-center text-white w-50 mt-3">
+                    <hr class="flex-grow-1 me-2">
+                    <span class="fs-6">o</span>
+                    <hr class="flex-grow-1 ms-2">
+                </div>
+            </div>
+            <div class="form-group d-none contShow2 mt-2" id="upload-image-section">
                 <input asp-for="Img" type="file" class="file" accept=".jpg,.jpeg,.png" />
                 <span asp-validation-for="Img" class="text-valid mt-1"></span>
             </div>
