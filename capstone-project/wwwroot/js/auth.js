@@ -80,17 +80,17 @@ $(document).ready(function () {
             container.removeClass('show');
             setTimeout(function () {
                 container.hide();  // Hide after the transition finishes
+                // Change the button text after the container is hidden
+                $('#toggle-predefined-images').text("Scegli un'immagine");
             }, 500);  // Match the CSS transition duration (0.5s)
         } else {
             container.show();  // Make it visible instantly
             setTimeout(function () {
                 container.addClass('show');  // Apply the transition effect
+                // Change the button text after the container is shown
+                $('#toggle-predefined-images').text('Nascondi');
             }, 10);  // Small delay to ensure CSS transition is triggered
         }
-
-        // Change the button text based on visibility
-        var isVisible = container.hasClass('show');
-        $(this).text(isVisible ? 'Nascondi' : 'Scegli un\'immagine');
     });
 
     // Handle image click
@@ -103,11 +103,12 @@ $(document).ready(function () {
             $('#SelectedPredefinedImage').val(''); // Clear the hidden input
             $('.selectable-image').removeClass('selected'); // Remove the selected class
 
-            // Show the file upload section again
+            // Show the file upload section and oSpacer again
             $('#upload-image-section').removeClass('d-none');
+            $('#oSpacer').removeClass('d-none');
 
             // Change button text to allow selection again
-            $('#toggle-predefined-images').text('Scegli un\'immagine');
+            $('#toggle-predefined-images').text("Scegli un'immagine");
         } else {
             // Set the selected image value to the hidden input
             $('#SelectedPredefinedImage').val(selectedImage);
@@ -118,14 +119,15 @@ $(document).ready(function () {
                 $('#predefined-images-container').hide(); // Hide after transition
             }, 500);  // Match transition duration
 
-            // Hide the file upload section
+            // Hide the file upload section and oSpacer
             $('#upload-image-section').addClass('d-none');
+            $('#oSpacer').addClass('d-none');
 
             // Optionally, highlight the selected image
             $('.selectable-image').removeClass('selected'); // Remove any previous selected class
             $(this).addClass('selected'); // Add selected class to the clicked image
 
-            // Change button text back to 'Scegli un'immagine'
+            // Change button text back to 'Scegli un\'immagine'
             $('#toggle-predefined-images').text('Scegli un\'immagine');
         }
     });
