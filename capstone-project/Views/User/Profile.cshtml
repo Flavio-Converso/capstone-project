@@ -1,6 +1,7 @@
 ﻿@using capstone_project.Models.DTOs.Wishlist
 @model capstone_project.Models.ViewModels.UserProfileViewModel
 @{
+    ViewData["Title"] = "Profilo";
     ViewBag.NavbarMarginTop = true;
     int ownedGamesCount = Model.OwnedGames.Count();
     var wishlistItems = ViewBag.WishlistItems as IEnumerable<WishlistItemDTO>;

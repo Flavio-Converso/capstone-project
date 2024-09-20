@@ -1,7 +1,7 @@
 ﻿@model capstone_project.Models.Pegi
 
 @{
-    ViewData["Title"] = "Delete Pegi";
+    ViewData["Title"] = "Conferma Eliminazione Pegi";
     string base64Image = Model.Img != null ? Convert.ToBase64String(Model.Img) : string.Empty;
     string imgSrc = !string.IsNullOrEmpty(base64Image) ? $"data:image/png;base64,{base64Image}" : "";
 }
