@@ -2,42 +2,38 @@
 
 @{
     ViewData["Title"] = "Lista Categorie";
+    ViewBag.NavbarMarginTop = true;
 }
 
-<h1>Categories</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
-
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+<div class="container d-flex justify-content-center">
+    <div class="row d-flex flex-column align-items-center justify-content-center rounded myGreyBg2 w-50 mb-10">
+        @if (User.IsInRole("master"))
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.CategoryId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.CategoryId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.CategoryId">Delete</a>
-                </td>
-            </tr>
+            <p class="text-start mb-4 mt-4">
+                <a class="auth-btn" asp-action="Create">Aggiungi Categoria</a>
+            </p>
         }
-    </tbody>
-</table>
+        <h1 class="text-center text-orange fw-bold mb-4 pt-3">Lista dele Categorie</h1>
+        @foreach (var category in Model)
+        {
+            <hr class="text-white w-50" />
+            <div class="col-md-7 px-0 py-4 pb-5 ">
+
+                <!-- Restriction Name -->
+                <h3 class="text-left text-orange">@category.Name</h3>
+
+                <!-- Restriction Description -->
+                <p class="text-left text-white">@category.Description</p>
+                @if (User.IsInRole("master"))
+                {
+                    <div class="text-center mt-3">
+                        <a class="auth-btn btn-sm mx-2" asp-action="Edit" asp-route-id="@category.CategoryId">Modifica</a>
+                        <a class="discard-btn btn-sm mx-2" asp-action="Delete" asp-route-id="@category.CategoryId">Elimina</a>
+                    </div>
+                }
+
+
+            </div>
+        }
+    </div>
+</div>
