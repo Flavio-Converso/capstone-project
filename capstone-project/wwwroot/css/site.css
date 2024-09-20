@@ -157,7 +157,7 @@ input:-webkit-autofill {
     border-radius: 4px !important;
 }
 
-.delete-btn {
+.discard-btn {
     cursor: pointer;
     background: rgb(169, 169, 169); /* Light gray */
     background: linear-gradient(225deg, rgba(169, 169, 169, 1) 0%, rgba(105, 105, 105, 1) 100%);
@@ -172,17 +172,17 @@ input:-webkit-autofill {
     z-index: 100 !important;
 }
 
-    .delete-btn:hover {
+    .discard-btn:hover {
         color: white;
         background: linear-gradient(52deg, rgba(128,128,128,1) 9%, rgba(96,96,96,1) 49%); /* Darker gray on hover */
         transform: scale(1.05) !important; /* Slight scaling effect on hover */
     }
 
-    .delete-btn:active {
+    .discard-btn:active {
         transform: scale(1); /* Reset the button to its original size when clicked */
     }
 
-    .delete-btn:disabled {
+    .discard-btn:disabled {
         cursor: inherit !important;
         opacity: 0.3;
         box-shadow: none; /* Remove the shadow for a flatter appearance */

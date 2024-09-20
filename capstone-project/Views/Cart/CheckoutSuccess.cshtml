@@ -1,6 +1,6 @@
 ﻿@{
     ViewBag.Title = "Pagamento Riuscito";
-    var redirectUrl = Url.Action("List", "Game");
+    var redirectUrl = Url.Action("Profile", "User") + "#game-keys";
 }
 
 <div class="container text-center mt-5">
@@ -9,12 +9,12 @@
         <h2 class="text-white mt-4">Pagamento Riuscito!</h2>
         <p class="text-secondary fs-5">Grazie per il tuo acquisto!</p>
         <p class="text-orange fs-4">Controlla la tua email o la sezione profilo per vedere le chiavi dei tuoi giochi.</p>
-        <p class="text-secondary fs-6">Verrai reindirizzato alla lista dei giochi tra pochi secondi...</p>
+        <p class="text-secondary fs-6">Verrai reindirizzato tra pochi secondi...</p>
     </div>
 </div>
 
 <script>
     setTimeout(function () {
         window.location.href = '@redirectUrl';
-    }, 7000); // Redirect after 5 seconds
+    }, 6000); // Redirect after 7 seconds
 </script>

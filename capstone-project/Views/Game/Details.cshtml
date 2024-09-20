@@ -163,9 +163,12 @@
                         <span>PEGI:</span>
                     </div>
                     <div class="col-8 text-start">
-                        <span>@Model.Pegi.Name</span>
+                        <a asp-controller="Pegi" asp-action="List" asp-fragment="pegi-@Model.Pegi.PegiId">
+                            <span class="border border-secondary rounded text-grey px-2 pb-1 mx-1">@Model.Pegi.Name</span>
+                        </a>
                     </div>
                 </div>
+
                 <div class="row d-flex align-items-start">
                     <div class="col-4 text-start ps-4">
                         <span>Restrizioni:</span>
@@ -173,9 +176,13 @@
                     <div class="col-8 text-start">
                         @foreach (var restriction in Model.Restrictions)
                         {
-                            <span class="border border-secondary rounded text-grey px-2 pb-1 mx-1">@restriction.Name</span>
+                            <a asp-controller="Restriction" asp-action="List" asp-fragment="restriction-@restriction.RestrictionId">
+                                <span class="border border-secondary rounded text-grey px-2 pb-1 mx-1">@restriction.Name</span>
+                            </a>
                         }
                     </div>
+
+
                 </div>
             </div>
 

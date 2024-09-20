@@ -1,42 +1,53 @@
 ﻿@model IEnumerable<capstone_project.Models.Pegi>
 
 @{
-    ViewData["Title"] = "Pegis List";
+    ViewData["Title"] = "Pegi List";
+
+    ViewBag.NavbarMarginTop = true;
+
 }
 
-<h1>PegiList</h1>
+<div class="container d-flex justify-content-center">
+    <div class="row d-flex flex-column align-items-center justify-content-center rounded myGreyBg2 w-50 mb-10">
+        @if (User.IsInRole("master"))
+        {
+            <p class="text-start mb-4 mt-4">
+                <a class="auth-btn" asp-action="Create">Aggiungi PEGI</a>
+            </p>
+        }
+        <h1 class="text-center text-orange fw-bold mb-4 pt-3">Lista dei PEGI</h1>
+        <p class="text-white px-5">Il PEGI (Pan European Game Information) è un sistema di classificazione dei videogiochi in base al contenuto. I giochi vengono classificati in base all'età minima consigliata per giocarli.</p>
+        @foreach (var pegi in Model)
+        {
+            <hr class="text-white w-50" />
+            <div class="col-md-7 px-0 py-4 pb-5 ">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
+                <!-- Restriction Image centered -->
+                <div class="text-center mb-3">
+                    @if (pegi.Img != null)
+                    {
+                        var base64Image = Convert.ToBase64String(pegi.Img);
+                        var imgSrc = $"data:image/png;base64,{base64Image}";
+                        <img src="@imgSrc" alt="@pegi.Name" class="img-fluid" style="max-height: 150px;" />
+                    }
 
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Description)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.PegiId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.PegiId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.PegiId">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                </div>
+
+                <!-- Restriction Name -->
+                <h3 class="text-left text-orange">@pegi.Name</h3>
+
+                <!-- Restriction Description -->
+                <p id="pegi-@pegi.PegiId" class="text-left text-white">@pegi.Description</p>
+                @if (User.IsInRole("master"))
+                {
+                    <div class="text-center mt-3">
+                        <a class="auth-btn btn-sm mx-2" asp-action="Edit" asp-route-id="@pegi.PegiId">Modifica</a>
+                        <a class="discard-btn btn-sm mx-2" asp-action="Delete" asp-route-id="@pegi.PegiId">Elimina</a>
+                    </div>
+                }
+
+
+            </div>
+        }
+    </div>
+</div>

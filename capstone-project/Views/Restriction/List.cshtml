@@ -2,42 +2,56 @@
 
 @{
     ViewData["Title"] = "Restriction List";
+
+    ViewBag.NavbarMarginTop = true;
+
 }
 
-<h1>Restriction List</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Name)
-            </th>
 
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
+
+<div class="container d-flex justify-content-center">
+    <div class="row d-flex flex-column align-items-center justify-content-center rounded myGreyBg2 w-50 mb-10">
+        @if (User.IsInRole("master"))
         {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Description)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.RestrictionId">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.RestrictionId">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.RestrictionId">Delete</a>
-                </td>
-            </tr>
+            <p class="text-start mb-4 mt-4">
+                <a class="auth-btn" asp-action="Create">Aggiungi restrizione</a>
+        </p>
         }
-    </tbody>
-</table>
+        <h1 class="text-center text-orange fw-bold mb-4 pt-3">Lista delle restrizioni</h1>
+        <p class="text-white px-5">Le restrizioni nei videogiochi rappresentano limiti specifici per quanto riguarda contenuti violenti, linguaggio volgare, o altri elementi che potrebbero non essere adatti a tutte le età. Ogni restrizione ha lo scopo di avvisare i giocatori sui possibili contenuti problematici all'interno del gioco.</p>
+
+        @foreach (var restriction in Model)
+        {
+            <hr class="text-white w-50"/>
+            <div class="col-md-7 px-0 py-4 pb-5 ">
+                
+                    <!-- Restriction Image centered -->
+                    <div class="text-center mb-3">
+                        @if (restriction.Img != null)
+                        {
+                            var base64Image = Convert.ToBase64String(restriction.Img);
+                            var imgSrc = $"data:image/png;base64,{base64Image}";
+                            <img src="@imgSrc" alt="@restriction.Name" class="img-fluid" style="max-height: 150px;" />
+                        }
+                      
+                    </div>
+
+                    <!-- Restriction Name -->
+                <h3 class="text-left text-orange">@restriction.Name</h3>
+
+                    <!-- Restriction Description -->
+                <p id="restriction-@restriction.RestrictionId" class="text-left text-white">@restriction.Description</p>
+                @if (User.IsInRole("master"))
+                {
+                    <div class="text-center mt-3">
+                        <a class="auth-btn btn-sm mx-2" asp-action="Edit" asp-route-id="@restriction.RestrictionId">Modifica</a>
+                        <a class="discard-btn btn-sm mx-2" asp-action="Delete" asp-route-id="@restriction.RestrictionId">Elimina</a>
+                    </div>
+                }
+                    
+              
+            </div>
+        }
+    </div>
+</div>
