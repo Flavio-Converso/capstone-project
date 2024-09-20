@@ -6,7 +6,7 @@ namespace capstone_project.Models.DTOs
     {
         public int PegiId { get; set; }
 
-        [Required(ErrorMessage = "Devi inserire un nome:"), MaxLength(50, ErrorMessage = "Il nome non deve superare i 50 caratteri:")]
+        [Required(ErrorMessage = "Devi inserire un nome"), MaxLength(50, ErrorMessage = "Il nome non deve superare i 50 caratteri:")]
         public required string Name { get; set; }
         public byte[]? ImgByte { get; set; }
 

@@ -3,6 +3,7 @@
 @{
     ViewBag.Title = "Conferma Eliminazione Gioco";
     ViewBag.Px0 = true;
+    ViewBag.HideNavbarMiddle = true;
 }
 <style>
     body{
@@ -10,7 +11,7 @@
         margin-bottom:2em;
     }
 </style>
-<div class="container-fluid px-0 mb-10">
+<div class="container-fluid px-0 mb-8">
 
    
 
@@ -26,14 +27,14 @@
         }
 
     <div class="container text-center">
-        <h1 class="text-orange">Conferma Eliminazione</h1>
+        <h1 class="text-orange">Conferma Eliminazione del Gioco</h1>
+        <p class="text-white mb-1 fs-3">
+            Sei sicuro di voler eliminare 
+            <span class="text-orange fw-bold">@Model.Name</span> 
+            per 
+            <span class="text-orange fw-bold">@Model.Platform</span>?       
+       </p>
         <p class="text-white mb-4 fs-3">
-            <strong>@Model.Name</strong> per
-            <strong>@Model.Platform</strong>
-        </p>
-        <p class="text-white mb-4 fs-3">
-           
-            Sei sicuro di voler eliminare il gioco? 
             <span class="fw-bold">Questa azione è <span class="text-orange">permanente</span> e non può essere annullata.</span>
         </p>
 

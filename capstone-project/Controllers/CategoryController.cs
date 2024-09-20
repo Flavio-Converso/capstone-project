@@ -47,13 +47,6 @@ namespace capstone_project.Controllers
             return View(categoryList);
         }
 
-        // GET: /Category/Details/5
-        public async Task<IActionResult> Details(int id)
-        {
-            var category = await _categorySvc.GetCategoryById(id);
-            return View(category);
-        }
-
         // GET: /Category/Edit/5
         public async Task<IActionResult> Edit(int id)
         {

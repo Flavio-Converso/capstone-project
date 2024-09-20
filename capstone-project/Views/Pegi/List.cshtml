@@ -19,11 +19,11 @@
         <p class="text-white px-5">Il PEGI (Pan European Game Information) è un sistema di classificazione dei videogiochi in base al contenuto. I giochi vengono classificati in base all'età minima consigliata per giocarli.</p>
         @foreach (var pegi in Model)
         {
-            <hr class="text-white w-50" />
+            <hr id="pegi-@pegi.PegiId" class="text-white w-50" />
             <div class="col-md-7 px-0 py-4 pb-5 ">
 
                 <!-- Restriction Image centered -->
-                <div class="text-center mb-3">
+                <div  class="text-center mb-3">
                     @if (pegi.Img != null)
                     {
                         var base64Image = Convert.ToBase64String(pegi.Img);
@@ -37,7 +37,7 @@
                 <h3 class="text-left text-orange">@pegi.Name</h3>
 
                 <!-- Restriction Description -->
-                <p id="pegi-@pegi.PegiId" class="text-left text-white">@pegi.Description</p>
+                <p  class="text-left text-white">@pegi.Description</p>
                 @if (User.IsInRole("master"))
                 {
                     <div class="text-center mt-3">
@@ -51,3 +51,22 @@
         }
     </div>
 </div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Add a slight delay to ensure the page has fully loaded before scrolling
+        setTimeout(function () {
+            // Check if there's a hash in the URL (e.g., #pegi-1)
+            if (window.location.hash) {
+                let element = document.querySelector(window.location.hash);
+                if (element) {
+                    // Scroll the page, offsetting by 250px from the top
+                    window.scrollTo({
+                        top: element.offsetTop - 250, // Adjust this value to control the offset
+                        behavior: 'smooth' // Optional, for smooth scrolling
+                    });
+                }
+            }
+        }, 100); // Adjust the delay if needed (100ms delay)
+    });
+
+</script>

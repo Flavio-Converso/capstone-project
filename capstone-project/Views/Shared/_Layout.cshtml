@@ -48,7 +48,7 @@
 
                 }
                
-                <div class="d-flex flex-column">                                     
+                <div class="d-flex flex-column @(ViewBag.HideNavbarMiddle == true ? "d-none" : "d-none d-lg-flex")">
                     @if (User.IsInRole("master"))
                     {
                         <div class="d-none d-lg-flex justify-content-around px-5 mb-2 navbar-text">
