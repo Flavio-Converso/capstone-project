@@ -2,29 +2,48 @@
 
 @{
     ViewBag.Title = "Conferma Eliminazione";
+    ViewBag.Px0 = true;
 }
+<style>
+    body{
+        display:block;
+        margin-bottom:2em;
+    }
+</style>
+<div class="container-fluid px-0 mb-10">
 
-<h2>Conferma Eliminazione</h2>
+   
 
-<h3>Sei sicuro di voler eliminare questo gioco?</h3>
+        @if (Model.GameImages != null && Model.GameImages.Any())
+        {
+            var coverImage = Model.GameImages.FirstOrDefault(img => img.ImgType == (ImageType)5);
+            var base64Image = Convert.ToBase64String(coverImage!.Img);
+            var imgSrc = $"data:image/png;base64,{base64Image}";
+            <div class="position-relative">
+                <img src="@imgSrc" class="img-fluid w-100 firstImg" alt="@Model.Name Banner" style="max-height:690px;" />
+               
+            </div>
+        }
 
-<div>
-    <h4>@Model.Name</h4>
-    <hr />
-    <dl class="row">
-        <dt class="col-sm-2">Descrizione</dt>
-        <dd class="col-sm-10">@Model.Description</dd>
+    <div class="container text-center">
+        <h1 class="text-orange">Conferma Eliminazione</h1>
+        <p class="text-white mb-4 fs-3">
+            <strong>@Model.Name</strong> per
+            <strong>@Model.Platform</strong>
+        </p>
+        <p class="text-white mb-4 fs-3">
+           
+            Sei sicuro di voler eliminare il gioco? 
+            <span class="fw-bold">Questa azione è <span class="text-orange">permanente</span> e non può essere annullata.</span>
+        </p>
 
-        <dt class="col-sm-2">Piattaforma</dt>
-        <dd class="col-sm-10">@Model.Platform</dd>
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="GameId" />
+            <button type="submit" class="auth-btn mx-5">Elimina</button>
+            <a asp-action="List" class="delete-btn mx-5 ">Annulla</a>
+        </form>
+    </div>
 
-        <dt class="col-sm-2">Prezzo</dt>
-        <dd class="col-sm-10">@Model.Price.ToString("C")</dd>
-    </dl>
+  
+
 </div>
-
-<form asp-action="Delete" method="post">
-    <input type="hidden" asp-for="GameId" />
-    <button type="submit" class="btn btn-danger">Elimina</button>
-    <a asp-action="List" class="btn btn-secondary">Annulla</a>
-</form>

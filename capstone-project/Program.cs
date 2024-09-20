@@ -83,6 +83,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseStatusCodePagesWithReExecute("/Home/NotFound");
 
 app.UseAuthentication();
 app.UseAuthorization();

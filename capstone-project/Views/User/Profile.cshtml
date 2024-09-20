@@ -143,7 +143,7 @@
             <h4 class="text-orange text-center mb-5">Le tue chiavi di gioco verranno mostrate qui.</h4>               
             @if (wishlistCount != 0)
             {
-            <a asp-action="List" class="auth-btn fs-3 ">Vai alla lista dei giochi</a>
+            <a asp-controller="Game" asp-action="List" class="auth-btn fs-3 ">Vai alla lista dei giochi</a>
             }
         </div>
     }
@@ -162,14 +162,14 @@ else{
         <h4 class="text-orange text-center mb-5">I tuoi giochi preferiti verranno mostrati qui.</h4>
         @if (Model.OwnedGames.Any())
         {
-            <a asp-action="List" class="auth-btn fs-3 ">Vai alla lista dei giochi</a>
+            <a asp-controller="Game" asp-action="List" class="auth-btn fs-3 ">Vai alla lista dei giochi</a>
         }
 </div>
 }
 @if (wishlistCount == 0 && !Model.OwnedGames.Any())
 {
     <div class="container mb-10 text-center">
-        <a asp-action="List" class="auth-btn fs-3">Vai alla lista dei giochi</a>
+        <a asp-controller="Game" asp-action="List" class="auth-btn fs-3">Vai alla lista dei giochi</a>
 
     </div>
 }

@@ -13,7 +13,10 @@ namespace capstone_project.Controllers
             _logger = logger;
         }
 
-
+        public IActionResult NotFound()
+        {
+            return View();
+        }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()

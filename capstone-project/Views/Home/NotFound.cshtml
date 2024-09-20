@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "Page Not Found";
+    ViewBag.NavbarMarginTop = false;
+}
+
+<div class=" myGreyBg">
+    <a asp-controller="Game" asp-action="List" class="px-4 pt-4">
+        <img class="img-fluid" src="~/images/logo_transp.png" alt="logo" style="height:80px;">
+    </a>
+</div>
+
+<!-- Container for the centered 404 -->
+
+<div class="d-flex justify-content-center align-items-center" style="height: 90vh;">
+ <a asp-controller="Game" asp-action="List">
+    <div class="rounded-circle d-flex flex-column justify-content-center align-items-center" style="width: 250px; height: 250px; background-color: #131313;">
+        <h1 class="display-3 text-center fw-bold text-orange">404</h1>
+        <h4 class="text-center text-white">Rage quit? :)</h4>
+        <h6 class="text-orange">Clicca per riconnetterti</h6>
+    </div>
+ </a>
+</div>

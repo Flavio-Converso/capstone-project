@@ -157,6 +157,39 @@ input:-webkit-autofill {
     border-radius: 4px !important;
 }
 
+.delete-btn {
+    cursor: pointer;
+    background: rgb(169, 169, 169); /* Light gray */
+    background: linear-gradient(225deg, rgba(169, 169, 169, 1) 0%, rgba(105, 105, 105, 1) 100%);
+    border: none; /* No border */
+    color: #fff; /* White text */
+    padding: 10px 30px; /* Padding for button size */
+    border-radius: 30px; /* Rounded corners */
+    font-size: 18px; /* Font size */
+    font-weight: bold;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2); /* Slight shadow for 3D effect */
+    transition: background 0.4s ease, transform 0.3s ease !important; /* Smooth transition for background and scale */
+    z-index: 100 !important;
+}
+
+    .delete-btn:hover {
+        color: white;
+        background: linear-gradient(52deg, rgba(128,128,128,1) 9%, rgba(96,96,96,1) 49%); /* Darker gray on hover */
+        transform: scale(1.05) !important; /* Slight scaling effect on hover */
+    }
+
+    .delete-btn:active {
+        transform: scale(1); /* Reset the button to its original size when clicked */
+    }
+
+    .delete-btn:disabled {
+        cursor: inherit !important;
+        opacity: 0.3;
+        box-shadow: none; /* Remove the shadow for a flatter appearance */
+        transform: none !important; /* No hover or active effects */
+    }
+
+
 .contShopp:hover{
     color:white !important;
     cursor:pointer !important;

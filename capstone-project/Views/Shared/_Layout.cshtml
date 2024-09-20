@@ -24,7 +24,7 @@
         
     
     
-    @if (currentUrl != "/Auth/Login" && currentUrl != "/Auth/Register" && currentUrl != "/")
+    @if (currentUrl != "/Auth/Login" && currentUrl != "/Auth/Register" && currentUrl != "/" && currentUrl != "/Home/NotFound")
     {
     <header>
         <nav>
@@ -133,6 +133,9 @@
                            asp-action="Logout">
                             <i class="sm-icon bi bi-box-arrow-right fs-3 px-2 text-white"></i>
                         </a>
+                            <span class="opacity-0">
+                                <i class="bi bi-box-arrow-right fs-3 px-2"></i>
+                            </span>
                     }
                     
                 </div>

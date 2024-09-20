@@ -3,6 +3,7 @@ using capstone_project.Interfaces.Auth;
 using capstone_project.Models.DTOs.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -21,7 +22,13 @@ namespace capstone_project.Controllers
 
         public IActionResult Login()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                // Redirect authenticated users to another page, like the home or dashboard
+                return RedirectToAction("List", "Game");
+            }
             return View();
+
         }
 
         [HttpPost]
@@ -64,6 +71,11 @@ namespace capstone_project.Controllers
 
         public async Task<IActionResult> Register()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+                // Redirect authenticated users to another page, like the home or dashboard
+                return RedirectToAction("List", "Game");
+            }
             var categories = await _categorySvc.GetAllCategoriesAsync();
             ViewBag.Categories = categories;
             return View();
@@ -99,7 +111,7 @@ namespace capstone_project.Controllers
         }
 
 
-
+        [Authorize]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);

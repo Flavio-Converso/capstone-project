@@ -4,6 +4,7 @@ using capstone_project.Helpers;
 using capstone_project.Interfaces;
 using capstone_project.Models;
 using capstone_project.Models.DTOs.Game;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -119,6 +120,7 @@ namespace capstone_project.Controllers
         }
 
         // GET: /Game
+        [Authorize]
         public async Task<IActionResult> List(string category, string platform)
         {
             var games = await _gameSvc.GetAllGamesAsync();
