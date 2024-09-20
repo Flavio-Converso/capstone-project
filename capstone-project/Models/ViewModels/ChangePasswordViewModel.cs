@@ -4,17 +4,16 @@ namespace capstone_project.Models.ViewModels
 {
     public class ChangePasswordViewModel
     {
-        [Required(ErrorMessage = "Old password is required.")]
-        [DataType(DataType.Password)]
+        [Required(ErrorMessage = "La password attuale è obbligatoria.")]
         public string OldPassword { get; set; }
 
-        [Required(ErrorMessage = "New password is required.")]
+        [Required(ErrorMessage = "La nuova password è obbligatoria.")]
         [DataType(DataType.Password)]
         public string NewPassword { get; set; }
 
-        [Required(ErrorMessage = "Please confirm your new password.")]
+        [Required(ErrorMessage = "Conferma la nuova password.")]
         [DataType(DataType.Password)]
-        [Compare("NewPassword", ErrorMessage = "The new password and confirmation password do not match.")]
+        [Compare("NewPassword", ErrorMessage = "La nuova password e la conferma non corrispondono.")]
         public string ConfirmNewPassword { get; set; }
     }
 }

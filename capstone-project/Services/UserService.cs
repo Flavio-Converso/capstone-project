@@ -96,7 +96,7 @@ namespace capstone_project.Services
 
             if (!_passwordHelper.VerifyPassword(viewModel.OldPassword, user.PasswordHash))
             {
-                throw new Exception("The old password is incorrect.");
+                throw new Exception("La password attuale è sbagliata.");
             }
 
             user.PasswordHash = _passwordHelper.HashPassword(viewModel.NewPassword);

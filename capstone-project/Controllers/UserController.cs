@@ -66,6 +66,8 @@ namespace capstone_project.Controllers
                 UserReviewsCount = userReviewsCount
             };
 
+            ViewBag.ChangePasswordViewModel = new ChangePasswordViewModel();
+
             // Pass the wishlist items to the ViewBag
             ViewBag.WishlistItems = wishlistItems;
 
@@ -127,29 +129,73 @@ namespace capstone_project.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel viewModel)
         {
+            // Get the current user ID
+            int userId = _userHelper.GetUserIdClaim();
+
+            // Repopulate the necessary data for the Profile view
+            var user = await _userHelper.GetUserIdAsync(userId);
+            var ownedGames = await _ctx.GameKeys
+                             .Where(gk => gk.UserId == userId)
+                             .Include(gk => gk.Game)
+                             .ThenInclude(g => g.GameImages)
+                             .ToListAsync();
+            var userCategoriesCount = user.Categories.Count;
+            var wishlistItems = await _wishlistSvc.GetWishlistItemsAsync(userId);
+            var userReviewsCount = await _ctx.Reviews
+                                 .Where(r => r.UserId == userId)
+                                 .CountAsync();
+
+            // Populate the UserProfileViewModel
+            var profileVm = new UserProfileViewModel
+            {
+                Username = user.Username,
+                Email = user.Email,
+                Name = user.Name,
+                Surname = user.Surname,
+                BirthDate = user.BirthDate,
+                Country = user.Country,
+                City = user.City,
+                Address = user.Address,
+                ZipCode = user.ZipCode,
+                PhoneNumber = user.PhoneNumber,
+                Gender = user.Gender.ToString(),
+                ProfileImg = user.ProfileImg,
+                OwnedGames = ownedGames,
+                UserCategoriesCount = userCategoriesCount,
+                UserReviewsCount = userReviewsCount
+            };
+
             if (!ModelState.IsValid)
             {
-                return View(viewModel); // Return the view with validation errors
+                // Pass the validation errors and set a flag to show the password section
+                ViewBag.ChangePasswordViewModel = viewModel;
+                ViewBag.WishlistItems = wishlistItems;
+                ViewBag.ShowChangePasswordSection = true; // Flag to show the password section
+                return View("Profile", profileVm); // Re-render the Profile view
             }
 
             try
             {
-                // Get the current user ID
-                int userId = _userHelper.GetUserIdClaim();
-
                 // Call the AuthService to change the password
                 await _userSvc.ChangePasswordAsync(userId, viewModel);
 
-                // Redirect to profile or success page
-                return RedirectToAction("Profile");
+                // If successful, redirect to the Profile page
+                return RedirectToAction("Profile", new { passwordChanged = true });
             }
             catch (Exception ex)
             {
-                // Add the error message (e.g., incorrect old password) to ModelState
-                ModelState.AddModelError(string.Empty, ex.Message);
-                return View(viewModel);
+                // Pass the exception message as a validation error
+                ModelState.AddModelError("ChangePasswordError", ex.Message);
+
+                // Pass the error and data back to the Profile view
+                ViewBag.ChangePasswordViewModel = viewModel;
+                ViewBag.WishlistItems = wishlistItems;
+                ViewBag.ShowChangePasswordSection = true; // Flag to show the password section
+                return View("Profile", profileVm); // Re-render the Profile view
             }
         }
+
+
 
         public async Task<IActionResult> GetProfileImage()
         {

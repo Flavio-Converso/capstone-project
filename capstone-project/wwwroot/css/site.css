@@ -159,6 +159,7 @@ input:-webkit-autofill {
 
 .contShopp:hover{
     color:white !important;
+    cursor:pointer !important;
 }
 
 .game-card {

@@ -22,16 +22,23 @@
             <h1 class="text-white">@Model.Username</h1>
     </div>
 </div>
-<div class="row mt-5">
-    <div class=" d-flex align-items-center fs-5">
-           <span class="text-orange pe-2">
-                <i class="bi bi-gear"></i>   Impostazioni
-           </span>
-            <i class="bi bi-chevron-right text-white fs-6"></i>          
-            <a class="text-white ps-3 navLink" asp-action="ChangePassword">Cambio Password</a>
+    <div class="row mt-5">
+        <div class="d-flex align-items-center fs-5">
+            <span class="text-orange pe-2">
+                <i class="bi bi-gear"></i> Impostazioni
+            </span>
+            <i class="bi bi-chevron-right text-white fs-6"></i>
+            <span id="toggle-password" class="text-white ps-3 navLink" style="cursor: pointer;">Cambio password</span>
+        </div>
+        <hr class="text-white mt-2" />
     </div>
-    <hr class="text-white mt-2"/>
-</div>
+
+    <!-- Password Change Section (Initially Hidden) -->
+    <div id="change-password-section" class="change-password-section mt-5" style="display: none;">
+        @await Html.PartialAsync("_ChangePasswordPartial", new capstone_project.Models.ViewModels.ChangePasswordViewModel())
+    </div>
+
+
 <div class="row mt-4 d-flex justify-content-around ">
         <div class="myBlackBg col-5 pt-4 pb-5 d-flex flex-column justify-content-center">
             <div class="row justify-content-center mt-3">
@@ -89,10 +96,7 @@
         </div>
 
 </div>
-        
-<div>
 
-</div>
     @if (Model.OwnedGames.Any())
     {
 <hr class="mt-10 text-white"/>
@@ -131,9 +135,45 @@
             }
         </div>
     }
+    else
+    {
+        <div class="container mb-10 text-center">
+            <hr class="mt-7 text-white" />
+            <h3 class="text-white text-center mt-5">Non hai ancora acquistato nulla!</h3>
+            <h4 class="text-orange text-center mb-5">Le tue chiavi di gioco verranno mostrate qui.</h4>               
+            @if (wishlistCount != 0)
+            {
+            <a asp-action="List" class="auth-btn fs-3 ">Vai alla lista dei giochi</a>
+            }
+        </div>
+    }
     
 </div>
-<!-- Bootstrap Modal -->
+
+
+@if (wishlistCount > 0)
+{
+@Html.Partial("_WishlistPartial", ViewBag.WishlistItems as IEnumerable<WishlistItemDTO>)
+}
+else{
+    <div class="container mb-7 text-center">
+    <hr class="mt-7 text-white" />
+        <h3 class="text-white text-center mt-5">Non hai ancora giochi preferiti!</h3>
+        <h4 class="text-orange text-center mb-5">I tuoi giochi preferiti verranno mostrati qui.</h4>
+        @if (Model.OwnedGames.Any())
+        {
+            <a asp-action="List" class="auth-btn fs-3 ">Vai alla lista dei giochi</a>
+        }
+</div>
+}
+@if (wishlistCount == 0 && !Model.OwnedGames.Any())
+{
+    <div class="container mb-10 text-center">
+        <a asp-action="List" class="auth-btn fs-3">Vai alla lista dei giochi</a>
+
+    </div>
+}
+<!-- Bootstrap Modals -->
 <div class="modal fade" id="copyModal" tabindex="-1" aria-labelledby="copyModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-sm modal-dialog-centered">
         <!-- Added modal-dialog-centered -->
@@ -144,11 +184,19 @@
         </div>
     </div>
 </div>
-
-@if (wishlistCount > 0)
-{
-@Html.Partial("_WishlistPartial", ViewBag.WishlistItems as IEnumerable<WishlistItemDTO>)
-}
+<div class="modal fade" id="passwordChangedModal" tabindex="-1" aria-labelledby="passwordChangedModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body text-center fs-3">
+                Password cambiata!
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts {  
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 <script>
     function copyToClipboard(gameKey) {
         // Create a temporary textarea element
@@ -179,4 +227,53 @@
         }, 1300); // 3 seconds
     }
 </script>
+<script>
+                 document.addEventListener("DOMContentLoaded", function () {
+            const changePasswordSection = document.getElementById("change-password-section");
+            const toggleButton = document.getElementById("toggle-password");
 
+            // Check if the change password section should be shown
+            const showChangePasswordSection = '@(ViewBag.ShowChangePasswordSection ?? false)'.toLowerCase() === 'true';
+
+            // Automatically show the section if there are validation errors
+            if (showChangePasswordSection) {
+                changePasswordSection.style.display = "block"; // Show the section
+            }
+
+            // Toggle functionality for manual user click
+            toggleButton.addEventListener("click", function () {
+                if (changePasswordSection.style.display === "none") {
+                    changePasswordSection.style.display = "block"; // Show the section
+                } else {
+                    changePasswordSection.style.display = "none"; // Hide the section
+                }
+            });
+        });
+</script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get URL parameters
+            const urlParams = new URLSearchParams(window.location.search);
+            const passwordChanged = urlParams.get('passwordChanged');
+
+            // Debugging: log the passwordChanged value to the console
+            console.log("Password changed param:", passwordChanged);
+
+            if (passwordChanged === 'True') {
+                console.log("Showing password changed modal");
+
+                // Reset scroll to top
+                window.scrollTo(0, 0);
+
+                var myModal = new bootstrap.Modal(document.getElementById('passwordChangedModal'));
+                myModal.show();
+
+                // Automatically hide the modal after 3 seconds
+                setTimeout(function () {
+                    myModal.hide();
+                }, 2000);
+            }
+        });
+    </script>
+
+}

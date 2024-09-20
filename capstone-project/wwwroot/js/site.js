@@ -1,4 +1,19 @@
 ﻿
+    document.addEventListener("DOMContentLoaded", function () {
+        // Save the scroll position before form submission
+        const form = document.querySelector('form');
+    form.addEventListener('submit', function () {
+        localStorage.setItem('scrollPosition', window.scrollY);
+        });
+
+    // Restore the scroll position when the page reloads
+    const scrollPosition = localStorage.getItem('scrollPosition');
+    if (scrollPosition) {
+        window.scrollTo(0, parseInt(scrollPosition));
+    localStorage.removeItem('scrollPosition'); // Clean up after use
+        }
+    });
+
 //profile image of logged in user (navbar)
 $(document).ready(function () {
     $.ajax({
