@@ -60,6 +60,44 @@ ul{
 .border-orange:hover{
     border:solid 3px;
 }
+.predefined-images-grid {
+    margin-top:5px;
+    display: flex !important; /* Use flexbox to create grid */
+
+    flex-wrap: wrap !important; /* Allow wrapping to next line */
+    gap: 3px !important; /* Space between images */
+}
+
+.predefined-image {
+    width: 100px !important; /* Set a fixed width for each image container */
+    text-align: center !important; /* Center images horizontally */
+}
+
+.selectable-image {
+    border: 5px solid transparent !important;
+    cursor: pointer !important;
+    transition: border-color 0.3s ease !important;
+}
+
+    .selectable-image.selected {
+        border-color: #ff5722 !important; /* Apply orange border when selected */
+    }
+
+#predefined-images-container {
+    display: none;
+    margin-top: 10px !important;
+    width: 75% !important; /* Make the container take half the horizontal space */
+    margin: 0 auto !important; /* Center the container */
+    opacity: 0;
+    transform: translateY(-20px);
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+    #predefined-images-container.show {
+        display: block;
+        opacity: 1;
+        transform: translateY(0);
+    }
 /* Basic input styling */
 input,textarea {
     background-color: #1D1D1D; /* Dark background */
@@ -82,7 +120,17 @@ input,textarea {
     input::placeholder {
         color: #888;
     }
+    input:read-only {
+        background-color: #333; /* Slightly darker background */
+        color: #ccc; /* Lighter text */
+        border-color: #555; /* Optional: different border color */
+        cursor: inherit; /* Show 'not-allowed' cursor */
+    }
 
+        /* Optional: Style the placeholder for readonly inputs */
+        input:read-only::placeholder {
+            color: #666; /* Different placeholder color */
+        }
     /* Styling for autofill (Chrome and Safari) */
 #searchbarInput:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px #ff5722 inset !important; /* Keeps the background to #FF4916 */

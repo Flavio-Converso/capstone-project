@@ -15,14 +15,7 @@ img,.firstImg {
 
 
     /*todo*/
-.selectable-image {
-    border: 5px solid transparent;
-    cursor: pointer;
-}
 
-    .selectable-image.selected {
-        border-color: #ff5722 !important; /* Apply orange border when selected */
-    }
 
 
 #continue-btn{
@@ -59,41 +52,7 @@ select {
             color: #888 !important; /* Placeholder color */
         }
 
-.predefined-images-grid {
-    display: flex !important; /* Use flexbox to create grid */
-    flex-wrap: wrap !important; /* Allow wrapping to next line */
-    gap: 3px !important; /* Space between images */
-}
 
-.predefined-image {
-    width: 100px !important; /* Set a fixed width for each image container */
-    text-align: center !important; /* Center images horizontally */
-}
-
-.selectable-image {
-    border: 5px solid transparent !important;
-    cursor: pointer !important;
-    transition: border-color 0.3s ease !important;
-}
-
-    .selectable-image.selected {
-        border-color: #ff5722 !important; /* Apply orange border when selected */
-    }
-
-#predefined-images-container {
-    display: none;
-    margin-top: 10px !important;
-    width: 75% !important; /* Make the container take half the horizontal space */
-    margin: 0 auto !important; /* Center the container */
-    opacity: 0;
-    transform: translateY(-20px);
-    transition: opacity 0.5s ease, transform 0.5s ease;
-}
-    #predefined-images-container.show {
-        display: block;
-        opacity: 1;
-        transform: translateY(0);
-    }
 #categoriesCheckboxes {
     display: flex !important;
     flex-wrap: wrap !important;
