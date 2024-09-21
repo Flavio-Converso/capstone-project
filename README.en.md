@@ -40,7 +40,7 @@ The project will follow the "_Code First_" approach, where classes and applicati
 ### 1. Home Page
  ![Home Page](assets/screenshots/homepage.png) 
 
-### 2. Cart and Payment Succesfull
+### 2. Cart and Payment Succesful
 <p align="center">
   <img src="assets/screenshots/cart.png" alt="Cart" width="45%" />
   <img src="assets/screenshots/paymentSuccess.png" alt="Payment Success" width="45%"  />
