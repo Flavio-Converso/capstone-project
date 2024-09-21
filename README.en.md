@@ -43,4 +43,9 @@ The project will follow the "_Code First_" approach, where classes and applicati
   <img src="assets/screenshots/homepage2.png" alt="Game Catalog" width="45%" />
 </p>
 
+### 2. Cart and Payment Success
+<p align="center">
+  <img src="assets/screenshots/cart.png" alt="Cart" height="280px" width="45%" />
+  <img src="assets/screenshots/payment.png" alt="Payment Success" height="280px" width="45%"  />
+</p>
 ---
