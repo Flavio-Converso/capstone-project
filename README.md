@@ -22,7 +22,7 @@ Il progetto dimostrerà competenze sia nel **frontend** che nel **backend**, nel
 Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica applicativa vengono sviluppate per prime e il database verrà generato automaticamente a partire dai modelli definiti nel codice.
 
 ### 🔗 Integrazioni API
-- 💳 _API_ di Pagamento (_Stripe_): Per gestire in modo sicuro le transazioni monetarie.
+- 💳 _API_ di Pagamento (_[Stripe](https://stripe.com/)_): Per gestire in modo sicuro le transazioni monetarie.
 
 ## 🚀 Funzionalità Principali
 - 👤 Registrazione e login degli utenti.
