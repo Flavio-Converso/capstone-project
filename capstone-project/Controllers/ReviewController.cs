@@ -27,11 +27,11 @@ namespace capstone_project.Controllers
             }
 
             var userId = _userHelper.GetUserIdClaim();
+            var reviewId = await _reviewSvc.CreateReviewAsync(reviewVm, userId);
 
-            await _reviewSvc.CreateReviewAsync(reviewVm, userId);
-
-            return RedirectToAction("Details", "Game", new { id = reviewVm.GameId });
+            return RedirectToAction("Details", "Game", new { id = reviewVm.GameId, reviewId });
         }
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -40,8 +40,11 @@ namespace capstone_project.Controllers
             var userId = _userHelper.GetUserIdClaim();
             await _reviewSvc.DeleteReviewAsync(reviewId, userId);
 
-            return RedirectToAction("Details", "Game", new { id = gameId });
+            // Redirect to game details with the scrollToReviewDeleted parameter
+            return RedirectToAction("Details", "Game", new { id = gameId, scrollToReviewDeleted = true });
         }
+
+
 
         [HttpPost]
         [ValidateAntiForgeryToken]

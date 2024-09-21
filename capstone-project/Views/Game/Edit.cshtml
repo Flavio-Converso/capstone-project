@@ -58,7 +58,7 @@
                         <div class="form-group d-flex flex-column align-items-center mt-2">
                             <label class="control-label text-white mb-1 fs-4" asp-for="PegiId">Classificazione PEGI</label>
                             <select asp-for="PegiId" asp-items="ViewBag.PegiOptions" class="">
-                                <option value="" selected disabled>Seleziona PEGI</option>
+                             
                             </select>
                             <span asp-validation-for="PegiId" class="text-valid"></span>
                         </div>
@@ -67,7 +67,7 @@
                         <div class="form-group d-flex flex-column align-items-center mt-2">
                             <label class="control-label text-white mb-1 fs-4" asp-for="Platform" class="control-label">Piattaforma</label>
                             <select asp-for="Platform" class="">
-                                <option value="Tutte" selected disabled>Seleziona la piattaforma</option>
+                               
                                 <option value="PC">PC</option>
                                 <option value="PlayStation">PlayStation</option>
                                 <option value="Xbox">Xbox</option>

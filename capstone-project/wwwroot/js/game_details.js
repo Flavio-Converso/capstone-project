@@ -47,3 +47,47 @@ $(document).on('click', '.unlike-btn', function () {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Check if scrollToReviewForm or scrollToReviewDeleted exists in the URL query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const scrollToReviewForm = urlParams.get('scrollToReviewForm');
+    const scrollToReviewDeleted = urlParams.get('scrollToReviewDeleted');
+    const reviewId = urlParams.get('reviewId'); // From previous logic for review scroll
+
+    // Scroll to the review form if the scrollToReviewForm parameter is true
+    if (scrollToReviewForm) {
+        const reviewFormElement = document.getElementById('reviewForm'); // Assuming this is the ID of your review form element
+        if (reviewFormElement) {
+            const elementPosition = reviewFormElement.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({
+                top: elementPosition - 240, // Adjust for offset (-240px)
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // Scroll to the "reviewDeleted" section if the scrollToReviewDeleted parameter is true
+    if (scrollToReviewDeleted) {
+        const reviewDeletedElement = document.getElementById('reviewDeleted'); // Assuming this is the ID of your h2 element
+        if (reviewDeletedElement) {
+            const elementPosition = reviewDeletedElement.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({
+                top: elementPosition - 240, // Adjust for offset (-240px)
+                behavior: 'smooth'
+            });
+        }
+    }
+
+    // Existing logic for scrolling to a specific review
+    if (reviewId) {
+        const reviewElement = document.getElementById('review-' + reviewId);
+        if (reviewElement) {
+            const elementPosition = reviewElement.getBoundingClientRect().top + window.scrollY;
+            window.scrollTo({
+                top: elementPosition - 240, // Adjust the offset here (-240px)
+                behavior: 'smooth'
+            });
+        }
+    }
+});

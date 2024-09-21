@@ -15,21 +15,28 @@ namespace capstone_project.Services
             _ctx = context;
         }
 
-        public async Task CreateReviewAsync(ReviewViewModel reviewVm, int userId)
+        public async Task<int> CreateReviewAsync(ReviewViewModel reviewVm, int userId)
         {
-            var review = new Review
+            // Logic to create the review
+            var newReview = new Review
             {
+                // Set properties from the view model
                 Title = reviewVm.Title,
                 Content = reviewVm.Content,
-                Rating = reviewVm.Rating,
                 GameId = reviewVm.GameId,
                 UserId = userId,
+                Rating = reviewVm.Rating,
                 Date = DateTime.Now
             };
 
-            _ctx.Reviews.Add(review);
+            // Add the review to the database
+            _ctx.Reviews.Add(newReview);
             await _ctx.SaveChangesAsync();
+
+            // Return the newly created review's ID
+            return newReview.ReviewId;
         }
+
 
         public async Task<bool> HasUserReviewedGameAsync(int userId, int gameId)
         {
