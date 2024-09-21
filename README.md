@@ -37,11 +37,10 @@ Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica appl
 
 ## 📸 Screenshots
 
-### 1. Database
-![Database Schema](assets/screenshots/database-schema.png)
-### 2. Home Page e Catalogo Giochi
+### 1. Home Page e Catalogo Giochi
 <p align="center">
   <img src="assets/screenshots/homepage1.png" alt="Home Page" width="45%" />
   <img src="assets/screenshots/homepage2.png" alt="Game Catalog" width="45%" />
 </p>
+
 ---
