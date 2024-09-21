@@ -22,24 +22,23 @@
         <div class="row">
             <!-- Left Column -->
             <div class="col-md-12">
-                <div class="form-group d-flex flex-column align-items-center mb-3">
+                <div class="form-group d-flex flex-column align-items-center mb-3 ">
                     <label asp-for="Username" class="control-label text-white mb-1 fs-4">Nome utente</label>
-                    <input asp-for="Username" class="w-50" readonly />
+                    <input asp-for="Username" class="w-50 disabInput" readonly />
                 </div>
 
-                <div class="form-group d-flex flex-column align-items-center mb-3">
+                <div class="form-group d-flex flex-column align-items-center mb-3 ">
                     <label asp-for="Email" class="control-label text-white mb-1 fs-4">Email</label>
-                    <input asp-for="Email" class="w-50" readonly  />
+                    <input asp-for="Email" class="w-50 disabInput" readonly />
                 </div>
-
-                <div class="form-group d-flex flex-column align-items-center mb-3">
+                <div class="form-group d-flex flex-column align-items-center mb-3 ">
                     <label asp-for="BirthDate" class="control-label text-white mb-1 fs-4">Data di nascita</label>
-                    <input asp-for="BirthDate" class="w-50" readonly />
+                    <input asp-for="BirthDate" class="w-50 disabInput" readonly />
                 </div>
 
-                <div class="form-group d-flex flex-column align-items-center mb-3">
+                <div class="form-group d-flex flex-column align-items-center mb-3 ">
                     <label asp-for="Gender" class="control-label text-white mb-1 fs-4">Genere</label>
-                    <input asp-for="Gender" class="w-50" readonly />
+                    <input asp-for="Gender" class="w-50 disabInput" readonly />
                 </div>
             </div>
         </div>
@@ -169,13 +168,15 @@
         <!-- File upload for custom image -->
         <div class="form-group mt-4 text-center" id="upload-image-section">
             <label class="d-block text-white mb-1 fs-4">Sostituisci immagine</label>
-            <input asp-for="NewProfileImg" class="file w-50" type="file" accept=".jpg,.jpeg,.png" />
+            <input asp-for="NewProfileImg" class="file w-25" type="file" accept=".jpg,.jpeg,.png" />
             <span asp-validation-for="NewProfileImg" class="text-valid mt-1 d-block"></span>
         </div>
 
         <div class="form-group text-center mt-5">
-            <button type="submit" class="auth-btn">Salva</button>
+            <button type="submit" class="auth-btn me-2">Salva</button>
+            <a asp-action="Profile" type="submit" class="discard-btn">Annulla</a>
         </div>
+       
     </form>
 </div>
 

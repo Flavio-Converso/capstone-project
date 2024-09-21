@@ -8,8 +8,11 @@
 }
 
 <div class="container d-flex justify-content-center">
-    <div class="row d-flex flex-column align-items-center justify-content-center rounded myGreyBg2 w-50 mb-10">
-        @if (User.IsInRole("master"))
+    <div class="row d-flex flex-column align-items-center justify-content-center rounded myGreyBg2 w-50 mb-10 position-relative">
+        <a href="#top" class="position-absolute auth-btn" style="bottom:7px; right:7px; width:auto;">
+            <i class="bi bi-arrow-up-short"></i>
+        </a>
+            @if (User.IsInRole("master"))
         {
             <p class="text-start mb-4 mt-4">
                 <a class="auth-btn" asp-action="Create">Aggiungi PEGI</a>

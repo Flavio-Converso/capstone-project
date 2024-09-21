@@ -120,17 +120,17 @@ input,textarea {
     input::placeholder {
         color: #888;
     }
-    input:read-only {
-        background-color: #333; /* Slightly darker background */
-        color: #ccc; /* Lighter text */
-        border-color: #555; /* Optional: different border color */
-        cursor: inherit; /* Show 'not-allowed' cursor */
-    }
+.disabInput:read-only {
+    background-color: #333;
+    color: #ccc;
+    border-color: #555;
+    cursor: inherit;
+}
 
-        /* Optional: Style the placeholder for readonly inputs */
-        input:read-only::placeholder {
-            color: #666; /* Different placeholder color */
-        }
+
+.disabInput:read-only::placeholder {
+    color: #666;
+}
     /* Styling for autofill (Chrome and Safari) */
 #searchbarInput:-webkit-autofill {
     -webkit-box-shadow: 0 0 0px 1000px #ff5722 inset !important; /* Keeps the background to #FF4916 */
