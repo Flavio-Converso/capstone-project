@@ -39,8 +39,14 @@ Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica appl
 
 ### 1. Home Page e Catalogo Giochi
 <p align="center">
-  <img src="assets/screenshots/homepage1.png" alt="Home Page" width="45%" />
-  <img src="assets/screenshots/homepage2.png" alt="Game Catalog" width="45%" />
+  <img src="assets/screenshots/homepage1.png" alt="Home Page"  width="45%"  />
+  <img src="assets/screenshots/homepage2.png" alt="Game Catalog"  width="45%"  />
+</p>
+
+### 2. Carrello e Acquisto Completato
+<p align="center">
+  <img src="assets/screenshots/cart.png" alt="Cart" height="280px" width="45%" />
+  <img src="assets/screenshots/payment.png" alt="Payment Success" height="280px" width="45%"  />
 </p>
 
 ---
