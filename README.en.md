@@ -1,7 +1,7 @@
 ### [🏴 VERSIONE ITALIANA](README.md)
 ---
 # 📖 Project Presentation
-The project involves the development of a digital distribution platform for video games, similar to _Steam_ or _G2A_. Users will be able to register, explore a catalog of games, purchase titles, and manage their profile and personal library. The application will feature a user-friendly interface and provide fundamental functionalities for managing accounts, purchases, and reviews.
+The project involves the development of a digital distribution platform for video games, similar to _[Instant Gaming](https://www.instant-gaming.com)_ or _[G2A](https://www.g2a.com/)_. Users will be able to register, explore a catalog of games, purchase titles, and manage their profile and personal library. The application will feature a user-friendly interface and provide fundamental functionalities for managing accounts, purchases, and reviews.
 
 ## 🎯 Project Goal
 The project will demonstrate skills in both **frontend** and **backend**, **database management**, and integration of **external APIs**.
@@ -22,8 +22,7 @@ The project will demonstrate skills in both **frontend** and **backend**, **data
 The project will follow the "_Code First_" approach, where classes and application logic are developed first, and the database is automatically generated from the models defined in the code.
 
 ### 🔗 API Integrations
-- 💳 Payment _APIs_ (_Stripe_ or _PayPal_): To securely handle monetary transactions.
-- 📧 Email _API_ (_SendGrid_): To send automatic notifications to users, such as purchase confirmations.
+- 💳 Payment _APIs_ (_[Stripe](https://stripe.com/)_): To securely handle monetary transactions.
 
 ## 🚀 Main Features
 - 👤 User registration and login.
