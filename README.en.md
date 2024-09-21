@@ -39,4 +39,10 @@ The project will follow the "_Code First_" approach, where classes and applicati
 
 ### 1. Database
 ![Database Schema](assets/screenshots/database-schema.png)
+### 2. Home Page and Game Catalog
+<p align="center">
+  <img src="assets/screenshots/homepage1.png" alt="Home Page" width="45%" />
+  <img src="assets/screenshots/homepage2.png" alt="Game Catalog" width="45%" />
+</p>
+---
 ---
