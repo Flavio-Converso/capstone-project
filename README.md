@@ -38,21 +38,18 @@ Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica appl
 ## 📸 Screenshots
 
 ### 1. Home Page e Catalogo Giochi
-<p align="center">
-  <img src="assets/screenshots/homepage1.png" alt="Home Page"  width="45%"  />
-  <img src="assets/screenshots/homepage2.png" alt="Game Catalog"  width="45%"  />
-</p>
+ ![Home Page](assets/screenshots/homepage.png) 
 
 ### 2. Carrello e Acquisto Completato
 <p align="center">
-  <img src="assets/screenshots/cart.png" alt="Cart" max-height="230px" width="45%" />
-  <img src="assets/screenshots/payment.png" alt="Payment Success" max-height="230px" width="45%"  />
+  <img src="assets/screenshots/cart.png" alt="Cart" width="45%" />
+  <img src="assets/screenshots/paymentSuccess.png" alt="Payment Success" width="45%"  />
 </p>
 
 ### 3. Login e Registrazione
 <p align="center">
-  <img src="assets/screenshots/login.png" alt="Login" width="45%" max-height="230px" />
-  <img src="assets/screenshots/registrazione.png" alt="Register" width="45%" max-height="230px" />
+  <img src="assets/screenshots/login.png" alt="Login" width="45%"  />
+  <img src="assets/screenshots/register.png" alt="Register" width="45%"  />
 </p>
 
 ### 4. Profilo Utente
