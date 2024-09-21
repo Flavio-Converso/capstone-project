@@ -32,4 +32,11 @@ The project will follow the "_Code First_" approach, where classes and applicati
 - 🎟 Management of game licenses after purchase.
 - 👤 User profile management: Avatar modification, personal data management, etc.
 - 🔧 Administrator dashboard for managing the catalog, users, and all platform-related functionalities.
+
+<br/>
+
+## 📸 Screenshots
+
+### 1. Database
+![Database Schema](assets/screenshots/database-schema.png)
 ---
