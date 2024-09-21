@@ -32,4 +32,11 @@ Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica appl
 - 🎟 Gestione delle licenze di gioco dopo l'acquisto.
 - 👤 Gestione del profilo utente: Modifica dell'avatar, gestione dei dati personali, ecc.
 - 🔧 Dashboard amministratore per la gestione del catalogo, degli utenti e di tutte le funzionalità relative alla piattaforma.
+
+<br/>
+
+## 📸 Screenshots
+
+### 1. Database
+![Database Schema](assets/screenshots/database-schema.png)
 ---
