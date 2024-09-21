@@ -49,4 +49,9 @@ Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica appl
   <img src="assets/screenshots/payment.png" alt="Payment Success" height="280px" width="45%"  />
 </p>
 
+### 3. Profilo Utente
+<p align="center">
+  <img src="assets/screenshots/profile.png" alt="Profile" width="75%" />
+</p>
+
 ---
