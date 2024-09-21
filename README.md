@@ -17,7 +17,7 @@ Il progetto dimostrerà competenze sia nel **frontend** che nel **backend**, nel
 - 💻 _C#_: Linguaggio di programmazione per sviluppare la logica di business.
 - 📊 _Entity Framework Core_: Per la gestione dell'accesso ai dati e l'interazione con il database.
 
-### 🗄️ Database
+### 🗄️ [Database](https://github.com/Flavio-Converso/capstone-project/blob/main/assets/screenshots/database-schema.png)
 - 💾 _SQL Server_: Per gestire i dati relativi agli utenti, ai giochi, agli acquisti e alle recensioni.
 Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica applicativa vengono sviluppate per prime e il database verrà generato automaticamente a partire dai modelli definiti nel codice.
 
@@ -37,6 +37,10 @@ Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica appl
 
 ## 📸 Screenshots
 
-### 1. Database
-![Database Schema](assets/screenshots/database-schema.png)
+### 1. Home Page e Catalogo Giochi
+<p align="center">
+  <img src="assets/screenshots/homepage1.png" alt="Home Page" width="45%" />
+  <img src="assets/screenshots/homepage2.png" alt="Game Catalog" width="45%" />
+</p>
+
 ---
