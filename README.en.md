@@ -45,14 +45,14 @@ The project will follow the "_Code First_" approach, where classes and applicati
 
 ### 2. Cart and Payment Success
 <p align="center">
-  <img src="assets/screenshots/cart.png" alt="Cart" height="250px" width="45%" />
-  <img src="assets/screenshots/payment.png" alt="Payment Success" height="250px" width="45%"  />
+  <img src="assets/screenshots/cart.png" alt="Cart" max-height="230px" width="45%" />
+  <img src="assets/screenshots/payment.png" alt="Payment Success" max-height="230px" width="45%"  />
 </p>
 
 ### 3. Login and Register
 <p align="center">
-  <img src="assets/screenshots/login.png" alt="Login" width="45%" height="250px" />
-  <img src="assets/screenshots/registrazione.png" alt="Register" width="45%" height="250px" />
+  <img src="assets/screenshots/login.png" alt="Login" width="45%" max-height="230px" />
+  <img src="assets/screenshots/registrazione.png" alt="Register" width="45%" max-height="230px" />
 </p>
 
 ### 4. User Profile
