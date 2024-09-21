@@ -7,6 +7,7 @@ using capstone_project.Models.DTOs.Game;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 
 namespace capstone_project.Controllers
 {
@@ -239,6 +240,26 @@ namespace capstone_project.Controllers
                 }).ToList()
             };
 
+
+            // Populate the restriction options
+            ViewBag.RestrictionOptions = _ctx.Restrictions
+                .Select(r => new SelectListItem
+                {
+                    Value = r.RestrictionId.ToString(),
+                    Text = r.Name
+                })
+                .ToList();
+
+            // Populate the category options
+            ViewBag.CategoryOptions = _ctx.Categories
+                .Select(c => new SelectListItem
+                {
+                    Value = c.CategoryId.ToString(),
+                    Text = c.Name
+                })
+                .ToList();
+            ViewBag.SelectedRestrictions = gameDto.RestrictionIds;
+            ViewBag.SelectedCategories = gameDto.CategoryIds;
             PopulateViewBags();
             return View(gameDto);
         }
@@ -249,6 +270,10 @@ namespace capstone_project.Controllers
         [Authorize(Policy = "MasterPolicy")]
         public async Task<IActionResult> Edit(GameDTO gameDto, List<ImageUpload> images, IFormFile VideoFile)
         {
+            if (VideoFile == null)
+            {
+                ModelState.Remove("VideoFile");
+            }
             // Validate image extensions
             foreach (var imageUpload in images)
             {
@@ -321,10 +346,25 @@ namespace capstone_project.Controllers
                 // Update the video path in the GameDTO
                 gameDto.VideoPath = "/videos/" + videoFileName; // Save the relative path
             }
+            else
+            {
+                // If no new video is provided, keep the old video path
+                var existingGame = await _gameSvc.GetGameByIdAsync(gameDto.GameId);
+                gameDto.VideoPath = existingGame.VideoPath; // Retain the old video path
+            }
+
 
             // Ensure the ModelState is valid before continuing
             if (!ModelState.IsValid)
             {
+                foreach (var state in ModelState)
+                {
+                    Console.WriteLine($"{state.Key}: {state.Value.ValidationState}");
+                    foreach (var error in state.Value.Errors)
+                    {
+                        Console.WriteLine($"Error: {error.ErrorMessage}");
+                    }
+                }
                 PopulateViewBags();
                 return View(gameDto);
             }

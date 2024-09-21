@@ -578,3 +578,6 @@ document.getElementById('searchbarInput').addEventListener('keypress', function 
         performSearch(); // Call the same search function
     }
 });
+
+
+

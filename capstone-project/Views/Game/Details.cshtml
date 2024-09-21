@@ -131,13 +131,15 @@
    <h3 class="text-start mb-3">Riguardo al prodotto</h3>
                     <span class="text-grey text-start d-inline-block">@Model.Description</span>
    </div>
-                <p class="text-start text-grey mt-4">
-                    Tags:
+                <p class="text-start text-white mt-4">
+                    Categorie:
+                </p>
 @foreach (var category in Model.Categories)
 {
- <span class="border border-secondary rounded px-2 pb-1 mx-1">@category.Name</span>
+                    <span class="text-grey border border-secondary rounded px-2 pb-1 mx-1 my-1 text-truncate overflow-hidden d-inline-block my-1" style="white-space: nowrap; text-overflow: ellipsis;">
+                            @category.Name
+                        </span>
                     }
-                </p>
    </div>
 
 
@@ -164,7 +166,7 @@
                     </div>
                     <div class="col-8 text-start">
                         <a asp-controller="Pegi" asp-action="List" asp-fragment="pegi-@Model.Pegi.PegiId">
-                            <span class="border border-secondary rounded text-grey px-2 pb-1 mx-1">@Model.Pegi.Name</span>
+                            <span class="border border-secondary rounded text-grey px-2 pb-1">@Model.Pegi.Name</span>
                         </a>
                     </div>
                 </div>
@@ -177,7 +179,7 @@
                         @foreach (var restriction in Model.Restrictions)
                         {
                             <a asp-controller="Restriction" asp-action="List" asp-fragment="restriction-@restriction.RestrictionId">
-                                <span class="border border-secondary rounded text-grey px-2 pb-1 mx-1">@restriction.Name</span>
+                                <span class="border border-secondary rounded text-grey px-2 pb-1 mx-1text-truncate overflow-hidden d-inline-block my-1" style="white-space: nowrap; text-overflow: ellipsis;">@restriction.Name</span>
                             </a>
                         }
                     </div>

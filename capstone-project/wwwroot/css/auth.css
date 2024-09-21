@@ -14,76 +14,10 @@ img,.firstImg {
 }
 
 
-    /*todo*/
-
-
-
 #continue-btn{
     z-index:100 !important;
 }
 
-select {
-    background-color: #1D1D1D !important; /* Dark background */
-    color: #fff !important; /* White text */
-    border: 2px solid transparent !important;
-    padding: 10px 30px !important; /* Padding similar to buttons */
-    outline: none !important;
-    font-size: 18px !important; /* Font size similar to buttons */
-    font-weight: bold !important; /* Bold text */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3) !important; /* Slight shadow for 3D effect */
-    transition: border-color 0.3s ease, background 0.4s ease !important; /* Smooth transition for border and background */
-    appearance: none !important; /* Remove default arrow */
-    -webkit-appearance: none !important; /* Remove default arrow for WebKit */
-    -moz-appearance: none !important; /* Remove default arrow for Firefox */
-}
-
-    select:focus {
-        border-color: #ff5722 !important; /* Orange border on focus */
-        outline: none !important; /* Remove outline */
-    }
-
-    select option {
-        background-color: #1D1D1D !important; /* Dark background for options */
-        color: #fff !important; /* White text for options */
-    }
-
-        /* Placeholder style for the default option */
-        select option:disabled {
-            color: #888 !important; /* Placeholder color */
-        }
-
-
-#categoriesCheckboxes {
-    display: flex !important;
-    flex-wrap: wrap !important;
-    gap: 7px !important; /* Space between checkboxes */
-}
-.form-check-label {
-    display: inline-block !important;
-    background: #1D1D1D !important; /* Dark background */
-    color: #fff !important; /* White text */
-    padding: 10px 20px !important;
-    border-radius: 30px !important;
-    font-size: 16px !important;
-    font-weight: bold !important;
-    border: 2px solid transparent !important;
-    transition: background 0.4s ease, border-color 0.3s ease !important;
-    cursor: pointer !important;
-    text-align: center !important; /* Center the label text */
-    width: 100% !important; /* Make label take full width of its container */
-}
-.form-check-input:checked + .form-check-label {
-    border-color: #ff5722 !important; /* Orange border */
-    background-color: rgba(255, 87, 34, 0.1) !important; /* Light orange background */
-}
-.form-check-label:hover {
-    border-color: #ff5722 !important;
-}
-.form-check-input {
-    position: absolute !important;
-    opacity: 0 !important;
-    cursor: pointer !important;
-}
 .custom-alert {
     color: white;
     text-align: center;

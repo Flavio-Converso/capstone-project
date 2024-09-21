@@ -3,107 +3,164 @@
 
 @{
     ViewBag.Title = "Aggiungi Gioco";
+    ViewBag.NavbarMarginTop = true;
+    ViewBag.HideNavbarMiddle = true;
 }
 
-<h2>Aggiungi Nuovo Gioco</h2>
-
-<form asp-action="Create" method="post" enctype="multipart/form-data">
+<div class="container myGreyBg2 rounded pb-4 mb-4">
+    <h1 class="text-white text-center pt-4">Aggiungi un <span class="text-orange">Gioco</span></h1>
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
     <!-- Display validation summary -->
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div asp-validation-summary="ModelOnly" class="text-valid"></div>
 
-    <!-- Fields for the game details -->
-    <div class="form-group">
-        <label asp-for="Name"></label>
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
-    </div>
+   <div class="row">
+       <div class="col-md-6">
+                <div class="form-group d-flex flex-column align-items-center mt-2">
+                    <label class="control-label text-white mb-1 fs-4" asp-for="Name">Nome</label>
+                    <input asp-for="Name" class="w-75" />
+                    <span asp-validation-for="Name" class="text-valid"></span>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="Description"></label>
-        <textarea asp-for="Description" class="form-control"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
-    </div>
+               
 
-    <div class="form-group">
-        <label asp-for="Platform" class="control-label"></label>
-        <select asp-for="Platform" class="form-control">
-            <option value="Tutte" selected disabled>Select a platform</option>
-            <option value="PC">PC</option>
-            <option value="PlayStation">PlayStation</option>
-            <option value="Xbox">Xbox</option>
-            <option value="Nintendo">Nintendo</option>
-        </select>
-        <span asp-validation-for="Platform" class="text-danger"></span>
-    </div>
+                <div class="form-group d-flex flex-column align-items-center mt-2">
+                    <label class="control-label text-white mb-1 fs-4" asp-for="Price">Prezzo</label>
+                    <input asp-for="Price" class="w-75" />
+                    <span asp-validation-for="Price" class="text-valid"></span>
+                </div>
 
+                
 
-    <div class="form-group">
-        <label asp-for="Publisher"></label>
-        <input asp-for="Publisher" class="form-control" />
-        <span asp-validation-for="Publisher" class="text-danger"></span>
-    </div>
+                <div class="form-group d-flex flex-column align-items-center mt-2">
+                    <label class="control-label text-white mb-1 fs-4" asp-for="QuantityAvail">Quantità in vendita</label>
+                    <input asp-for="QuantityAvail" class="w-75" />
+                    <span asp-validation-for="QuantityAvail" class="text-valid"></span>
+                </div>
+                <div class="form-group d-flex flex-column align-items-center mt-2">
+                    <label class="control-label text-white mb-1 fs-4" asp-for="Description">Descrizione</label>
+                    <textarea asp-for="Description" class="w-75"></textarea>
+                    <span asp-validation-for="Description" class="text-valid"></span>
+                </div>                  
+       </div>
 
-    <div class="form-group">
-        <label asp-for="Price"></label>
-        <input asp-for="Price" class="form-control" />
-        <span asp-validation-for="Price" class="text-danger"></span>
-    </div>
+       <div class="col-md-6">              
+                <div class="form-group d-flex flex-column align-items-center mt-2">
+                    <label class="control-label text-white mb-1 fs-4" asp-for="Publisher">Produttore</label>
+                    <input asp-for="Publisher" class="w-75" />
+                    <span asp-validation-for="Publisher" class="text-valid"></span>
+                </div>
+                <div class="form-group d-flex flex-column align-items-center mt-2">
+                    <label class="control-label text-white mb-1 fs-4" asp-for="ReleaseDate">Data di rilascio</label>
+                    <input asp-for="ReleaseDate" type="date" class="w-75" />
+                    <span asp-validation-for="ReleaseDate" class="text-valid"></span>
+                </div>
+                <div class="row">
+                    <div class="col-6">
+                        <div class="form-group d-flex flex-column align-items-center mt-2">
+                            <label class="control-label text-white mb-1 fs-4" asp-for="PegiId">Classificazione PEGI</label>
+                            <select asp-for="PegiId" asp-items="ViewBag.PegiOptions" class="">
+                                <option value="" selected disabled>Seleziona PEGI</option>
+                            </select>
+                            <span asp-validation-for="PegiId" class="text-valid"></span>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="form-group d-flex flex-column align-items-center mt-2">
+                            <label class="control-label text-white mb-1 fs-4" asp-for="Platform" class="control-label">Piattaforma</label>
+                            <select asp-for="Platform" class="">
+                                <option value="Tutte" selected disabled>Seleziona la piattaforma</option>
+                                <option value="PC">PC</option>
+                                <option value="PlayStation">PlayStation</option>
+                                <option value="Xbox">Xbox</option>
+                                <option value="Nintendo">Nintendo</option>
+                            </select>
+                            <span asp-validation-for="Platform" class="text-valid"></span>
+                        </div>
+                    </div>
+                </div>
 
-    <div class="form-group">
-        <label asp-for="ReleaseDate"></label>
-        <input asp-for="ReleaseDate" type="date" class="form-control" />
-        <span asp-validation-for="ReleaseDate" class="text-danger"></span>
-    </div>
+                <div class="form-group d-flex flex-column align-items-center mt-4">
+                    <label class="control-label text-white mb-1 fs-4" for="VideoFile">Carica un Video</label>
+                    <input type="file" class="" name="VideoFile" accept="video/*" />
+                </div>           
+            </div>
+       <div class="row mt-5 d-flex justify-content-center">
+           <div class="col-12">
+                        <div class="form-group d-flex flex-column align-items-center mt-2">
+                            <label class="control-label text-white mb-1 fs-4">Restrizioni</label>
+                            <div class="d-flex flex-wrap" id="restrictionsCheckboxes">
+                                @if (ViewBag.RestrictionOptions != null)
+                                {
+                                    foreach (var option in ViewBag.RestrictionOptions)
+                                    {
+                                        <div class="form-check">
+                                            <input type="checkbox"
+                                                   class="form-check-input"
+                                                   id="restriction-@option.Value"
+                                                   name="RestrictionIds"
+                                                   value="@option.Value"
+                                            @(ViewBag.SelectedRestrictions != null && ViewBag.SelectedRestrictions.Contains(option.Value) ? "checked" : "") />
+                                            <label class="form-check-label text-white" for="restriction-@option.Value">
+                                                @option.Text
+                                            </label>
+                                        </div>
+                                    }
+                                }
+                                
+                            </div>
+                            <span asp-validation-for="RestrictionIds" class="text-valid mt-1"></span>
+                        </div>
+           </div>
+           <div class="col-12">
+                    <div class="form-group d-flex flex-column align-items-center mt-2">
+                        <label class="control-label text-white mb-1 fs-4">Categorie</label>
+                        <div class="d-flex flex-wrap" id="categoriesCheckboxes">
+                            @if (ViewBag.CategoryOptions != null)
+                            {
+                                foreach (var option in ViewBag.CategoryOptions)
+                                {
+                                    <div class="">
+                                        <input type="checkbox"
+                                               class="form-check-input"
+                                               id="category-@option.Value"
+                                               name="CategoryIds"
+                                               value="@option.Value"
+                                        @(ViewBag.SelectedCategories != null && ViewBag.SelectedCategories.Contains(option.Value) ? "checked" : "") />
+                                        <label class="form-check-label text-white" for="category-@option.Value">
+                                            @option.Text
+                                        </label>
+                                    </div>
+                                }
+                            }
+                            
+                        </div>
+                        <span asp-validation-for="CategoryIds" class="text-valid mt-1"></span>
+                    </div>
 
-    <div class="form-group">
-        <label asp-for="QuantityAvail"></label>
-        <input asp-for="QuantityAvail" class="form-control" />
-        <span asp-validation-for="QuantityAvail" class="text-danger"></span>
-    </div>
-
- 
-
-    <div class="form-group">
-        <label for="VideoFile">Carica Video</label>
-        <input type="file" class="form-control-file" name="VideoFile" accept="video/*" />
-    </div>
-
-    <div class="form-group">
-        <label asp-for="PegiId">Classificazione PEGI</label>
-        <select asp-for="PegiId" asp-items="ViewBag.PegiOptions" class="form-control"></select>
-        <span asp-validation-for="PegiId" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Restrizioni</label>
-        <select asp-for="RestrictionIds" asp-items="ViewBag.RestrictionOptions" class="form-control" multiple="multiple"></select>
-        <span asp-validation-for="RestrictionIds" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label>Categorie</label>
-        <select asp-for="CategoryIds" asp-items="ViewBag.CategoryOptions" class="form-control" multiple="multiple"></select>
-        <span asp-validation-for="CategoryIds" class="text-danger"></span>
+           </div>
+       </div>     
     </div>
 
     <!-- Section for uploading images -->
     <div id="imageUploadSection">
-        <div class="form-group image-upload-group">
-            <label>Carica Immagine di Copertina</label>
-            <input type="file" name="images[0].ImageFile" class="form-control-file" accept=".jpg,.jpeg,.png" />
+            <div class="form-group d-flex flex-column align-items-center image-upload-group">
+                <label class="control-label text-white mt-4 mb-1 fs-4">Carica Immagine di Copertina</label>
+                <input type="file" name="images[0].ImageFile" class="form-control-file" accept=".jpg,.jpeg,.png" />
             <input type="hidden" name="images[0].ImgType" value="Cover" />
-            <span asp-validation-for="GameImages" class="text-danger"></span>
+            <span asp-validation-for="GameImages" class="text-valid"></span>
         </div>
     </div>
-
-    <button type="button" id="addImageButton" class="btn btn-secondary">Aggiungi Immagine</button>
-    <button type="submit" class="btn btn-primary">Salva Gioco</button>
+        <div class="text-center mt-4">
+    <button type="button" id="addImageButton" class="auth-btn2">Aggiungi Immagine</button>
+    </div>
+    <div class="text-center mt-4">
+         <button class="auth-btn mx-2" type="submit">Salva Gioco</button>
+         <a class="discard-btn mx-2" asp-action="List">Torna alla lista</a>
+    </div>
 </form>
 
-<div>
-    <a asp-action="List">Torna alla lista</a>
-</div>
 
+</div>
 @section Scripts {s
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
@@ -114,23 +171,24 @@
             const imageIndex = document.querySelectorAll('.image-upload-group').length;
 
             const newImageDiv = document.createElement('div');
-            newImageDiv.classList.add('form-group', 'image-upload-group');
+            newImageDiv.classList.add('form-group', 'image-upload-group','form-group', 'd-flex', 'flex-column', 'align-items-center');
             newImageDiv.innerHTML = `
-                                <label>Carica Immagine</label>
+                       <label class="text-white mt-4 mb-1 fs-4">Tipo di Immagine</label>
+                                        <select name="images[${imageIndex}].ImgType" class="form-control w-25 mb-2">
+                                            <option value="Screenshot">Screenshot</option>
+                                            <option value="Artwork">Artwork</option>
+                                            <option value="Icon">Icona</option>
+                                            <option value="Logo">Logo</option>
+                                            <option value="Banner">Banner</option>
+                                            <option value="Other">Altro</option>
+                                        </select>
+
                                 <input type="file" name="images[${imageIndex}].ImageFile" class="form-control-file" accept=".jpg,.jpeg,.png" multiple />
-                                <span class="text-danger validation-message"></span>
+                                        <span class="text-danger validation-message"></span>
 
-                                <label>Tipo di Immagine</label>
-                                <select name="images[${imageIndex}].ImgType" class="form-control">
-                                    <option value="Screenshot">Screenshot</option>
-                                    <option value="Artwork">Artwork</option>
-                                    <option value="Icon">Icona</option>
-                                    <option value="Logo">Logo</option>
-                                    <option value="Banner">Banner</option>
-                                    <option value="Other">Altro</option>
-                                </select>
+                                     
 
-                                <button type="button" class="btn btn-danger remove-image-button">Rimuovi</button>
+                                <button type="button" class="discard-btn fs-6 mt-2 remove-image-button">Rimuovi</button>
                             `;
             document.getElementById('imageUploadSection').appendChild(newImageDiv);
 

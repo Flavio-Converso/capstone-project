@@ -29,7 +29,9 @@ namespace capstone_project.Controllers
             int userId = _userHelper.GetUserIdClaim();
 
             // Get the user by their ID
-            var user = await _userHelper.GetUserIdAsync(userId);
+            var user = await _ctx.Users
+                             .Include(u => u.Categories) // Eager load the Categories collection
+                             .FirstOrDefaultAsync(u => u.UserId == userId);
 
             // Get the games owned by the user via GameKey
             var ownedGames = await _ctx.GameKeys
