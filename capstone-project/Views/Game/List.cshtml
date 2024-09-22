@@ -18,7 +18,7 @@
             var base64Image = Convert.ToBase64String(coverImage!.Img);
             var imgSrc = $"data:image/png;base64,{base64Image}";
             <div class="position-relative">
-                <img src="@imgSrc" class="img-fluid w-100 firstImg" alt="@firstGame.Name Banner" style="max-height:690px;" />
+                <img src="@imgSrc" class="img-fluid w-100 firstImg" alt="@firstGame.Name Banner" style="max-height:690px; clip-path: polygon(0% 91%, 100% 100%, 100% 0%, 0% 0%)" />
 
                 <!-- Game Name -->
                 <span class="position-absolute text-white fs-2" style="top: 45%; left: 13%">
@@ -49,17 +49,17 @@
     <div class="row">
         @if (!string.IsNullOrEmpty(ViewBag.SelectedCategory))
         {
-            <h1 class="text-white fs-3 mt-5">Categoria: @ViewBag.SelectedCategory</h1>
+            <h1 class="text-white fs-3 mt-3">Categoria: @ViewBag.SelectedCategory</h1>
         }
 
         @if (!string.IsNullOrEmpty(ViewBag.SelectedPlatform))
         {
-            <h1 class="text-white fs-3 mt-5">Piattaforma: @ViewBag.SelectedPlatform</h1>
+            <h1 class="text-white fs-3 mt-3">Piattaforma: @ViewBag.SelectedPlatform</h1>
         }
 
         @if (string.IsNullOrEmpty(ViewBag.SelectedCategory) && string.IsNullOrEmpty(ViewBag.SelectedPlatform)) // Only show "In tendenza" when no category or platform is selected
         {
-            <h1 class="text-white fs-3 mt-5">
+            <h1 class="text-white fs-3 mt-3">
                 In tendenza
                 <i class="bi bi-chevron-right fs-4 text-secondary"></i>
             </h1>
