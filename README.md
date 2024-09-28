@@ -35,8 +35,8 @@ Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica appl
 
 <br/>
 
-## 📸 Screenshots
-
+## 📸 Screenshot & Video
+https://github.com/user-attachments/assets/6b496e57-adfe-401b-9140-7b0501b12ee7
 ### 1. Home Page e Catalogo Giochi
  ![Home Page](assets/screenshots/homepage.png) 
 
@@ -51,6 +51,10 @@ Il progetto seguirà l'approccio "_Code First_", dove le classi e la logica appl
   <img src="assets/screenshots/login.png" alt="Login" width="45%"  />
   <img src="assets/screenshots/register.png" alt="Register" width="45%"  />
 </p>
+
+
+
+
 
 ### 4. Profilo Utente
 <p align="center">
