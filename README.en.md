@@ -35,7 +35,11 @@ The project will follow the "_Code First_" approach, where classes and applicati
 
 <br/>
 
-## 📸 Screenshots
+## 📸 Screenshot & Video
+
+
+https://github.com/user-attachments/assets/405bffb9-cc0d-4791-9493-94f63d3131a1
+
 
 ### 1. Home Page
  ![Home Page](assets/screenshots/homepage.png) 
