@@ -1,4 +1,4 @@
-### [🏴 ENGLISH VERSION](README.en.md)
+### [<img src="https://github.com/user-attachments/assets/5df1ea15-3ab1-461b-9bdc-0be41b4e46a3" alt="English Flag" width="32"/> ENGLISH VERSION](README.en.md)
 ---
 # 📖 Presentazione del Progetto
 Il progetto prevede lo sviluppo di una piattaforma di distribuzione digitale per videogiochi, simile a _[Instant Gaming](https://www.instant-gaming.com)_. Gli utenti potranno registrarsi, esplorare un catalogo di giochi, acquistare titoli e gestire il loro profilo e la loro libreria personale. L'applicazione sarà caratterizzata da un'interfaccia _user-friendly_ e offrirà funzionalità fondamentali per la gestione degli account, degli acquisti e delle recensioni.
