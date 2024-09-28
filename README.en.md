@@ -1,4 +1,4 @@
-### [🏴 VERSIONE ITALIANA](README.md)
+### [<img src="https://github.com/user-attachments/assets/60d1100d-00d9-4918-8740-d4a502a5db62" alt="English Flag" width="32"/> VERSIONE ITALIANA](README.md)
 ---
 # 📖 Project Presentation
 The project involves the development of a digital distribution platform for video games, similar to _[Instant Gaming](https://www.instant-gaming.com)_. Users will be able to register, explore a catalog of games, purchase titles, and manage their profile and personal library. The application will feature a user-friendly interface and provide fundamental functionalities for managing accounts, purchases, and reviews.
